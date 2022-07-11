@@ -87,7 +87,7 @@ class RouteServiceProvider extends ServiceProvider
                 if (!$fileinfo->isDot() && $fileinfo->isDir()) {
                     $module_name = $fileinfo->getFilename();
 
-                    if (file_exists($modules_path . $DS . $module_name . $DS . 'Routes/api.php')) {
+                    if ($module_name != 'Base' && file_exists($modules_path . $DS . $module_name . $DS . 'Routes/api.php')) {
                         Route::prefix('api')
                             ->middleware('api')
                             ->namespace('Modules\\' . $module_name . '\Http\Controllers')
@@ -97,101 +97,8 @@ class RouteServiceProvider extends ServiceProvider
             }
         }
 
-        $this->mapGeneralApiRoutes();
-    }
-
-    private function mapGeneralApiRoutes()
-    {
-
-        Route::middleware('api')
-            ->namespace('Modules\Base\Http\Controllers')
-            ->group(module_path('Base', '/Routes/api.php'));
-
-        Route::group(
-            ['prefix' => 'api/base', 'middleware' => ['auth:sanctum']],
-            function () {
-                $apicontroller = 'Modules\Base\Http\Controllers\BaseController';
-                Route::get('/base/autocomplete', $apicontroller . '@autocomplete');
-            }
-        );
-
-        Route::group(['prefix' => 'api'], function () {
-            $apicontroller = 'Modules\Base\Http\Controllers\BaseController';
-        });
-
         Route::prefix('api')
-            ->middleware(['api', 'auth:sanctum'])
-            ->group(function () {
-                $apicontroller = 'Modules\Base\Http\Controllers\BaseController';
-            });
-
-        // Route::group(['prefix' => 'api', 'middleware' => ['auth:sanctum']], function () {
-        Route::middleware('auth:sanctum')->group(function () {
-            // Route::group(['prefix' => 'api'], function () {
-
-            // });
-        });
-
-        Route::group(['prefix' => 'api', 'middleware' => ['auth:sanctum']], function () {
-            $DS = DIRECTORY_SEPARATOR;
-            $modules_path = realpath(base_path()) . $DS . 'Modules';
-
-            if (is_dir($modules_path)) {
-                $dir = new \DirectoryIterator($modules_path);
-
-                foreach ($dir as $fileinfo) {
-                    if (!$fileinfo->isDot() && $fileinfo->isDir()) {
-                        $module_name = $fileinfo->getFilename();
-                        $camel_module_name = ucfirst(Str::camel($module_name));
-                        $snake_module_name = Str::lower(Str::snake($module_name));
-
-                        $entities_path = $modules_path . $DS . $module_name . $DS . 'Entities';
-
-                        if (is_dir($entities_path)) {
-                            $dir = new \DirectoryIterator($entities_path);
-
-                            foreach ($dir as $fileinfo) {
-                                if (!$fileinfo->isDir()) {
-
-                                    $entity_name = $fileinfo->getFilename();
-                                    $entity_name_arr = explode('.', $entity_name);
-                                    $camel_entity_name = ucfirst(Str::camel($entity_name_arr[0]));
-                                    $snake_entity_name = Str::lower(Str::snake($entity_name_arr[0]));
-
-                                    $controller_path = realpath(base_path()) . $DS . 'Modules' . $DS . $camel_module_name . $DS . 'Http' . $DS . 'Controllers' . $DS . $camel_entity_name . 'Controller.php';
-                                    $controller = 'Modules\\' . $camel_module_name . '\Http\Controllers\\' . $camel_entity_name . 'Controller';
-                                    $prefix = $snake_module_name . '/admin/' . $snake_entity_name;
-
-
-                                    if (file_exists($controller_path)) {
-                                        if (method_exists($controller, 'getAllRecords')) {
-                                            Route::get($prefix, $controller . '@getAllRecords');
-                                        }
-                                        if (method_exists($controller, 'getAllRecords')) {
-                                            Route::get($prefix . '/{id}', $controller . '@getRecord');
-                                        }
-                                        if (method_exists($controller, 'getAllRecords')) {
-                                            Route::get($prefix . '/recordselect', $controller . '@getRecordSelect');
-                                        }
-                                        if (method_exists($controller, 'getAllRecords')) {
-                                            Route::post($prefix, $controller . '@createRecord');
-                                        }
-                                        if (method_exists($controller, 'getAllRecords')) {
-                                            Route::put($prefix . '/{id}', $controller . '@updateRecord');
-                                        }
-                                        if (method_exists($controller, 'getAllRecords')) {
-                                            Route::delete($prefix . '/{id}', $controller . '@deleteRecord');
-                                        }
-                                        if (method_exists($controller, 'getAllRecords')) {
-                                            Route::match(['get', 'post'], $prefix . '/{function}//',  $controller . '@functionCall');
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        });
+            ->middleware('api')
+            ->group(module_path('Base', '/Routes/api.php'));
     }
 }

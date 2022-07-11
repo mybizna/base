@@ -24,6 +24,9 @@ class BaseController extends Controller
     public function __construct()
     {
         //$this->middleware('auth');
+        //var_dump(get_class($this));
+        //var_dump(get_class());
+        //var_dump(__CLASS__);
     }
 
     // http://127.0.0.1:8000/api/account/journal/?s[name][str]=test&s[name][ope]==&s[keyword]=test
