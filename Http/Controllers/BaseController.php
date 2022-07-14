@@ -37,7 +37,7 @@ class BaseController extends Controller
 
         $args = $request->query();
 
-        $result = $modularize->getAllRecords($args, $module, $model);
+        $result = $modularize->getAllRecords($args);
 
         return Response::json($result);
     }
@@ -49,8 +49,16 @@ class BaseController extends Controller
         exit;
     }
 
-    public function getRecord($module, $model, $id)
+    public function getRecord(Request $request, $module, $model, $id)
     {
+        $modularize = new Modularize($module, $model);
+        // logic to get all records goes here
+
+        $args = $request->query();
+
+        $result = $modularize->getRecord($id, $args);
+
+        return Response::json($result);
         // logic to get a record record goes here
     }
 

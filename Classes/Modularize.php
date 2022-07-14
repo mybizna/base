@@ -33,6 +33,23 @@ class Modularize
     }
 
 
+    public function getRecord($id, $args = [])
+    {
+        $classname = $this->getClassName($this->module, $this->model);
+
+        if ($classname) {
+            if (method_exists($classname, 'getRecord')) {
+                $result = $classname->getRecord($id, $args);
+            }
+        } else {
+            $result['message'] = 'No Model Found with name ' . $this->module . '-' . $this->model;
+        }
+
+        return $result;
+    }
+
+
+
     //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     //Fetching Routes
     public function fetchRoutes()

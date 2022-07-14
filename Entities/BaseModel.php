@@ -59,15 +59,45 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             $result['total'] = $query->count();
         }
 
-        $result['error'] = 0;
-        $result['status'] = 1;
-        $result['records'] = $query->get();
-        $result['message'] = 'Records Found Successfully.';
+        try {
+            //code.. $result['error'] = 0;
+            $result['status'] = 1;
+            $result['records'] = $query->get();
+            $result['message'] = 'Records Found Successfully.';
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+
 
         return $result;
     }
 
+    public function getRecord($id, $args = [])
+    {
+        $result = [
+            'module'  => $this->module,
+            'model'   => $this->model,
+            'id'  => $id,
+            'status'  => 0,
+            'error'   => 1,
+            'record'    => [],
+            'message' => 'No Record'
+        ];
 
+        $query = $this->generateQuery($args);
+
+        try {
+            //code..
+            $result['error'] = 0;
+            $result['status'] = 1;
+            $result['record'] = $query->first();
+            $result['message'] = 'Record Found Successfully.';
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+
+        return $result;
+    }
     private function getAlias($table_name, $alias)
     {
         $alias_exist = false;
