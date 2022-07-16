@@ -174,9 +174,10 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             }
         }
 
+        $query = $query->select($select->all());
+
         if (isset($params['limit']) && $params['limit'] > 1) {
-            $query = $query->select($select->all())
-                ->limit($params['limit']);
+            $query->limit($params['limit']);
         }
 
         if (isset($params['order'])) {
