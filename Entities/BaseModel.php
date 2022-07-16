@@ -84,7 +84,6 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             'message' => 'No Record'
         ];
 
-
         $query = $this->generateQuery($args);
 
         try {
@@ -99,6 +98,75 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
 
         return $result;
     }
+
+    public function createRecord($args = [])
+    {
+        $result = [
+            'module'  => $this->module,
+            'model'   => $this->model,
+            'status'  => 0,
+            'error'   => 1,
+            'record'    => [],
+            'message' => 'No Record'
+        ];
+
+        try {
+            //code..
+            $result['error'] = 0;
+            $result['status'] = 1;
+            $result['record'] = $this->create($args);
+            $result['message'] = 'Record Created Successfully.';
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+    }
+
+    public function updateRecord($args = [])
+    {
+        $result = [
+            'module'  => $this->module,
+            'model'   => $this->model,
+            'status'  => 0,
+            'error'   => 1,
+            'record'    => [],
+            'message' => 'No Record'
+        ];
+
+        $this->fill($args);
+        $this->save();
+
+        try {
+            //code..
+            $result['error'] = 0;
+            $result['status'] = 1;
+            $result['record'] = $this->save();
+            $result['message'] = 'Record Updated Successfully.';
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+    }
+    public function deleteRecord($id)
+    {
+        $result = [
+            'module'  => $this->module,
+            'model'   => $this->model,
+            'status'  => 0,
+            'error'   => 1,
+            'record'    => [],
+            'message' => 'No Record'
+        ];
+
+        try {
+            //code..
+            $result['error'] = 0;
+            $result['status'] = 1;
+            $result['record'] = $this->where('id', $id)->firstorfail()->delete();
+            $result['message'] = 'Record Found Successfully.';
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+    }
+
     private function getAlias($table_name, $alias)
     {
         $alias_exist = false;

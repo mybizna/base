@@ -42,34 +42,51 @@ class BaseController extends Controller
         return Response::json($result);
     }
 
-    public function createRecord(Request $request, $module, $model)
-    {
-        // logic to create a record record goes here
-        print_r('$module');
-        exit;
-    }
 
     public function getRecord(Request $request, $module, $model, $id)
     {
         $modularize = new Modularize($module, $model);
-        // logic to get all records goes here
 
         $args = $request->query();
 
         $result = $modularize->getRecord($id, $args);
 
         return Response::json($result);
-        // logic to get a record record goes here
     }
+
+
+    public function createRecord(Request $request, $module, $model)
+    {
+        $modularize = new Modularize($module, $model);
+
+        $args = $request->all();
+
+        $result = $modularize->createRecord($args);
+
+        return Response::json($result);
+
+        exit;
+    }
+
 
     public function updateRecord(Request $request, $module, $model, $id)
     {
-        // logic to update a record record goes here
+        $modularize = new Modularize($module, $model);
+
+        $args = $request->query();
+
+        $result = $modularize->updateRecord($id, $args);
+
+        return Response::json($result);
     }
 
     public function deleteRecord($module, $model, $id)
     {
-        // logic to delete a record record goes here
+        $modularize = new Modularize($module, $model);
+
+        $result = $modularize->deleteRecord($id);
+
+        return Response::json($result);
     }
 
 

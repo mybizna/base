@@ -1,13 +1,13 @@
 <?php
 
-namespace Module\Base\Classes;
+namespace Modules\Base\Classes;
 
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class Autocomplete
 {
 
-    public function dataResult($search, $table_name, $display_fields, $search_fields, $leftjoin_criteria = '')
+    public function dataResult($search, $table_name, $display_fields, $search_fields, $leftjoin_criteria = [])
     {
 
         $query = DB::table($table_name . ' as amm');

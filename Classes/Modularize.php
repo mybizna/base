@@ -32,7 +32,6 @@ class Modularize
         return $result;
     }
 
-
     public function getRecord($id, $args = [])
     {
         $classname = $this->getClassName($this->module, $this->model);
@@ -48,7 +47,50 @@ class Modularize
         return $result;
     }
 
+    public function createRecord($args = [])
+    {
+        $classname = $this->getClassName($this->module, $this->model);
 
+        if ($classname) {
+            if (method_exists($classname, 'createRecord')) {
+                $result = $classname->createRecord($args);
+            }
+        } else {
+            $result['message'] = 'No Model Found with name ' . $this->module . '-' . $this->model;
+        }
+
+        return $result;
+    }
+
+    public function updateRecord($args = [])
+    {
+        $classname = $this->getClassName($this->module, $this->model);
+
+        if ($classname) {
+            if (method_exists($classname, 'updateRecord')) {
+                $result = $classname->updateRecord($args);
+            }
+        } else {
+            $result['message'] = 'No Model Found with name ' . $this->module . '-' . $this->model;
+        }
+
+        return $result;
+    }
+
+    public function deleteRecord($id)
+    {
+        $classname = $this->getClassName($this->module, $this->model);
+
+        if ($classname) {
+            if (method_exists($classname, 'deleteRecord')) {
+                $result = $classname->deleteRecord($id);
+            }
+        } else {
+            $result['message'] = 'No Model Found with name ' . $this->module . '-' . $this->model;
+        }
+
+        return $result;
+    }
 
     //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     //Fetching Routes
@@ -58,6 +100,7 @@ class Modularize
 
         return $fetchroutes->fetchRoutes();
     }
+
     //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     //Discover Modules
     public function discoverModules()
@@ -66,6 +109,7 @@ class Modularize
 
         return $discover_modules->discoverModules();
     }
+
     //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     //Fetching Menu
     public function fetchMenus()
