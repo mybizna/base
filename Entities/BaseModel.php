@@ -84,6 +84,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             'message' => 'No Record'
         ];
 
+
         $query = $this->generateQuery($args);
 
         try {
@@ -124,8 +125,8 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
         list($main_table_alias, $alias_exist, $alias) = $this->getAlias($table_name, $alias);
         $select = collect([$main_table_alias . '*']);
 
-        if (is_array($params['f'])) {
-            $select = collect([]);
+        if (isset($params['f']) && is_array($params['f'])) {
+            $select = collect([$main_table_alias . '.id']);
             $main_field = '';
 
             $query->from($table_name . ' as ' . $main_table_alias);
@@ -173,12 +174,15 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             }
         }
 
-        $query = $query->select($select->all())
-            ->limit($params['limit']);
+        if (isset($params['limit']) && $params['limit'] > 1) {
+            $query = $query->select($select->all())
+                ->limit($params['limit']);
+        }
 
-        ($params['order'] == 'DESC') ? $query->orderByDesc($main_table_alias . '.' . $params['orderby']) : $query->orderBy($main_table_alias . '.' . $params['orderby']);
-
-        if (is_array($params['s'])) {
+        if (isset($params['order'])) {
+            ($params['order'] == 'DESC') ? $query->orderByDesc($main_table_alias . '.' . $params['orderby']) : $query->orderBy($main_table_alias . '.' . $params['orderby']);
+        }
+        if (isset($params['s']) && is_array($params['s'])) {
             foreach ($params['s'] as $field => $s) {
                 if (is_array($s)) {
                     $query->where($field, $s['ope'], $s['str']);
