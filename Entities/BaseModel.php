@@ -167,21 +167,6 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
         }
     }
 
-    private function getAlias($table_name, $alias)
-    {
-        $alias_exist = false;
-        $alpha = range('a', 'z');
-        $key = $alias->search($table_name);
-
-        if (!$key) {
-            $alias->push($table_name);
-            $key = $alias->search($table_name);
-        } else {
-            $alias_exist = true;
-        }
-
-        return [$alpha[$key], $alias_exist, $alias];
-    }
 
     public function generateQuery($params)
     {
@@ -223,7 +208,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
                         $pre_leftjoin_alias = $leftjoin_alias;
                     }
 
-                    $select->push($pre_leftjoin_alias . '.' . $sub_main_field . ' as ' . $f);
+                    $select->push($pre_leftjoin_alias . '.' . $sub_main_field . ' as ' . $main_field . '.' . $f);
                 } elseif (strpos($f, '__')) {
                     $table_parts = explode('__', $f);
 
@@ -234,7 +219,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
                         $query->leftJoin($leftjoin_table, $leftjoin_alias . '.id', '=', $main_table_alias . '.' . $main_field);
                     }
 
-                    $select->push($leftjoin_alias . '.' . $table_parts[1] . ' as ' . $f);
+                    $select->push($leftjoin_alias . '.' . $table_parts[1] . ' as '  . $main_field . '.' . $f);
                 } else {
                     $main_field = $f;
                     $select->push($main_table_alias . '.' . $f);
@@ -262,5 +247,21 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
         }
 
         return $query;
+    }
+
+    private function getAlias($table_name, $alias)
+    {
+        $alias_exist = false;
+        $alpha = range('a', 'z');
+        $key = $alias->search($table_name);
+
+        if (!$key) {
+            $alias->push($table_name);
+            $key = $alias->search($table_name);
+        } else {
+            $alias_exist = true;
+        }
+
+        return [$alpha[$key], $alias_exist, $alias];
     }
 }
