@@ -56,6 +56,7 @@ class BaseController extends Controller
 
     public function getRecordSelect(Request $request, $module, $model)
     {
+
         $modularize = new Modularize($module, $model);
         // logic to get all records goes here
 

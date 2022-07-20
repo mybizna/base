@@ -125,12 +125,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
 
         $query = $this->generateQuery($params);
 
-        if ($params['count']) {
-            $result['total'] = $query->count();
-        }
-
         try {
-
             $records = $query->get();
             $list = collect();
             $list->push(['value' => '', 'label' => '--- Please Select ---']);
@@ -229,13 +224,14 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
 
         $table_name = $this->table;
         list($main_table_alias, $alias_exist, $alias) = $this->getAlias($table_name, $alias);
-        $select = collect([$main_table_alias . '*']);
+        $select = collect([$main_table_alias . '.*']);
+
+        $query->from($table_name . ' as ' . $main_table_alias);
 
         if (isset($params['f']) && is_array($params['f'])) {
             $select = collect([$main_table_alias . '.id']);
             $main_field = '';
 
-            $query->from($table_name . ' as ' . $main_table_alias);
 
             foreach ($params['f'] as $field => $f) {
                 list($table_alias, $alias_exist, $alias) = $this->getAlias($table_name, $alias);
