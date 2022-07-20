@@ -47,6 +47,22 @@ class Modularize
         return $result;
     }
 
+    public function getRecordSelect($args)
+    {
+        $classname = $this->getClassName($this->module, $this->model);
+
+        if ($classname) {
+            if (method_exists($classname, 'getRecordSelect')) {
+                $result = $classname->getRecordSelect($args);
+            }
+        } else {
+            $result['message'] = 'No Model Found with name ' . $this->module . '-' . $this->model;
+        }
+
+        return $result;
+    }
+
+
     public function createRecord($args = [])
     {
         $classname = $this->getClassName($this->module, $this->model);

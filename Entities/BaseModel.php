@@ -99,6 +99,59 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
         return $result;
     }
 
+    public function getRecordSelect($args)
+    {
+        $result = [
+            'module'  => $this->module,
+            'model'   => $this->model,
+            'status'  => 0,
+            'total'   => 0,
+            'error'   => 1,
+            'records'    => [],
+            'message' => 'No Records'
+        ];
+
+        $defaults = [
+            'limit'   => 200,
+            'offset'  => 0,
+            'orderby' => 'id',
+            'order'   => 'DESC',
+            'count'   => false,
+            's'       => [],
+
+        ];
+
+        $params = array_merge($defaults, $args);
+
+        $query = $this->generateQuery($params);
+
+        if ($params['count']) {
+            $result['total'] = $query->count();
+        }
+
+        try {
+
+            $records = $query->get();
+            $list = collect();
+            $list->push(['value' => '', 'label' => '--- Please Select ---']);
+
+            foreach ($records as $key => $record) {
+                $list->push(['value' => $record->id, 'label' => $record->name]);
+            }
+
+            //code.. $result['error'] = 0;
+            $result['status'] = 1;
+            $result['records'] = $list;
+            $result['message'] = 'Records Found Successfully.';
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+
+
+        return $result;
+    }
+
+
     public function createRecord($args = [])
     {
         $result = [

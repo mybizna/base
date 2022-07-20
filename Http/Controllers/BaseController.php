@@ -54,6 +54,17 @@ class BaseController extends Controller
         return Response::json($result);
     }
 
+    public function getRecordSelect(Request $request, $module, $model)
+    {
+        $modularize = new Modularize($module, $model);
+        // logic to get all records goes here
+
+        $args = $request->query();
+
+        $result = $modularize->getRecordSelect($args);
+
+        return Response::json($result);
+    }
 
     public function createRecord(Request $request, $module, $model)
     {
