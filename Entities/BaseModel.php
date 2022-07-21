@@ -126,12 +126,20 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
         $query = $this->generateQuery($params);
 
         try {
+
             $records = $query->get();
             $list = collect();
             $list->push(['value' => '', 'label' => '--- Please Select ---']);
 
+            $fields = $params['f'] ?? [];
+
             foreach ($records as $key => $record) {
-                $list->push(['value' => $record->id, 'label' => $record->name]);
+                $template_str = $params['template'] ?? '';
+                foreach ($fields as $key1 => $value) {
+                    $template_str = str_replace('[' . $value . ']', $record->{$value}, $template_str);
+                }
+
+                $list->push(['value' => $record->id, 'label' => $template_str]);
             }
 
             //code.. $result['error'] = 0;
