@@ -91,7 +91,7 @@ class FetchRoutes
                                         $vs_route['children'][] = $this->addRouteToList($vs_sx_filename, $t_folder_path, $vs_path . '.vue');
                                     }
 
-                                    if (!in_array($vs_filename, ['create.vue', 'edit.vue', 'modify.vue', 'new.vue', 'update.vue'])) {
+                                    if (!in_array($vs_filename, ['create.vue', 'edit.vue', 'modify.vue', 'new.vue', 'update.vue','form.vue'])) {
                                         $this->layouts[$module_name][$folder][$vs_foldername][] = $vs_filename;
                                     }
                                 }
