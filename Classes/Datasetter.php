@@ -6,7 +6,7 @@ use Carbon\Carbon;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
-use Modules\Base\Entities\DataMigrated;
+use Modules\Core\Entities\DataMigrated;
 
 class Datasetter
 {
@@ -72,7 +72,6 @@ class Datasetter
             "array_key" => $data[$main_field],
         );
 
-        print_r($module);
 
         $class_name = $this->getClassName($module, $model);
 
@@ -84,7 +83,6 @@ class Datasetter
 
         $data_migrated = DataMigrated::where($data_to_migrate)
             ->whereNotNull('item_id')->first();
-
 
         if ($data_migrated && $data_migrated->item_id) {
             if ($hash <> $data_migrated->hash) {
