@@ -40,6 +40,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('autocomplete', $apicontroller . '@autocomplete');
     Route::get('current_user',  $apicontroller . '@currentUser');
     Route::get('dashboard_data',  $apicontroller . '@dashboardData');
+    Route::get('profile',  $apicontroller . '@profile');
 });
 
 Route::middleware('auth:sanctum')->group(function () {

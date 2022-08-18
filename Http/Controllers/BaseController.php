@@ -146,6 +146,17 @@ class BaseController extends Controller
         return Response::json($user);
     }
 
+    public function profile(Request $request)
+    {
+
+        $this->user = Auth::user();
+
+        $user = $request->user();
+
+
+        return Response::json($user);
+    }
+
     public function dashboardData(Request $request)
     {
 
