@@ -88,10 +88,13 @@ class FetchRoutes
                                         $vs_route['children'][] = $this->addRouteToList($vs_sx_filename, $t_folder_path, $vs_path . '.vue', true);
                                         $vs_route['children'][] = $this->addRouteToList($vs_sx_filename, $t_folder_path, $vs_path . '.vue');
                                     } else {
+                                        if (in_array($vs_filename, ['edit.vue', 'modify.vue', 'detail.vue', 'update.vue'])) {
+                                            $vs_sx_filename = $vs_sx_filename . '/[id]';
+                                        }
                                         $vs_route['children'][] = $this->addRouteToList($vs_sx_filename, $t_folder_path, $vs_path . '.vue');
                                     }
 
-                                    if (!in_array($vs_filename, ['create.vue', 'edit.vue', 'modify.vue', 'new.vue', 'update.vue','form.vue'])) {
+                                    if (!in_array($vs_filename, ['create.vue', 'edit.vue', 'modify.vue', 'new.vue', 'detail.vue', 'update.vue', 'form.vue'])) {
                                         $this->layouts[$module_name][$folder][$vs_foldername][] = $vs_filename;
                                     }
                                 }
@@ -120,7 +123,6 @@ class FetchRoutes
 
     public function addRouteToList($path, $name, $component, $no_path = false)
     {
-
         return [
             'path' => $no_path ? '' : Str::lower($path),
             'name' => $no_path ?  Str::lower(str_replace('/', '.', $name)) . '.default' :  Str::lower(str_replace('/', '.', $name)),
