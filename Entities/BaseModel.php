@@ -3,9 +3,18 @@
 namespace Modules\Base\Entities;
 
 use Illuminate\Support\Str;
+use Wildside\Userstamps\Userstamps;
+
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 class BaseModel extends \Illuminate\Database\Eloquent\Model
 {
+
+    use Userstamps;
+    //use SoftDeletes;
+    use Notifiable;
 
 
     /**
@@ -17,6 +26,20 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
     {
         $table =  $this->table;
         return $table ?? Str::snake(Str::pluralStudly(class_basename(static::class)));
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->created_by = is_object(Auth::guard(config('app.guards.web'))->user()) ? Auth::guard(config('app.guards.web'))->user()->id : 1;
+            $model->updated_by = NULL;
+        });
+
+        static::updating(function ($model) {
+            $model->updated_by = is_object(Auth::guard(config('app.guards.web'))->user()) ? Auth::guard(config('app.guards.web'))->user()->id : 1;
+        });
     }
 
     /**
