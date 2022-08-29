@@ -89,7 +89,7 @@ class FetchRoutes
                                         $vs_route['children'][] = $this->addRouteToList($vs_sx_filename, $t_folder_path, $vs_path . '.vue');
                                     } else {
                                         if (in_array($vs_filename, ['edit.vue', 'modify.vue', 'detail.vue', 'update.vue'])) {
-                                            $vs_sx_filename = $vs_sx_filename . '/[id]';
+                                            $vs_sx_filename = $vs_sx_filename . '/:id';
                                         }
                                         $vs_route['children'][] = $this->addRouteToList($vs_sx_filename, $t_folder_path, $vs_path . '.vue');
                                     }
