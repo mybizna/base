@@ -40,6 +40,12 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
         static::updating(function ($model) {
             $model->updated_by = is_object(Auth::guard(config('app.guards.web'))->user()) ? Auth::guard(config('app.guards.web'))->user()->id : 1;
         });
+
+        static::deleting(function ($model) {
+            $model->deleted_by = is_object(Auth::guard(config('app.guards.web'))->user()) ? Auth::guard(config('app.guards.web'))->user()->id : 1;
+        });
+
+
     }
 
     /**
