@@ -17,6 +17,9 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
     use Notifiable;
 
 
+
+
+
     /**
      * Get the table associated with the model. Copies getTable() in Model
      *
