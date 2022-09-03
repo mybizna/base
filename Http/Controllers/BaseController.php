@@ -117,7 +117,6 @@ class BaseController extends Controller
     }
 
 
-
     public function fetchRoutes(Request $request)
     {
         $modularize = new Modularize();
@@ -132,6 +131,15 @@ class BaseController extends Controller
         $modularize = new Modularize();
 
         $result = $modularize->fetchMenus();
+
+        return Response::json($result);
+    }
+
+    public function fetchSettings(Request $request)
+    {
+        $modularize = new Modularize();
+
+        $result = $modularize->fetchSettings();
 
         return Response::json($result);
     }

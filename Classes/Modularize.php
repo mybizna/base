@@ -136,6 +136,14 @@ class Modularize
     }
 
     //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    //Fetching Setting
+    public function fetchSettings()
+    {
+        $fetchsettings = new FetchSettings();
+
+        return $fetchsettings->fetchSettings();
+    }
+    //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     //General Classes
     private function getClassName()
     {

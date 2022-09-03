@@ -49,23 +49,22 @@ class FetchSettings
         $this->settings[$module] = array_merge($this->settings[$module], $data);
     }
 
-    public function add_setting_category($module, $key, $title, $path, $icon, $position)
+    public function add_setting_category($module, $key, $title, $position, $params)
     {
         $this->settings[$module]['settings'][$key] = [
             'title' => $title,
-            'path' => $path,
             'position' => $position,
-            'icon' => $icon,
+            'params' => $params,
             'list' => []
         ];
     }
 
-    public function add_setting($module, $key, $title, $path, $position)
+    public function add_setting($module, $key, $title, $position, $params)
     {
         $this->settings[$module]['settings'][$key]['list'][] = [
             'title' => $title,
-            'path' => $path,
             'position' => $position,
+            'params' => $params
         ];
     }
 }
