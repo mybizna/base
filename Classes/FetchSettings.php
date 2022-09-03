@@ -4,12 +4,12 @@ namespace Modules\Base\Classes;
 
 use Illuminate\Support\Str;
 
-class FetchMenus
+class FetchSettings
 {
 
-    public $menus = [];
+    public $settings = [];
 
-    public function fetchMenus()
+    public function fetchSettings()
     {
 
         $DS = DIRECTORY_SEPARATOR;
@@ -24,37 +24,34 @@ class FetchMenus
                 if (!$fileinfo->isDot() && $fileinfo->isDir()) {
                     $module_name = $fileinfo->getFilename();
 
-                    $file_names = ['menu', 'menus'];
+                    $file_names = ['setting', 'settings'];
 
                     foreach ($file_names as $key => $file_name) {
-                        $menu_file = $modules_path .  $DS . $module_name .  $DS . $file_name . '.php';
-                        if (file_exists($menu_file)) {
-                            include_once $menu_file;
+                        $setting_file = $modules_path .  $DS . $module_name .  $DS . $file_name . '.php';
+                        if (file_exists($setting_file)) {
+                            include_once $setting_file;
                         }
                     }
-
-
-
                 }
             }
         }
 
-        return $this->menus;
+        return $this->settings;
     }
 
 
     public function add_module_info($module, $data)
     {
-        if (!array_key_exists($module, $this->menus)) {
-            $this->menus[$module] = ['menus' => []];
+        if (!array_key_exists($module, $this->settings)) {
+            $this->settings[$module] = ['settings' => []];
         }
 
-        $this->menus[$module] = array_merge($this->menus[$module], $data);
+        $this->settings[$module] = array_merge($this->settings[$module], $data);
     }
 
-    public function add_menu($module, $key, $title, $path, $icon, $position)
+    public function add_setting_category($module, $key, $title, $path, $icon, $position)
     {
-        $this->menus[$module]['menus'][$key] = [
+        $this->settings[$module]['settings'][$key] = [
             'title' => $title,
             'path' => $path,
             'position' => $position,
@@ -63,9 +60,9 @@ class FetchMenus
         ];
     }
 
-    public function add_submenu($module, $key, $title, $path, $position)
+    public function add_setting($module, $key, $title, $path, $position)
     {
-        $this->menus[$module]['menus'][$key]['list'][] = [
+        $this->settings[$module]['settings'][$key]['list'][] = [
             'title' => $title,
             'path' => $path,
             'position' => $position,
