@@ -24,6 +24,8 @@ class BaseServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        require_once base_path().'/Modules/Base/Helpers/GlobalFunctions.php';
+
         $this->registerTranslations();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
     }
@@ -35,6 +37,7 @@ class BaseServiceProvider extends ServiceProvider
      */
     public function register()
     {
+
         $this->app->register(RouteServiceProvider::class);
     }
 
