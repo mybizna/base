@@ -48,8 +48,6 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
         static::deleting(function ($model) {
             $model->deleted_by = is_object(Auth::guard(config('app.guards.web'))->user()) ? Auth::guard(config('app.guards.web'))->user()->id : 1;
         });
-
-
     }
 
     /**
@@ -79,7 +77,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             'offset'  => 0,
             'orderby' => 'id',
             'order'   => 'DESC',
-            'count'   => false,
+            'count'   => true,
             's'       => [],
 
         ];
@@ -90,6 +88,14 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
 
         if ($params['count']) {
             $result['total'] = $query->count();
+        }
+
+        if (isset($params['offset']) && $params['offset'] > 1) {
+            $query->offset($params['offset']);
+        }
+
+        if (isset($params['limit']) && $params['limit'] > 1) {
+            $query->limit($params['limit']);
         }
 
         try {
@@ -158,8 +164,11 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
 
         $query = $this->generateQuery($params);
 
-        try {
+        if (isset($params['limit']) && $params['limit'] > 1) {
+            $query->limit($params['limit']);
+        }
 
+        try {
             $records = $query->get();
             $list = collect();
             $list->push(['value' => '', 'label' => '--- Please Select ---']);
@@ -319,9 +328,8 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
 
         $query = $query->select($select->all());
 
-        if (isset($params['limit']) && $params['limit'] > 1) {
-            $query->limit($params['limit']);
-        }
+
+
 
         if (isset($params['order'])) {
             ($params['order'] == 'DESC') ? $query->orderByDesc($main_table_alias . '.' . $params['orderby']) : $query->orderBy($main_table_alias . '.' . $params['orderby']);
