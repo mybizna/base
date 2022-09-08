@@ -3,6 +3,7 @@
 namespace Modules\Base\Classes;
 
 use Illuminate\Support\Str;
+use Modules\Core\Entities\Setting as DBSetting;
 
 class FetchSettings
 {
@@ -85,6 +86,12 @@ class FetchSettings
 
     public function add_setting($module, $key, $name, $position, $params)
     {
+        $setting = DBSetting::where('module', $module)->where('name', $name)->first();
+
+        if ($setting) {
+            $params['value'] = $setting['value'];
+        }
+
         $this->settings[$module]['settings'][$key]['list'][] = [
             'name' => $name,
             'position' => $position,
