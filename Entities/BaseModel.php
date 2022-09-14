@@ -328,9 +328,6 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
 
         $query = $query->select($select->all());
 
-
-
-
         if (isset($params['order'])) {
             ($params['order'] == 'DESC') ? $query->orderByDesc($main_table_alias . '.' . $params['orderby']) : $query->orderBy($main_table_alias . '.' . $params['orderby']);
         }
