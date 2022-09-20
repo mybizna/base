@@ -15,6 +15,8 @@ class FetchMenus
 
         $modules_path = realpath(base_path()) . $DS . 'Modules';
 
+        $this->loadDefaultMenus();
+
         if (is_dir($modules_path)) {
             $dir = new \DirectoryIterator($modules_path);
 
@@ -106,5 +108,20 @@ class FetchMenus
             'path' => $path,
             'position' => $position,
         ];
+    }
+
+    private function loadDefaultMenus(){
+
+        $this->add_module_info("dashboard", [
+            'title' => 'Dashboard',
+            'description' => 'Dashboard',
+            'icon'=> "fas fa-tachometer-alt",
+            'path'=> "/manage/dashboard",
+            'class_str'=> "text-danger border-danger",
+        ]);
+
+        $this->add_menu("dashboard", "invoice", "Invoice", "/account/admin/invoice", "fas fa-cogs", 1);
+           
+
     }
 }

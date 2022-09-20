@@ -11,7 +11,11 @@
         }
     ],
     "require": {
-        "mybizna/core": "^0.5"
+        "composer/installers": "~1.0",
+        "mybizna/core": "^0.5",
+        "mybizna/lucid": "^1.0",
+        "nwidart/laravel-modules": "^8.3",
+        "wildside/userstamps": "^2.2"
     },
     "extra": {
         "laravel": {
