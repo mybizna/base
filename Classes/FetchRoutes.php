@@ -8,6 +8,7 @@ class FetchRoutes
 {
 
     public $routes = [];
+    public $layouts = [];
 
     public function fetchRoutes()
     {
@@ -39,7 +40,6 @@ class FetchRoutes
                 }
             }
         }
-
 
         $this->routes = array_merge($this->routes, $routes);
 
@@ -113,6 +113,8 @@ class FetchRoutes
             }
         }
 
+        
+
         if (!empty($module_route['children'])) {
             $routes[] = $module_route;
         }
@@ -125,6 +127,7 @@ class FetchRoutes
     {
         return [
             'path' => $no_path ? '' : Str::lower($path),
+            'meta' => ['breadcrumb'=>true, 'middlewareAuth'=>true,],
             'name' => $no_path ?  Str::lower(str_replace('/', '.', $name)) . '.default' :  Str::lower(str_replace('/', '.', $name)),
             'component' => Str::lower($component)
         ];

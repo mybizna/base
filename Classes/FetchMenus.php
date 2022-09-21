@@ -15,7 +15,9 @@ class FetchMenus
 
         $modules_path = realpath(base_path()) . $DS . 'Modules';
 
-        $this->loadDefaultMenus();
+        $base_path = $modules_path  . $DS . 'Base';
+
+        $this->loadDefaultMenus($base_path);
 
         if (is_dir($modules_path)) {
             $dir = new \DirectoryIterator($modules_path);
@@ -23,6 +25,10 @@ class FetchMenus
             foreach ($dir as $fileinfo) {
                 if (!$fileinfo->isDot() && $fileinfo->isDir()) {
                     $module_name = $fileinfo->getFilename();
+
+                    if($base_path == $modules_path  . $DS . $module_name){
+                        continue;
+                    }
 
                     $file_names = ['menu', 'menus'];
 
@@ -71,6 +77,10 @@ class FetchMenus
             $this->menus[$module]['menus'] = $tmp_menus;
         }
 
+
+        
+
+
         return $this->menus;
     }
 
@@ -110,18 +120,18 @@ class FetchMenus
         ];
     }
 
-    private function loadDefaultMenus(){
+    private function loadDefaultMenus($base_path){
+   
+        $DS = DIRECTORY_SEPARATOR;
+        
+        $file_names = ['menu', 'menus'];
 
-        $this->add_module_info("dashboard", [
-            'title' => 'Dashboard',
-            'description' => 'Dashboard',
-            'icon'=> "fas fa-tachometer-alt",
-            'path'=> "/manage/dashboard",
-            'class_str'=> "text-danger border-danger",
-        ]);
+        foreach ($file_names as $key => $file_name) {
+            $menu_file = $base_path.  $DS . $file_name . '.php';
 
-        $this->add_menu("dashboard", "invoice", "Invoice", "/account/admin/invoice", "fas fa-cogs", 1);
-           
-
+            if (file_exists($menu_file)) {
+                include_once $menu_file;
+            }
+        }
     }
 }
