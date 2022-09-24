@@ -14,7 +14,7 @@
             <div class="col-12 col-md-8">
 
                 <div class="card">
-                    <div class="card-body p-0">
+                    <div class="card-body p-1">
                         <div class="d-flex justify-content-between">
                             <h3 class="me-3 p-1">Events</h3>
                             <div class="text-xs text--disabled cursor-pointer p-1">
