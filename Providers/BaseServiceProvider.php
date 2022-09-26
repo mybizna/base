@@ -2,8 +2,8 @@
 
 namespace Modules\Base\Providers;
 
+use Illuminate\Support\Str;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Database\Eloquent\Factory;
 
 class BaseServiceProvider extends ServiceProvider
 {
@@ -24,10 +24,13 @@ class BaseServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        require_once base_path().'/Modules/Base/Helpers/GlobalFunctions.php';
+        require_once base_path() . '/Modules/Base/Helpers/GlobalFunctions.php';
+
+        $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
 
         $this->registerTranslations();
-        $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
+        $this->registerConfig();
+        $this->registerViews();
     }
 
     /**
@@ -37,10 +40,8 @@ class BaseServiceProvider extends ServiceProvider
      */
     public function register()
     {
-
         $this->app->register(RouteServiceProvider::class);
     }
-
 
     /**
      * Register translations.
@@ -49,13 +50,93 @@ class BaseServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
-        $langPath = resource_path('lang/modules/' . $this->moduleNameLower);
+        $DS = DIRECTORY_SEPARATOR;
+        $modules_path = realpath(base_path()) . $DS . 'Modules';
 
-        if (is_dir($langPath)) {
-            $this->loadTranslationsFrom($langPath, $this->moduleNameLower);
-        } else {
-            $this->loadTranslationsFrom(module_path($this->moduleName, 'Resources/lang'), $this->moduleNameLower);
+        if (is_dir($modules_path)) {
+            $dir = new \DirectoryIterator($modules_path);
+
+            foreach ($dir as $fileinfo) {
+                if (!$fileinfo->isDot() && $fileinfo->isDir()) {
+                    $module_name = $fileinfo->getFilename();
+
+                    if (is_dir($modules_path . $DS . $module_name . $DS . 'Resources/lang')) {
+                        $this->loadTranslationsFrom(module_path($module_name, 'Resources/lang'), Str::lower($module_name));
+                    }
+                }
+            }
         }
+    }
+
+    /**
+     * Register config.
+     *
+     * @return void
+     */
+    protected function registerConfig()
+    {
+        // TODO: Rework using setting
+        /*
+    $DS = DIRECTORY_SEPARATOR;
+    $modules_path = realpath(base_path()) . $DS . 'Modules';
+
+    if (is_dir($modules_path)) {
+    $dir = new \DirectoryIterator($modules_path);
+
+    foreach ($dir as $fileinfo) {
+    if (!$fileinfo->isDot() && $fileinfo->isDir()) {
+    $module_name = $fileinfo->getFilename();
+
+    if (file_exists($modules_path . $DS . $module_name . $DS . 'config.php')) {
+    $this->publishes([
+    $modules_path . $DS . $module_name . $DS . 'config.php' => config_path(Str::lower($module_name).'.php'),
+    ], 'config');
+    $this->mergeConfigFrom(
+    $modules_path . $DS . $module_name . $DS . 'config.php', Str::lower($module_name)
+    );
+    }
+    }
+    }
+    } */
+
+    }
+
+    /**
+     * Register views.
+     *
+     * @return void
+     */
+    public function registerViews()
+    {
+
+        $DS = DIRECTORY_SEPARATOR;
+        $modules_path = realpath(base_path()) . $DS . 'Modules';
+
+        if (is_dir($modules_path)) {
+            $dir = new \DirectoryIterator($modules_path);
+
+            foreach ($dir as $fileinfo) {
+                if (!$fileinfo->isDot() && $fileinfo->isDir()) {
+                    $module_name = $fileinfo->getFilename();
+
+                    $viewPath = resource_path('views/modules/' . Str::lower($module_name));
+
+                    $sourcePath = $modules_path . $DS . $module_name . $DS . 'Resources' . $DS . 'views';
+
+                    if (is_dir($sourcePath)) {
+                        $this->publishes([
+                            $sourcePath => $viewPath,
+                        ], 'views');
+
+                        $this->loadViewsFrom(array_merge(array_map(function ($path) use ($module_name) {
+                            return $path . '/modules/'. Str::lower($module_name);
+                        }, \Config::get('view.paths')), [$sourcePath]),  Str::lower($module_name));
+                    }
+
+                }
+            }
+        }
+
     }
 
     /**
