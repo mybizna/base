@@ -12,13 +12,9 @@ class FetchSettings
 
     public function fetchSettings()
     {
-
         $DS = DIRECTORY_SEPARATOR;
 
-
         $modules_path = realpath(base_path()) . $DS . 'Modules';
-
-
 
         if (is_dir($modules_path)) {
             $dir = new \DirectoryIterator($modules_path);
@@ -31,7 +27,7 @@ class FetchSettings
                     $file_names = ['setting', 'settings'];
 
                     foreach ($file_names as $key => $file_name) {
-                        $setting_file = $modules_path .  $DS . $module_name .  $DS . $file_name . '.php';
+                        $setting_file = $modules_path . $DS . $module_name . $DS . $file_name . '.php';
                         if (file_exists($setting_file)) {
                             $this->add_module_info($module_name_slug, [
                                 'title' => $module_name,
@@ -42,14 +38,14 @@ class FetchSettings
 
                             foreach ($settings as $setting_name => $setting) {
                                 $category = (isset($setting['category']) && $setting['category'] != '')
-                                    ? $setting['category']
-                                    : 'Main';
+                                ? $setting['category']
+                                : 'Main';
                                 $category_slug = Str::snake(Str::lower($category));
 
                                 $category_position = ($category_slug == 'main') ? 5 : 1;
                                 $field_position = (isset($setting['position']) && $setting['position'] != '')
-                                    ? $setting['position']
-                                    : 5;
+                                ? $setting['position']
+                                : 5;
 
                                 $this->add_setting_category($module_name_slug, $category_slug, $category, $category_position);
 
@@ -64,7 +60,6 @@ class FetchSettings
         return $this->settings;
     }
 
-
     public function add_module_info($module, $data)
     {
         if (!array_key_exists($module, $this->settings)) {
@@ -76,12 +71,14 @@ class FetchSettings
 
     public function add_setting_category($module, $key, $title, $position, $params = [])
     {
-        $this->settings[$module]['settings'][$key] = [
-            'title' => $title,
-            'position' => $position,
-            'params' => $params,
-            'list' => []
-        ];
+        if (!array_key_exists($key,  $this->settings[$module]['settings'])) {
+            $this->settings[$module]['settings'][$key] = [
+                'title' => $title,
+                'position' => $position,
+                'params' => $params,
+                'list' => [],
+            ];
+        }
     }
 
     public function add_setting($module, $key, $name, $position, $params)
@@ -95,7 +92,7 @@ class FetchSettings
         $this->settings[$module]['settings'][$key]['list'][] = [
             'name' => $name,
             'position' => $position,
-            'params' => $params
-        ];
+            'params' => $params,
+        ]; 
     }
 }
