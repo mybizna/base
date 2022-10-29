@@ -2,24 +2,19 @@
 
 namespace Modules\Base\Entities;
 
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Wildside\Userstamps\Userstamps;
 
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Auth;
-
 class BaseModel extends \Illuminate\Database\Eloquent\Model
+
 {
 
     use Userstamps;
     //use SoftDeletes;
     //use SoftDeletes;
     use Notifiable;
-
-
-
-
 
     /**
      * Get the table associated with the model. Copies getTable() in Model
@@ -28,7 +23,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
      */
     public function getTableName(): string
     {
-        $table =  $this->table;
+        $table = $this->table;
         return $table ?? Str::snake(Str::pluralStudly(class_basename(static::class)));
     }
 
@@ -38,7 +33,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
 
         static::creating(function ($model) {
             $model->created_by = is_object(Auth::guard(config('app.guards.web'))->user()) ? Auth::guard(config('app.guards.web'))->user()->id : 1;
-            $model->updated_by = NULL;
+            $model->updated_by = null;
         });
 
         static::updating(function ($model) {
@@ -63,22 +58,22 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
     public function getAllRecords($args)
     {
         $result = [
-            'module'  => $this->module,
-            'model'   => $this->model,
-            'status'  => 0,
-            'total'   => 0,
-            'error'   => 1,
-            'records'    => [],
-            'message' => 'No Records'
+            'module' => $this->module,
+            'model' => $this->model,
+            'status' => 0,
+            'total' => 0,
+            'error' => 1,
+            'records' => [],
+            'message' => 'No Records',
         ];
 
         $defaults = [
-            'limit'   => 20,
-            'offset'  => 0,
+            'limit' => 20,
+            'offset' => 0,
             'orderby' => 'id',
-            'order'   => 'DESC',
-            'count'   => true,
-            's'       => [],
+            'order' => 'DESC',
+            'count' => true,
+            's' => [],
 
         ];
 
@@ -103,10 +98,9 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             $result['status'] = 1;
             $result['records'] = $query->get();
             $result['message'] = 'Records Found Successfully.';
-        } catch (\Throwable $th) {
+        } catch (\Throwable$th) {
             //throw $th;
         }
-
 
         return $result;
     }
@@ -114,14 +108,16 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
     public function getRecord($id, $args = [])
     {
         $result = [
-            'module'  => $this->module,
-            'model'   => $this->model,
-            'id'  => $id,
-            'status'  => 0,
-            'error'   => 1,
-            'record'    => [],
-            'message' => 'No Record'
+            'module' => $this->module,
+            'model' => $this->model,
+            'id' => $id,
+            'status' => 0,
+            'error' => 1,
+            'record' => [],
+            'message' => 'No Record',
         ];
+
+        $args['s'] = ['id' => $id];
 
         $query = $this->generateQuery($args);
 
@@ -131,7 +127,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             $result['status'] = 1;
             $result['record'] = $query->first();
             $result['message'] = 'Record Found Successfully.';
-        } catch (\Throwable $th) {
+        } catch (\Throwable$th) {
             //throw $th;
         }
 
@@ -141,22 +137,22 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
     public function getRecordSelect($args)
     {
         $result = [
-            'module'  => $this->module,
-            'model'   => $this->model,
-            'status'  => 0,
-            'total'   => 0,
-            'error'   => 1,
-            'records'    => [],
-            'message' => 'No Records'
+            'module' => $this->module,
+            'model' => $this->model,
+            'status' => 0,
+            'total' => 0,
+            'error' => 1,
+            'records' => [],
+            'message' => 'No Records',
         ];
 
         $defaults = [
-            'limit'   => 200,
-            'offset'  => 0,
+            'limit' => 200,
+            'offset' => 0,
             'orderby' => 'id',
-            'order'   => 'DESC',
-            'count'   => false,
-            's'       => [],
+            'order' => 'DESC',
+            'count' => false,
+            's' => [],
 
         ];
 
@@ -188,24 +184,22 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             $result['status'] = 1;
             $result['records'] = $list;
             $result['message'] = 'Records Found Successfully.';
-        } catch (\Throwable $th) {
+        } catch (\Throwable$th) {
             //throw $th;
         }
-
 
         return $result;
     }
 
-
     public function createRecord($args = [])
     {
         $result = [
-            'module'  => $this->module,
-            'model'   => $this->model,
-            'status'  => 0,
-            'error'   => 1,
-            'record'    => [],
-            'message' => 'No Record'
+            'module' => $this->module,
+            'model' => $this->model,
+            'status' => 0,
+            'error' => 1,
+            'record' => [],
+            'message' => 'No Record',
         ];
 
         try {
@@ -214,7 +208,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             $result['status'] = 1;
             $result['record'] = $this->create($args);
             $result['message'] = 'Record Created Successfully.';
-        } catch (\Throwable $th) {
+        } catch (\Throwable$th) {
             //throw $th;
         }
     }
@@ -222,12 +216,12 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
     public function updateRecord($args = [])
     {
         $result = [
-            'module'  => $this->module,
-            'model'   => $this->model,
-            'status'  => 0,
-            'error'   => 1,
-            'record'    => [],
-            'message' => 'No Record'
+            'module' => $this->module,
+            'model' => $this->model,
+            'status' => 0,
+            'error' => 1,
+            'record' => [],
+            'message' => 'No Record',
         ];
 
         $this->fill($args);
@@ -239,19 +233,19 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             $result['status'] = 1;
             $result['record'] = $this->save();
             $result['message'] = 'Record Updated Successfully.';
-        } catch (\Throwable $th) {
+        } catch (\Throwable$th) {
             //throw $th;
         }
     }
     public function deleteRecord($id)
     {
         $result = [
-            'module'  => $this->module,
-            'model'   => $this->model,
-            'status'  => 0,
-            'error'   => 1,
-            'record'    => [],
-            'message' => 'No Record'
+            'module' => $this->module,
+            'model' => $this->model,
+            'status' => 0,
+            'error' => 1,
+            'record' => [],
+            'message' => 'No Record',
         ];
 
         try {
@@ -260,15 +254,13 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             $result['status'] = 1;
             $result['record'] = $this->where('id', $id)->firstorfail()->delete();
             $result['message'] = 'Record Found Successfully.';
-        } catch (\Throwable $th) {
+        } catch (\Throwable$th) {
             //throw $th;
         }
     }
 
-
     public function generateQuery($params)
     {
-
         $alias = collect(['']);
         $query = $this::query();
 
@@ -282,19 +274,18 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             $select = collect([$main_table_alias . '.id']);
             $main_field = '';
 
-
             foreach ($params['f'] as $field => $f) {
                 list($table_alias, $alias_exist, $alias) = $this->getAlias($table_name, $alias);
 
                 if (strpos($f, '.')) {
                     $tables_concat = '';
-                    $sub_main_field =  $main_field;
+                    $sub_main_field = $main_field;
                     $pre_leftjoin_alias = $table_alias;
 
                     $table_levels = explode('.', $f);
                     foreach ($table_levels as $key => $table_level) {
                         $table_parts = explode('__', $table_level);
-                        $tables_concat = ($tables_concat == '') ? $sub_main_field . '_' . $table_parts[0] : $tables_concat . '_' .  $sub_main_field . '_' .  $table_parts[0];
+                        $tables_concat = ($tables_concat == '') ? $sub_main_field . '_' . $table_parts[0] : $tables_concat . '_' . $sub_main_field . '_' . $table_parts[0];
 
                         list($leftjoin_alias, $alias_exist, $alias) = $this->getAlias($tables_concat, $alias);
                         $leftjoin_table = $table_parts[0] . ' as ' . $leftjoin_alias;
@@ -318,7 +309,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
                         $query->leftJoin($leftjoin_table, $leftjoin_alias . '.id', '=', $main_table_alias . '.' . $main_field);
                     }
 
-                    $select->push($leftjoin_alias . '.' . $table_parts[1] . ' as '  . $main_field . '.' . $f);
+                    $select->push($leftjoin_alias . '.' . $table_parts[1] . ' as ' . $main_field . '.' . $f);
                 } else {
                     $main_field = $f;
                     $select->push($main_table_alias . '.' . $f);
@@ -334,9 +325,9 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
         if (isset($params['s']) && is_array($params['s'])) {
             foreach ($params['s'] as $field => $s) {
                 if (is_array($s)) {
-                    $query->where($field, $s['ope'], $s['str']);
+                    $query->where($main_table_alias . '.' . $field, $s['ope'], $s['str']);
                 } else {
-                    $query->where($field, $s);
+                    $query->where($main_table_alias . '.' . $field, $s);
                 }
             }
         }
