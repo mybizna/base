@@ -2,8 +2,9 @@
 
 namespace Modules\Base\Providers;
 
-use Illuminate\Support\Str;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
+use Modules\Core\Entities\Setting;
 
 class BaseServiceProvider extends ServiceProvider
 {
@@ -76,28 +77,46 @@ class BaseServiceProvider extends ServiceProvider
     protected function registerConfig()
     {
         // TODO: Rework using setting
-        /*
-    $DS = DIRECTORY_SEPARATOR;
-    $modules_path = realpath(base_path()) . $DS . 'Modules';
 
-    if (is_dir($modules_path)) {
-    $dir = new \DirectoryIterator($modules_path);
+        $DS = DIRECTORY_SEPARATOR;
+        $modules_path = realpath(base_path()) . $DS . 'Modules';
 
-    foreach ($dir as $fileinfo) {
-    if (!$fileinfo->isDot() && $fileinfo->isDir()) {
-    $module_name = $fileinfo->getFilename();
+        if (is_dir($modules_path)) {
+            $dir = new \DirectoryIterator($modules_path);
 
-    if (file_exists($modules_path . $DS . $module_name . $DS . 'config.php')) {
-    $this->publishes([
-    $modules_path . $DS . $module_name . $DS . 'config.php' => config_path(Str::lower($module_name).'.php'),
-    ], 'config');
-    $this->mergeConfigFrom(
-    $modules_path . $DS . $module_name . $DS . 'config.php', Str::lower($module_name)
-    );
-    }
-    }
-    }
-    } */
+            foreach ($dir as $fileinfo) {
+                if (!$fileinfo->isDot() && $fileinfo->isDir()) {
+                    $merged_settings = [];
+                    $module_name = $fileinfo->getFilename();
+                    $module_name_l = Str::lower($module_name);
+                    $config_path = $modules_path . $DS . $module_name . $DS . 'settings.php';
+
+                    if (file_exists($config_path)) {
+
+                        $settings = require $config_path;
+
+                        foreach ($settings as $key => $setting) {
+
+                            $value = $setting['value'];
+                            $db_setting = Setting::where(['module' => $module_name_l, 'name' => $key])->first();
+
+                            if ($db_setting) {
+                                $value = $db_setting->value;
+                            }
+
+                            $merged_settings[] = ['name' => $key, 'value' => $value];
+                           
+
+                        }
+
+                        $config = $this->app['config']->get($module_name_l, []);
+                        $this->app['config']->set($module_name_l, array_merge($merged_settings, $config));
+                  
+                    }
+
+                }
+            }
+        }
 
     }
 
@@ -129,8 +148,8 @@ class BaseServiceProvider extends ServiceProvider
                         ], 'views');
 
                         $this->loadViewsFrom(array_merge(array_map(function ($path) use ($module_name) {
-                            return $path . '/modules/'. Str::lower($module_name);
-                        }, \Config::get('view.paths')), [$sourcePath]),  Str::lower($module_name));
+                            return $path . '/modules/' . Str::lower($module_name);
+                        }, \Config::get('view.paths')), [$sourcePath]), Str::lower($module_name));
                     }
 
                 }
