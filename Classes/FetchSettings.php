@@ -24,6 +24,8 @@ class FetchSettings
                     $module_name = $fileinfo->getFilename();
                     $module_name_slug = Str::lower($module_name);
 
+                    
+
                     $file_names = ['setting', 'settings'];
 
                     foreach ($file_names as $key => $file_name) {
@@ -34,7 +36,7 @@ class FetchSettings
                                 'description' => $module_name,
                             ]);
 
-                            $settings = include_once $setting_file;
+                            $settings = require $setting_file;
 
                             foreach ($settings as $setting_name => $setting) {
                                 $category = (isset($setting['category']) && $setting['category'] != '')
