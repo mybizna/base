@@ -104,7 +104,7 @@ class BaseServiceProvider extends ServiceProvider
                                 $value = $db_setting->value;
                             }
 
-                            $merged_settings[] = ['name' => $key, 'value' => $value];
+                            $merged_settings[$key] = $value;
                            
 
                         }
