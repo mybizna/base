@@ -14,6 +14,7 @@ class DiscoverModules
         $DS = DIRECTORY_SEPARATOR;
 
         $modules_path = realpath(base_path()) . $DS . 'Modules';
+        
 
         if (is_dir($modules_path)) {
             $dir = new \DirectoryIterator($modules_path);
@@ -27,12 +28,13 @@ class DiscoverModules
 
                     if (!File::exists($public_folder)) {
                         messageBag('modularize_fold_missing_error', __('Folder Missing error.'));
-
+                      
                         //File::makeDirectory($public_folder);
                         if (File::exists($module_folder)) {
                             symlink($module_folder, $public_folder);
                         }
                     }
+
                 }
             }
         }

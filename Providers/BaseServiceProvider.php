@@ -32,6 +32,10 @@ class BaseServiceProvider extends ServiceProvider
         $this->registerTranslations();
         $this->registerConfig();
         $this->registerViews();
+
+        $config = $this->app['config']->get('mybizna', []);
+        $this->app['config']->set('mybizna', array_merge(['is_local' => $this->app->isLocal()], $config));
+
     }
 
     /**
@@ -105,13 +109,12 @@ class BaseServiceProvider extends ServiceProvider
                             }
 
                             $merged_settings[$key] = $value;
-                           
 
                         }
 
                         $config = $this->app['config']->get($module_name_l, []);
                         $this->app['config']->set($module_name_l, array_merge($merged_settings, $config));
-                  
+
                     }
 
                 }
