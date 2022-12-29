@@ -29,6 +29,16 @@ class BaseController extends Controller
         //var_dump(__CLASS__);
     }
 
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function manage()
+    {
+        return view('base::manage');
+    }
+
     // http://127.0.0.1:8000/api/account/journal/?s[name][str]=test&s[name][ope]==&s[keyword]=test
     public function getAllRecords(Request $request, $module, $model)
     {
