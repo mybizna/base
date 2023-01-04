@@ -5,6 +5,7 @@ namespace Modules\Base\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Modules\Core\Entities\Setting;
+use Illuminate\Support\Facades\App;
 
 class BaseServiceProvider extends ServiceProvider
 {
@@ -30,11 +31,13 @@ class BaseServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
 
         $this->registerTranslations();
-        $this->registerConfig();
         $this->registerViews();
-
-        $config = $this->app['config']->get('mybizna', []);
-        $this->app['config']->set('mybizna', array_merge(['is_local' => $this->app->isLocal()], $config));
+        
+        if (!App::runningInConsole()) {
+            $this->registerConfig();
+            $config = $this->app['config']->get('mybizna', []);
+            $this->app['config']->set('mybizna', array_merge(['is_local' => $this->app->isLocal()], $config));
+        }
 
     }
 
