@@ -18,6 +18,7 @@
   "require": {
     "composer/installers": "~1.0",
     "mybizna/lucid": "^1.0",
+    "mybizna/assets": "^1.0.0",
     "nwidart/laravel-modules": "^8.3",
     "wildside/userstamps": "^2.2"
   },
