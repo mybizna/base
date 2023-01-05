@@ -11,6 +11,7 @@
     <title>{{ config('app.name', 'Mybizna Erp') }}</title>
 
     <script>
+        __webpack_public_path__ = '{{  $assets_url; }}';
         var base_url = '{{  $url; }}';
 
         function __(title, select){
