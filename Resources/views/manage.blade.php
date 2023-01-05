@@ -11,11 +11,7 @@
     <title>{{ config('app.name', 'Mybizna Erp') }}</title>
 
     <script>
-        @if(config('mybizna.is_local'))
-            var base_url = '{{  url("/"); }}';
-        @else
-            var base_url = '{{  secure_url("/"); }}';
-        @endif
+        var base_url = '{{  $url; }}';
 
         function __(title, select){
             return title;
@@ -23,10 +19,10 @@
 
     </script>
 
-    <script defer="defer" src="/mybizna/tinymce/tinymce.min.js?{{ rand(10000,50000) }}"></script>
-    <script defer="defer" src="/mybizna/js/app.js?{{ rand(10000,50000) }}"></script>
-    <link href="/mybizna/css/app.css?{{ rand(10000,50000) }}" rel="stylesheet">
-    <script src="/mybizna/js/tailwindcss.js?{{ rand(10000,50000) }}"></script>
+    <script defer="defer" src="{{  $assets_url; }}/mybizna/tinymce/tinymce.min.js?{{ rand(10000,50000) }}"></script>
+    <script defer="defer" src="{{  $assets_url; }}/mybizna/js/app.js?{{ rand(10000,50000) }}"></script>
+    <link href="{{  $assets_url; }}/mybizna/css/app.css?{{ rand(10000,50000) }}" rel="stylesheet">
+    <script src="{{  $assets_url; }}/mybizna/js/tailwindcss.js?{{ rand(10000,50000) }}"></script>
     <!-- <script src="https://cdn.tailwindcss.com"></script> -->
 
     <script>

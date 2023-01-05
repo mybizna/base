@@ -11,8 +11,7 @@
 |
  */
 
-$apicontroller = 'Modules\Base\Http\Controllers\BaseController';
+ use Modules\Base\Http\Controllers\BaseController;
 
-Route::get('/manage', [
-    'uses' => "$apicontroller .@manage",
-]);
+ //manage new user
+ Route::post('/manage', [BaseController::class, 'manage']);

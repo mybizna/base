@@ -2,15 +2,13 @@
 
 namespace Modules\Base\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
-
-use Modules\Base\Classes\Modularize;
-use Modules\Base\Classes\Datasetter;
 use Modules\Base\Classes\Autocomplete;
+use Modules\Base\Classes\Modularize;
 
 class BaseController extends Controller
 {
@@ -36,7 +34,19 @@ class BaseController extends Controller
      */
     public function manage()
     {
-        return view('base::manage');
+        $url = url("/");
+
+        if (!config('mybizna.is_local')) {
+            $url = secure_url("/");
+        }
+
+        $assets_url = $url;
+
+        if (defined('WP_PLUGINS_URL')) {
+            $assets_url = WP_PLUGINS_URL . 'mybizna/public/mybizna';
+        }
+
+        return view('base::manage', ['url' => $url, 'assets_url' => $assets_url]);
     }
 
     // http://127.0.0.1:8000/api/account/journal/?s[name][str]=test&s[name][ope]==&s[keyword]=test
@@ -51,7 +61,6 @@ class BaseController extends Controller
 
         return Response::json($result);
     }
-
 
     public function getRecord(Request $request, $module, $model, $id)
     {
@@ -90,7 +99,6 @@ class BaseController extends Controller
         exit;
     }
 
-
     public function updateRecord(Request $request, $module, $model, $id)
     {
         $modularize = new Modularize($module, $model);
@@ -111,7 +119,6 @@ class BaseController extends Controller
         return Response::json($result);
     }
 
-
     public function functionCall(Request $request, $module, $model, $function)
     {
         // logic to update a record record goes here
@@ -125,7 +132,6 @@ class BaseController extends Controller
 
         return Response::json($result);
     }
-
 
     public function fetchRoutes(Request $request)
     {
@@ -171,7 +177,6 @@ class BaseController extends Controller
 
         $user = $request->user();
 
-
         return Response::json($user);
     }
 
@@ -191,21 +196,21 @@ class BaseController extends Controller
                 'title' => "Partner",
                 'icon' => "fas fa-users",
                 'color' => "success",
-                'total' => DB::table('partner')->count()
+                'total' => DB::table('partner')->count(),
             ],
             [
                 'is_amount' => false,
                 'title' => "Product",
                 'icon' => "fas fa-store",
                 'color' => "warning",
-                'total' => DB::table('product')->count()
+                'total' => DB::table('product')->count(),
             ],
             [
                 'is_amount' => true,
                 'title' => "Sales",
                 'icon' => "fas fa-sack-dollar",
                 'color' => "info",
-                'total' => DB::table('sale')->count()
+                'total' => DB::table('sale')->count(),
             ],
         ];
 
