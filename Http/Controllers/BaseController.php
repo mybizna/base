@@ -46,6 +46,10 @@ class BaseController extends Controller
             $assets_url = WP_PLUGINS_URL . '/mybizna/mybizna/public';
         }
 
+        if (defined('WP_URL')) {
+            $url = WP_URL . '/wp-admin/admin.php?page=mybizna&url=';
+        }
+
         return view('base::manage', ['url' => $url, 'assets_url' => $assets_url]);
     }
 
