@@ -14,4 +14,4 @@
  use Modules\Base\Http\Controllers\BaseController;
 
  //manage new user
- Route::post('/manage', [BaseController::class, 'manage']);
+ Route::get('/manage', [BaseController::class, 'manage']);
