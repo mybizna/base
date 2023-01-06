@@ -11,6 +11,8 @@ class DiscoverModules
     public function discoverModules()
     {
 
+        return;
+
         $DS = DIRECTORY_SEPARATOR;
 
         $modules_path = realpath(base_path()) . $DS . 'Modules';
