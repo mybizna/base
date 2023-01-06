@@ -63,21 +63,30 @@ class AuthenticationController extends Controller
     //use this method to signin users
     public function autologin(Request $request)
     {
+        if (defined('MYBIZNA_USER_EMAIL')) {
 
-        $user = User::where('email', '=', $email)->first();
+            $user = User::where('email', '=', MYBIZNA_USER_EMAIL)->first();
+            
+            if ($user) {
+                if (Auth::id() != $user->id) {
+                    auth()->user()->tokens()->delete();
+                }
 
-        if (Auth::id() != $user->id) {
-            auth()->user()->tokens()->delete();
+                Auth::login($user, true);
+
+                return Response::json([
+                    'status' => true,
+                    'user' => auth()->user(),
+                    'message' => 'Hi ' . auth()->user()->name . ', welcome to home',
+                    'token' => auth()->user()->createToken('API Token')->plainTextToken,
+                ]);
+            }
+        } else {
+            return Response::json([
+                'status' => false,
+                'message' => 'Wordpress and Laravel User did sync or Credentials not match',
+            ]);
         }
-
-        Auth::login($user, true);
-
-        return Response::json([
-            'status' => true,
-            'user' => auth()->user(),
-            'message' => 'Hi ' . auth()->user()->name . ', welcome to home',
-            'token' => auth()->user()->createToken('API Token')->plainTextToken,
-        ]);
     }
 
     // this method signs out users by removing tokens

@@ -25,6 +25,7 @@ Route::post('/register', [AuthenticationController::class, 'register']);
 
 //login user
 Route::post('/login', [AuthenticationController::class, 'login']);
+Route::post('/autologin', [AuthenticationController::class, 'autologin']);
 
 
 $apicontroller = 'Modules\Base\Http\Controllers\BaseController';
