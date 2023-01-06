@@ -77,10 +77,6 @@ class FetchMenus
             $this->menus[$module]['menus'] = $tmp_menus;
         }
 
-
-        
-
-
         return $this->menus;
     }
 

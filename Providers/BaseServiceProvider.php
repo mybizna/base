@@ -2,10 +2,10 @@
 
 namespace Modules\Base\Providers;
 
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Modules\Core\Entities\Setting;
-use Illuminate\Support\Facades\App;
 
 class BaseServiceProvider extends ServiceProvider
 {
@@ -32,9 +32,18 @@ class BaseServiceProvider extends ServiceProvider
 
         $this->registerTranslations();
         $this->registerViews();
-        
+
         if (!App::runningInConsole()) {
+
             $this->registerConfig();
+
+            $logging_config = $this->app['config']->get('logging', []);
+            $logging_config['channels']['datasetter'] = [
+                'driver' => 'single',
+                'path' => storage_path('logs/datasetter.log'),
+            ];
+            $this->app['config']->set('mybizna', $logging_config);
+
             $config = $this->app['config']->get('mybizna', []);
             $this->app['config']->set('mybizna', array_merge(['is_local' => $this->app->isLocal()], $config));
         }

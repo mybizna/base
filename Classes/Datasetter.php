@@ -6,7 +6,9 @@ use Carbon\Carbon;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Modules\Core\Entities\DataMigrated;
+
 
 class Datasetter
 {
@@ -111,20 +113,20 @@ class Datasetter
     private function output($string, $with_space = false)
     {
         if ($with_space) {
-            print('' . "\n");
-            print('' . "\n");
-            print('-----------------------------------' . "\n");
-            print($string . "\n");
-            print('' . "\n");
+            Log::channel('datasetter')->info('');
+            Log::channel('datasetter')->info('');
+            Log::channel('datasetter')->info('-----------------------------------');
+            Log::channel('datasetter')->info($string);
+            Log::channel('datasetter')->info('');
         } else {
-            print($string . "\n");
+            Log::channel('datasetter')->info($string);
         }
     }
     private function getClassName($module, $model)
     {
         $classname = 'Modules\\' . ucfirst($module) . '\Entities\\' . ucfirst(Str::camel($model));
 
-        print_r($classname);
+        Log::channel('datasetter')->info($classname);
 
         return (class_exists($classname)) ? new $classname() : false;
     }
