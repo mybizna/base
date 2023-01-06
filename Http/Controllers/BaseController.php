@@ -42,12 +42,12 @@ class BaseController extends Controller
 
         $assets_url = $url;
 
-        if (defined('WP_PLUGINS_URL')) {
-            $assets_url = WP_PLUGINS_URL . '/mybizna/mybizna/public';
+        if (defined('MYBIZNA_PLUGINS_URL')) {
+            $assets_url = MYBIZNA_PLUGINS_URL . '/mybizna/mybizna/public';
         }
 
-        if (defined('WP_URL')) {
-            $url = WP_URL . '/wp-admin/admin.php?page=mybizna&url=';
+        if (defined('MYBIZNA_URL')) {
+            $url = MYBIZNA_URL . '/wp-admin/admin.php?page=mybizna&url=';
         }
 
         return view('base::manage', ['url' => $url, 'assets_url' => $assets_url]);

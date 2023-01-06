@@ -1,11 +1,11 @@
 <?php
 
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Str;
 
-use App\Http\Controllers\ApiController;
-use App\Http\Controllers\AuthenticationController;
+use Modules\Base\Http\Controllers\ApiController;
+use Modules\Base\Http\Controllers\AuthenticationController;
 
 
 
