@@ -37,13 +37,6 @@ class BaseServiceProvider extends ServiceProvider
 
             $this->registerConfig();
 
-            $logging_config = $this->app['config']->get('logging', []);
-            $logging_config['channels']['datasetter'] = [
-                'driver' => 'single',
-                'path' => storage_path('logs/datasetter.log'),
-            ];
-            $this->app['config']->set('mybizna', $logging_config);
-
             $config = $this->app['config']->get('mybizna', []);
             $this->app['config']->set('mybizna', array_merge(['is_local' => $this->app->isLocal()], $config));
         }
