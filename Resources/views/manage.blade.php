@@ -11,8 +11,8 @@
     <title>{{ config('app.name', 'Mybizna Erp') }}</title>
 
     <script>
-        PUBLIC_PATH = '{{  $assets_url; }}/mybizna/';
-        var base_url = '{{  $url; }}';
+        PUBLIC_PATH = '{!!  $assets_url; !!}/mybizna/';
+        var base_url = '{!!  $url; !!}';
 
         function __(title, select){
             return title;

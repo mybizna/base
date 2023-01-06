@@ -2,8 +2,8 @@
 
 namespace Modules\Base\Classes;
 
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 class DiscoverModules
 {
@@ -14,7 +14,6 @@ class DiscoverModules
         $DS = DIRECTORY_SEPARATOR;
 
         $modules_path = realpath(base_path()) . $DS . 'Modules';
-        
 
         if (is_dir($modules_path)) {
             $dir = new \DirectoryIterator($modules_path);
@@ -23,12 +22,17 @@ class DiscoverModules
                 if (!$fileinfo->isDot() && $fileinfo->isDir()) {
                     $module_name = $fileinfo->getFilename();
 
+                    $asset_folder = realpath(base_path()) . $DS . 'public' . $DS . 'assets';
                     $module_folder = $modules_path . $DS . $module_name . $DS . 'views';
-                    $public_folder = realpath(base_path()) . $DS . 'public' . $DS . 'assets' . $DS . Str::lower($module_name);
+                    $public_folder = $asset_folder . $DS . Str::lower($module_name);
+
+                    if (!File::isDirectory($asset_folder)) {
+                        File::makeDirectory($asset_folder);
+                    }
 
                     if (!File::exists($public_folder)) {
                         messageBag('modularize_fold_missing_error', __('Folder Missing error.'));
-                      
+
                         //File::makeDirectory($public_folder);
                         if (File::exists($module_folder)) {
                             symlink($module_folder, $public_folder);
@@ -40,7 +44,6 @@ class DiscoverModules
         }
         $comp_folder = realpath(base_path()) . $DS . 'resources' . $DS . 'js' . $DS . 'components';
         $comp_public_folder = realpath(base_path()) . $DS . 'public' . $DS . 'assets' . $DS . 'components';
-
 
         if (!File::exists($comp_public_folder)) {
             symlink($comp_folder, $comp_public_folder);
