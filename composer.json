@@ -2,7 +2,7 @@
   "name": "mybizna/base",
   "description": "",
   "type": "asgard-module",
-  "version": "1.2.7",
+  "version": "1.2.8",
   "license": "GPL-3.0-or-later",
   "authors": [
     {
@@ -20,7 +20,8 @@
     "mybizna/lucid": "^1.0",
     "mybizna/assets": "^1.0.0",
     "nwidart/laravel-modules": "^8.3",
-    "wildside/userstamps": "^2.2"
+    "wildside/userstamps": "^2.2",
+    "laravel/sanctum": "^2.15"
   },
   "extra": {
     "laravel": {
