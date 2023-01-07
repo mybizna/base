@@ -13,6 +13,7 @@
     <script>
         PUBLIC_PATH = '{!!  $assets_url; !!}/mybizna/';
         var base_url = '{!!  $url; !!}';
+        var assets_url = '{!!  $assets_url; !!}';
 
         function __(title, select){
             return title;

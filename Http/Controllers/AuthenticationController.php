@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
-use App\Http\Controllers;
+use App\Http\Controllers\Controller;
 
 class AuthenticationController extends Controller
 {
@@ -69,9 +69,6 @@ class AuthenticationController extends Controller
             $user = User::where('email', '=', MYBIZNA_USER_EMAIL)->first();
             
             if ($user) {
-                if (Auth::id() != $user->id) {
-                    auth()->user()->tokens()->delete();
-                }
 
                 Auth::login($user, true);
 
