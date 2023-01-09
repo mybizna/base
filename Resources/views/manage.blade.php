@@ -11,7 +11,7 @@
     <title>{{ config('app.name', 'Mybizna Erp') }}</title>
 
     <script>
-        PUBLIC_PATH = '{!!  $assets_url; !!}/mybizna/';
+        PUBLIC_PATH = '{!!  $assets_url; !!}';
         var base_url = '{!!  $url; !!}';
         var assets_url = '{!!  $assets_url; !!}';
         var autologin =  '{!!  $autologin; !!}';
@@ -22,10 +22,10 @@
 
     </script>
 
-    <script defer="defer" src="{{  $assets_url; }}/mybizna/tinymce/tinymce.min.js?{{ rand(10000,50000) }}"></script>
-    <script defer="defer" src="{{  $assets_url; }}/mybizna/js/app.js?{{ rand(10000,50000) }}"></script>
-    <link href="{{  $assets_url; }}/mybizna/css/app.css?{{ rand(10000,50000) }}" rel="stylesheet">
-    <script src="{{  $assets_url; }}/mybizna/js/tailwindcss.js?{{ rand(10000,50000) }}"></script>
+    <script defer="defer" src="{{  $assets_url; }}/tinymce/tinymce.min.js?{{ rand(10000,50000) }}"></script>
+    <script defer="defer" src="{{  $assets_url; }}/js/app.js?{{ rand(10000,50000) }}"></script>
+    <link href="{{  $assets_url; }}/css/app.css?{{ rand(10000,50000) }}" rel="stylesheet">
+    <script src="{{  $assets_url; }}/js/tailwindcss.js?{{ rand(10000,50000) }}"></script>
     <!-- <script src="https://cdn.tailwindcss.com"></script> -->
 
     <script>

@@ -40,18 +40,17 @@ class BaseController extends Controller
             $url = secure_url("/");
         }
 
-        $assets_url = $url;
-        $autologin = FALSE;
-        
+        $assets_url = $url . '/mybizna/';
+        $autologin = false;
+
         if (defined('MYBIZNA_PLUGINS_URL')) {
-            $autologin = TRUE;
-            $assets_url = MYBIZNA_PLUGINS_URL . '/mybizna/mybizna/public';
+            $autologin = true;
+            $assets_url = MYBIZNA_PLUGINS_URL . '/mybizna/mybizna/public/mybizna';
         }
 
         if (defined('MYBIZNA_URL')) {
             $url = MYBIZNA_URL . '/wp-admin/admin.php?page=mybizna&url=';
         }
-
 
         return view('base::manage', ['url' => $url, 'assets_url' => $assets_url, 'autologin' => $autologin]);
     }
