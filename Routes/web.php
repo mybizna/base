@@ -15,3 +15,5 @@
 
  //manage new user
  Route::get('/manage', [BaseController::class, 'manage']);
+
+ Auth::routes();

@@ -52,6 +52,7 @@ class BaseController extends Controller
             $url = MYBIZNA_URL . '/wp-admin/admin.php?page=mybizna&url=';
         }
 
+
         return view('base::manage', ['url' => $url, 'assets_url' => $assets_url, 'autologin' => $autologin]);
     }
 
