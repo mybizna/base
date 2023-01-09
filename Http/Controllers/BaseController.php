@@ -41,8 +41,10 @@ class BaseController extends Controller
         }
 
         $assets_url = $url;
-
+        $autologin = FALSE;
+        
         if (defined('MYBIZNA_PLUGINS_URL')) {
+            $autologin = TRUE;
             $assets_url = MYBIZNA_PLUGINS_URL . '/mybizna/mybizna/public';
         }
 
@@ -50,7 +52,7 @@ class BaseController extends Controller
             $url = MYBIZNA_URL . '/wp-admin/admin.php?page=mybizna&url=';
         }
 
-        return view('base::manage', ['url' => $url, 'assets_url' => $assets_url]);
+        return view('base::manage', ['url' => $url, 'assets_url' => $assets_url, 'autologin' => $autologin]);
     }
 
     // http://127.0.0.1:8000/api/account/journal/?s[name][str]=test&s[name][ope]==&s[keyword]=test
