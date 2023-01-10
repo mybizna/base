@@ -45,7 +45,7 @@ class BaseController extends Controller
 
         if (defined('MYBIZNA_PLUGINS_URL')) {
             $autologin = true;
-            $assets_url = MYBIZNA_PLUGINS_URL . '/mybizna/mybizna/public/mybizna';
+            $assets_url = MYBIZNA_PLUGINS_URL . '/mybizna/mybizna/public/mybizna/';
         }
 
         if (defined('MYBIZNA_URL')) {
