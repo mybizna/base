@@ -26,7 +26,6 @@
     <script defer="defer" src="{{  $assets_url; }}/js/app.js?{{ rand(10000,50000) }}"></script>
     <link href="{{  $assets_url; }}/css/app.css?{{ rand(10000,50000) }}" rel="stylesheet">
     <script src="{{  $assets_url; }}/js/tailwindcss.js?{{ rand(10000,50000) }}"></script>
-    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
 
     <script>
         tailwind.config = {
@@ -38,7 +37,7 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
-    <link href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" rel="stylesheet">
+    <link href="{{  $assets_url; }}/fontawesome/css/all.css" rel="stylesheet">
 
 
     <style>

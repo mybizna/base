@@ -10,10 +10,11 @@
 | contains the "web" middleware group. Now create something great!
 |
  */
+use Illuminate\Support\Facades\Auth;
+use Modules\Base\Http\Controllers\BaseController;
 
- use Modules\Base\Http\Controllers\BaseController;
+//manage new user
+Route::get('/manage', [BaseController::class, 'manage']);
 
- //manage new user
- Route::get('/manage', [BaseController::class, 'manage']);
+require_once 'auth.php';
 
- Auth::routes();
