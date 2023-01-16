@@ -122,6 +122,7 @@ class Datasetter
             Log::channel('datasetter')->info($string);
         }
     }
+    
     private function getClassName($module, $model)
     {
         $classname = 'Modules\\' . ucfirst($module) . '\Entities\\' . ucfirst(Str::camel($model));
