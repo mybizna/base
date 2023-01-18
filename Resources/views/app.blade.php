@@ -16,6 +16,10 @@
     <script src="http://127.0.0.1:8000/mybizna/css/app.css?{{ rand(10000, 50000) }}"></script>
     <script src="http://127.0.0.1:8000/mybizna/js/tailwindcss.js?{{ rand(10000, 50000) }}"></script>
     <link href="http://127.0.0.1:8000/mybizna/fontawesome/css/all.css" rel="stylesheet">
+
+    <script src="https://odooisp.mybizna.com/mybizna/css/app.css?{{ rand(10000, 50000) }}"></script>
+    <script src="https://odooisp.mybizna.com/mybizna/js/tailwindcss.js?{{ rand(10000, 50000) }}"></script>
+    <link href="https://odooisp.mybizna.com/mybizna/fontawesome/css/all.css" rel="stylesheet">
 </head>
 
 <body class="bg-blue-50 dark:bg-blue-900">

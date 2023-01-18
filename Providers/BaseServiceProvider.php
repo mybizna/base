@@ -2,10 +2,13 @@
 
 namespace Modules\Base\Providers;
 
+
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Modules\Core\Entities\Setting;
+use Config;
 
 class BaseServiceProvider extends ServiceProvider
 {
@@ -26,6 +29,12 @@ class BaseServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
+        URL::forceRootUrl(Config::get('app.url'));    
+        if (str_contains(Config::get('app.url'), 'https://')) {
+            URL::forceScheme('https');
+        }
+
         require_once base_path() . '/Modules/Base/Helpers/GlobalFunctions.php';
 
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
