@@ -36,7 +36,13 @@ class FetchSettings
                                 'description' => $module_name,
                             ]);
 
-                            $settings = require $setting_file;
+                            //TODO: Change this to be logging errors silently.
+                            try {
+                                $settings = require $setting_file;
+                            } catch (\Throwable $th) {
+                                //throw $th;
+                            }
+                            
 
                             foreach ($settings as $setting_name => $setting) {
                                 $category = (isset($setting['category']) && $setting['category'] != '')
