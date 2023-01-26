@@ -11,8 +11,6 @@ class DiscoverModules
     public function discoverModules()
     {
 
-        return;
-
         $DS = DIRECTORY_SEPARATOR;
 
         $modules_path = realpath(base_path()) . $DS . 'Modules';
@@ -24,7 +22,7 @@ class DiscoverModules
                 if (!$fileinfo->isDot() && $fileinfo->isDir()) {
                     $module_name = $fileinfo->getFilename();
 
-                    $asset_folder = realpath(base_path()) . $DS . 'public' . $DS . 'assets';
+                    $asset_folder = realpath(base_path()) . $DS . 'public'. $DS . 'mybizna' . $DS . 'assets';
                     $module_folder = $modules_path . $DS . $module_name . $DS . 'views';
                     $public_folder = $asset_folder . $DS . Str::lower($module_name);
 

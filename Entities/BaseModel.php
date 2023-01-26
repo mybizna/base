@@ -76,11 +76,12 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             's' => [],
 
         ];
-
+       
         $params = array_merge($defaults, $args);
 
         $query = $this->generateQuery($params);
 
+    
         if ($params['count']) {
             $result['total'] = $query->count();
         }
@@ -99,7 +100,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             $result['records'] = $query->get();
             $result['message'] = 'Records Found Successfully.';
         } catch (\Throwable$th) {
-            //throw $th;
+            throw $th;
         }
 
         return $result;
