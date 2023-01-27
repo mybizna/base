@@ -3,11 +3,12 @@
 namespace Modules\Base\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
 use App\Models\User;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Modules\Base\Events\ReservedUsernames;
 
 class RegisterController extends Controller
 {
@@ -20,7 +21,7 @@ class RegisterController extends Controller
     | validation and creation. By default this controller uses a trait to
     | provide this functionality without requiring any additional code.
     |
-    */
+     */
 
     use RegistersUsers;
 
@@ -49,11 +50,27 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
-        return Validator::make($data, [
+        $validator = Validator::make($data, [
+            'username' => ['required', 'string', 'max:16', 'unique:users'],
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ], [
+            'username.unique' => 'Sorry, this username has already been taken!',
         ]);
+
+        $validator->after(function ($validator) use ($data) {
+
+            $results = event(new ReservedUsernames($data['username']));
+
+            $results_str = trim(implode('', $results), ' ');
+
+            if ($results_str != '') {
+                $validator->errors()->add('username', 'Sorry, this username is reserved in the systems.!');
+            }
+        });
+
+        return $validator;
     }
 
     /**
