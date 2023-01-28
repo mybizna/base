@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\DB;
 
-use App\Jobs\AppMailerJob;
+use Modules\Base\Jobs\AppMailerJob;
 
 if (!function_exists('sendmail')) {
 

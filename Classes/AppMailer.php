@@ -16,6 +16,7 @@ class AppMailer extends Mailable
     public $template;
     public $template_type;
     public $data;
+    public $body;
     /**
      * Create a new message instance.
      *
@@ -26,10 +27,9 @@ class AppMailer extends Mailable
         $this->params = $params;
         $this->data = isset($this->params['data']) ? $this->params['data'] : '';
         $this->subject = isset($this->params['subject']) ? $this->params['subject'] : '';
-        $this->from_email = isset($this->params['from_email']) ? $this->params['from_email'] : 'info@globalinternetfortunes.com';
-        $this->from_name = isset($this->params['from_name']) ? $this->params['from_name'] : 'GIF';
+        $this->from_email = isset($this->params['from_email']) ? $this->params['from_email'] : config('core.company_email');
+        $this->from_name = isset($this->params['from_name']) ? $this->params['from_name'] :  config('core.company_name');
         $this->template = $this->params['template'] ? $this->params['template'] : '';
-        $this->template_type = isset($this->params['template_type']) ?$this->params['template_type'] : 'view';
     }
 
     /**
