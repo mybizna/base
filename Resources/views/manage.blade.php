@@ -22,10 +22,10 @@
 
     </script>
 
-    <script defer="defer" src="{{  $assets_url; }}/tinymce/tinymce.min.js?{{ rand(10000,50000) }}"></script>
-    <script defer="defer" src="{{  $assets_url; }}/js/app.js?{{ rand(10000,50000) }}"></script>
-    <link href="{{  $assets_url; }}/css/app.css?{{ rand(10000,50000) }}" rel="stylesheet">
-    <script src="{{  $assets_url; }}/js/tailwindcss.js?{{ rand(10000,50000) }}"></script>
+    <script defer="defer" src="{{  $assets_url; }}/tinymce/tinymce.min.js"></script>
+    <script defer="defer" src="{{  $assets_url; }}/js/app.js"></script>
+    <link href="{{  $assets_url; }}/css/app.css" rel="stylesheet">
+    <script src="{{  $assets_url; }}/js/tailwindcss.js"></script>
 
     <script>
         tailwind.config = {
