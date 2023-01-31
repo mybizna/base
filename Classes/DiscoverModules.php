@@ -23,10 +23,7 @@ class DiscoverModules
                     $module_name = $fileinfo->getFilename();
 
                     $asset_folder = realpath(base_path()) . $DS . 'public' . $DS . 'mybizna' . $DS . 'assets';
-                    if (File::isFile(realpath(base_path()) . $DS . 'index.php')) {
-                        $asset_folder = realpath(base_path()) . $DS . 'mybizna' . $DS . 'assets';
-                    }
-                    
+                  
                     $module_folder = $modules_path . $DS . $module_name . $DS . 'views';
                     $public_folder = $asset_folder . $DS . Str::lower($module_name);
 

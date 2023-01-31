@@ -2,6 +2,7 @@
 
 namespace Modules\Base\Classes;
 
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 class FetchRoutes
@@ -16,32 +17,42 @@ class FetchRoutes
 
         $modules_path = realpath(base_path()) . $DS . 'Modules';
 
-        $routes = [];
+        if (Cache::has("fetch_routes") && Cache::has("fetch_layouts")) {
+            $this->layouts = Cache::get("fetch_layouts");
+            $this->routes = Cache::get("fetch_routes");
+        } else {
 
-        if (is_dir($modules_path)) {
-            $dir = new \DirectoryIterator($modules_path);
+            if (is_dir($modules_path)) {
 
-            foreach ($dir as $fileinfo) {
-                if (!$fileinfo->isDot() && $fileinfo->isDir()) {
-                    $module_name = $fileinfo->getFilename();
+                $routes = [];
 
-                    if ($module_name != '') {
-                        $routes = $this->getModuleRoute($module_name, $routes);
-                    }
+                $dir = new \DirectoryIterator($modules_path);
 
-                    $routes_file = $modules_path . DIRECTORY_SEPARATOR . $module_name . DIRECTORY_SEPARATOR . 'routes.json';
+                foreach ($dir as $fileinfo) {
+                    if (!$fileinfo->isDot() && $fileinfo->isDir()) {
+                        $module_name = $fileinfo->getFilename();
 
-                    if (file_exists($routes_file)) {
-                        $routes_arr = json_decode(file_get_contents($routes_file), true);
-                        if (!empty($routes_arr)) {
-                            $routes = array_merge($routes, $routes_arr);
+                        if ($module_name != '') {
+                            $routes = $this->getModuleRoute($module_name, $routes);
+                        }
+
+                        $routes_file = $modules_path . DIRECTORY_SEPARATOR . $module_name . DIRECTORY_SEPARATOR . 'routes.json';
+
+                        if (file_exists($routes_file)) {
+                            $routes_arr = json_decode(file_get_contents($routes_file), true);
+                            if (!empty($routes_arr)) {
+                                $routes = array_merge($routes, $routes_arr);
+                            }
                         }
                     }
                 }
+
+                $this->routes = array_merge($this->routes, $routes);
+
+                Cache::put("fetch_layouts", $this->routes, 3600);
+                Cache::put("fetch_routes", $this->layouts, 3600);
             }
         }
-
-        $this->routes = array_merge($this->routes, $routes);
 
         return ['routes' => $this->routes, 'layouts' => $this->layouts];
     }
@@ -52,15 +63,14 @@ class FetchRoutes
 
         $module_path = realpath(base_path()) . $DS . 'Modules' . $DS . $module_name;
 
-        $m_folder_path =  $module_name;
+        $m_folder_path = $module_name;
         $module_route = $this->addRouteToList('/' . $module_name, $m_folder_path, 'router_view');
 
         foreach (['admin', 'web'] as $folder) {
-            $vue_folders = $module_path . $DS  . 'views' . $DS . $folder;
+            $vue_folders = $module_path . $DS . 'views' . $DS . $folder;
 
-            $f_folder_path =  $m_folder_path . '/' . $folder;
+            $f_folder_path = $m_folder_path . '/' . $folder;
             $folder_route = $this->addRouteToList($folder, $f_folder_path, 'router_view');
-
 
             if (is_dir($vue_folders)) {
                 $dir = new \DirectoryIterator($vue_folders);
@@ -68,8 +78,8 @@ class FetchRoutes
                 foreach ($dir as $fileinfo) {
                     if (!$fileinfo->isDot() && $fileinfo->isDir()) {
                         $vs_foldername = $fileinfo->getFilename();
-                        $vs_folders = $vue_folders  . $DS . $vs_foldername;
-                        $v_folder_path =  $f_folder_path . '/' . $vs_foldername;
+                        $vs_folders = $vue_folders . $DS . $vs_foldername;
+                        $v_folder_path = $f_folder_path . '/' . $vs_foldername;
 
                         $vs_route = $this->addRouteToList($vs_foldername, $v_folder_path, 'router_view');
 
@@ -80,9 +90,9 @@ class FetchRoutes
                                 if (!$vs_fileinfo->isDot() && !$vs_fileinfo->isDir()) {
                                     $vs_filename = $vs_fileinfo->getFilename();
                                     $vs_sx_filename = str_replace('.vue', '', $vs_filename);
-                                    $vs_path = $module_name . '/' . $folder . '/' . $vs_foldername  . '/'  . $vs_sx_filename;
+                                    $vs_path = $module_name . '/' . $folder . '/' . $vs_foldername . '/' . $vs_sx_filename;
 
-                                    $t_folder_path =  $v_folder_path . '/' . $vs_sx_filename;
+                                    $t_folder_path = $v_folder_path . '/' . $vs_sx_filename;
 
                                     if ($vs_sx_filename == 'list') {
                                         $vs_route['children'][] = $this->addRouteToList($vs_sx_filename, $t_folder_path, $vs_path . '.vue', true);
@@ -113,8 +123,6 @@ class FetchRoutes
             }
         }
 
-        
-
         if (!empty($module_route['children'])) {
             $routes[] = $module_route;
         }
@@ -122,14 +130,13 @@ class FetchRoutes
         return $routes;
     }
 
-
     public function addRouteToList($path, $name, $component, $no_path = false)
     {
         return [
             'path' => $no_path ? '' : Str::lower($path),
-            'meta' => ['breadcrumb'=>true, 'middlewareAuth'=>true,],
-            'name' => $no_path ?  Str::lower(str_replace('/', '.', $name)) . '.default' :  Str::lower(str_replace('/', '.', $name)),
-            'component' => Str::lower($component)
+            'meta' => ['breadcrumb' => true, 'middlewareAuth' => true],
+            'name' => $no_path ? Str::lower(str_replace('/', '.', $name)) . '.default' : Str::lower(str_replace('/', '.', $name)),
+            'component' => Str::lower($component),
         ];
     }
 }
