@@ -2,13 +2,12 @@
 
 namespace Modules\Base\Providers;
 
-
-use Illuminate\Support\Facades\URL;
+use Config;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Modules\Core\Entities\Setting;
-use Config;
 
 class BaseServiceProvider extends ServiceProvider
 {
@@ -30,7 +29,9 @@ class BaseServiceProvider extends ServiceProvider
     public function boot()
     {
 
-        URL::forceRootUrl(Config::get('app.url'));    
+        $this->setGlobalVariables();
+
+        URL::forceRootUrl(Config::get('app.url'));
         if (str_contains(Config::get('app.url'), 'https://')) {
             URL::forceScheme('https');
         }
@@ -60,6 +61,37 @@ class BaseServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(RouteServiceProvider::class);
+    }
+
+    public function setGlobalVariables()
+    {
+
+        $DS = DIRECTORY_SEPARATOR;
+        $url = url("/");
+
+        if (!config('mybizna.is_local')) {
+            $url = secure_url("/");
+        }
+
+        $assets_url = $url . '/mybizna/';
+        $autologin = false;
+
+        if (defined('MYBIZNA_ASSETS_URL')) {
+            $autologin = true;
+            $assets_url = MYBIZNA_ASSETS_URL;
+        }
+
+        $composer = json_decode(file_get_contents(realpath(base_path()) . $DS . 'composer.json'), true);
+        $version = $composer['version'];
+
+        $version = rand(1000, 5000);
+
+        if (defined('MYBIZNA_BASE_URL')) {
+            $url = MYBIZNA_BASE_URL;
+        }
+
+        view()->share(['version' => $version, 'url' => $url, 'assets_url' => $assets_url, 'autologin' => $autologin]);
+
     }
 
     /**

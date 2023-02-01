@@ -15,38 +15,39 @@
 $options = [];
 $namespace = 'Modules\Base\Http\Controllers\\';
 
-    // Login Routes...
-    if ($options['login'] ?? true) {
-        Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
-        Route::post('login', 'Auth\LoginController@login');
-    }
+// Login Routes...
+if ($options['login'] ?? true) {
+ 
+    Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
+    Route::post('login', 'Auth\LoginController@login');
+}
 
-    // Logout Routes...
-    if ($options['logout'] ?? true) {
-        Route::post('logout', 'Auth\LoginController@logout')->name('logout');
-    }
+// Logout Routes...
+if ($options['logout'] ?? true) {
+    Route::post('logout', 'Auth\LoginController@logout')->name('logout');
+}
 
-    // Registration Routes...
-    if ($options['register'] ?? true) {
-        Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
-        Route::post('register', 'Auth\RegisterController@register');
-    }
+// Registration Routes...
+if ($options['register'] ?? true) {
+    Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
+    Route::post('register', 'Auth\RegisterController@register');
+}
 
-    // Password Reset Routes...
-    if ($options['reset'] ?? true) {
-        resetPassword($namespace);
-    }
+// Password Reset Routes...
+if ($options['reset'] ?? true) {
+    resetPassword($namespace);
+}
 
-    // Password Confirmation Routes...
-    if ($options['confirm'] ??
-        class_exists('Auth\ConfirmPasswordController')) {
-        confirmPassword($namespace);
-    }
+// Password Confirmation Routes...
+if ($options['confirm'] ??
+    class_exists('Auth\ConfirmPasswordController')) {
+    confirmPassword($namespace);
+}
 
-    // Email Verification Routes...
-    if ($options['verify'] ?? false) {
-        emailVerification($namespace);
-    }
+// Email Verification Routes...
+if ($options['verify'] ?? false) {
+    emailVerification($namespace);
+}
 
 /**
  * Register the typical reset password routes for an application.

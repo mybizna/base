@@ -34,30 +34,7 @@ class BaseController extends Controller
      */
     public function manage()
     {
-
-        $DS = DIRECTORY_SEPARATOR;
-        $url = url("/");
-
-        if (!config('mybizna.is_local')) {
-            $url = secure_url("/");
-        }
-
-        $assets_url = $url . '/mybizna/';
-        $autologin = false;
-
-        if (defined('MYBIZNA_ASSETS_URL')) {
-            $autologin = true;
-            $assets_url = MYBIZNA_ASSETS_URL;
-        }
-
-        $composer = json_decode(file_get_contents(realpath(base_path()) . $DS . 'composer.json'), true);
-        $version = $composer['version'];
-
-        if (defined('MYBIZNA_BASE_URL')) {
-            $url = MYBIZNA_BASE_URL;
-        }
-
-        return view('base::manage', ['version' => $version, 'url' => $url, 'assets_url' => $assets_url, 'autologin' => $autologin]);
+        return view('base::manage');
     }
 
     // http://127.0.0.1:8000/api/account/journal/?s[name][str]=test&s[name][ope]==&s[keyword]=test

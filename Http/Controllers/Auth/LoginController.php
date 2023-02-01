@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\URL;
 
 class LoginController extends Controller
 {
@@ -18,7 +20,7 @@ class LoginController extends Controller
     | redirecting them to your home screen. The controller uses a trait
     | to conveniently provide its functionality to your applications.
     |
-    */
+     */
 
     use AuthenticatesUsers;
 
@@ -36,32 +38,46 @@ class LoginController extends Controller
      */
     public function __construct()
     {
+        Session::put('backUrl', URL::previous());
+        $this->redirectTo = url()->previous();
+
         $this->middleware('guest')->except('logout');
     }
 
-       /**
+    /**
      * Create a new controller instance.
      *
      * @return void
      */
     public function login(Request $request)
-    {   
+    {
         $input = $request->all();
-  
+
         $this->validate($request, [
             'username' => 'required',
             'password' => 'required',
         ]);
-  
+
         $fieldType = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
-        
-        if(auth()->attempt(array($fieldType => $input['username'], 'password' => $input['password'])))
-        {
-            return redirect()->route('home');
-        }else{
+
+        if (auth()->attempt(array($fieldType => $input['username'], 'password' => $input['password']))) {
+            //return redirect()->route('home');
+            return redirect()->intended() ;
+        } else {
             return redirect()->route('login')
-                ->with('error','Email-Address And Password Are Wrong.');
+                ->with('error', 'Email-Address And Password Are Wrong.');
         }
-          
+
+    }
+
+    /**
+     * Where to redirect users after login.
+     *
+     * @var string
+     */
+    // protected $redirectTo = RouteServiceProvider::HOME;
+    protected function redirectTo()
+    {
+        return Session::get('backUrl') ? Session::get('backUrl') : $this->redirectTo;
     }
 }
