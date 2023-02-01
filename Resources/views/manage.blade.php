@@ -22,10 +22,10 @@
 
     </script>
 
-    <script defer="defer" src="{{  $assets_url; }}/tinymce/tinymce.min.js"></script>
-    <script defer="defer" src="{{  $assets_url; }}/js/app.js"></script>
-    <link href="{{  $assets_url; }}/css/app.css" rel="stylesheet">
-    <script src="{{  $assets_url; }}/js/tailwindcss.js"></script>
+    <script defer="defer" src="{{  $assets_url; }}/tinymce/tinymce.min.js?{{ $version }}"></script>
+    <script defer="defer" src="{{  $assets_url; }}/js/app.js?{{ $version }}"></script>
+    <link href="{{  $assets_url; }}/css/app.css?{{ $version }}" rel="stylesheet">
+    <script src="{{  $assets_url; }}/js/tailwindcss.js?{{ $version }}"></script>
 
     <script>
         tailwind.config = {
