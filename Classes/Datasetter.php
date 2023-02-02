@@ -2,17 +2,12 @@
 
 namespace Modules\Base\Classes;
 
-use Carbon\Carbon;
-
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Modules\Core\Entities\DataMigrated;
-
 
 class Datasetter
 {
-
 
     //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     //Data Modules
@@ -30,8 +25,8 @@ class Datasetter
             foreach ($dir as $fileinfo) {
                 if (!$fileinfo->isDot() && $fileinfo->isDir()) {
                     $module_name = $fileinfo->getFilename();
-                    $namespace = 'Modules\\'  . $module_name . '\\Entities\\Data';
-                    $data_folder = $modules_path .  $DS . $module_name .  $DS . 'Entities' . $DS . 'Data';
+                    $namespace = 'Modules\\' . $module_name . '\\Entities\\Data';
+                    $data_folder = $modules_path . $DS . $module_name . $DS . 'Entities' . $DS . 'Data';
 
                     if (is_dir($data_folder)) {
                         $data_dir = new \DirectoryIterator($data_folder);
@@ -40,7 +35,7 @@ class Datasetter
                             if ($fileinfo->isFile()) {
                                 $data_name = $fileinfo->getFilename();
 
-                                $model = $namespace  . str_replace(
+                                $model = $namespace . str_replace(
                                     ['/', '.php'],
                                     ['\\', ''],
                                     '\\' . $data_name
@@ -60,8 +55,11 @@ class Datasetter
             }
 
             foreach ($models->sortBy('order') as $model) {
-                $this->output('Model: ' . $model['data_folder'],true);
-                $model['object']->data($this);
+                $this->output('Model: ' . $model['data_folder'], true);
+
+                if (!isset($model['object']->run_later) || !$model['object']->run_later) {
+                    $model['object']->data($this);
+                }
             }
         }
     }
@@ -74,7 +72,6 @@ class Datasetter
             "array_key" => $data[$main_field],
         );
 
-
         $class_name = $this->getClassName($module, $model);
 
         array_multisort($data);
@@ -86,12 +83,10 @@ class Datasetter
         $data_migrated = DataMigrated::where($data_to_migrate)
             ->whereNotNull('item_id')->first();
 
-  
         if ($data_migrated && $data_migrated->item_id) {
-            if ($hash <> $data_migrated->hash) {
+            if ($hash != $data_migrated->hash) {
                 $saved_record = $class_name::find($data_migrated->item_id);
-            
-        
+
                 if (!$saved_record->is_modified) {
                     $saved_record->fill($data);
                     $saved_record->save();
@@ -122,7 +117,7 @@ class Datasetter
             Log::channel('datasetter')->info($string);
         }
     }
-    
+
     private function getClassName($module, $model)
     {
         $classname = 'Modules\\' . ucfirst($module) . '\Entities\\' . ucfirst(Str::camel($model));
