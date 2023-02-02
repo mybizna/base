@@ -49,8 +49,8 @@ class FetchRoutes
 
                 $this->routes = array_merge($this->routes, $routes);
 
-                Cache::put("fetch_layouts", $this->routes, 3600);
-                Cache::put("fetch_routes", $this->layouts, 3600);
+                Cache::put("fetch_layouts", $this->layouts, 3600);
+                Cache::put("fetch_routes", $this->routes, 3600);
             }
         }
 
