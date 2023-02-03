@@ -71,10 +71,12 @@ class BaseServiceProvider extends ServiceProvider
 
         $composer = json_decode(file_get_contents(realpath(base_path()) . $DS . 'composer.json'), true);
         $version = $composer['version'];
-        
-        $current_url = url()->current();
+
+        $current_url = env('APP_URL') ?? url()->current();
+     
         if (strpos($current_url, "https") === 0) {
             $url = secure_url("/");
+        } else {
             $version = rand(1000, 5000);
         }
 
