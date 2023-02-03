@@ -17,6 +17,8 @@ class FetchRoutes
 
         $modules_path = realpath(base_path()) . $DS . 'Modules';
 
+        Cache::forget('fetch_routes');
+
         if (Cache::has("fetch_routes") && Cache::has("fetch_layouts")) {
             $this->layouts = Cache::get("fetch_layouts");
             $this->routes = Cache::get("fetch_routes");
@@ -48,6 +50,7 @@ class FetchRoutes
                 }
 
                 $this->routes = array_merge($this->routes, $routes);
+
 
                 Cache::put("fetch_layouts", $this->layouts, 3600);
                 Cache::put("fetch_routes", $this->routes, 3600);

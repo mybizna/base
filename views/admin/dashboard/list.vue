@@ -38,7 +38,7 @@
 export default {
     components: {
         ImageLink: window.$func.fetchComponent(
-            "components/common/widgets/link/ImageLink.vue"
+            "components/widgets/ImageLink.vue"
         ),
         DashboardCongratulationJohn: window.$func.fetchComponent(
             "base/admin/dashboard/DashboardCongratulationJohn.vue"
