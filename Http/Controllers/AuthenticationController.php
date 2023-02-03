@@ -40,14 +40,19 @@ class AuthenticationController extends Controller
     //use this method to signin users
     public function login(Request $request)
     {
+
+        $input = $request->all();
+
         $attr = $request->validate(
             [
-                'email' => 'required|string|email|',
+                'username' => 'required|string',
                 'password' => 'required|string|min:6',
             ]
         );
 
-        if (!Auth::attempt($attr)) {
+        $fieldType = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+
+        if (!Auth::attempt(array($fieldType => $input['username'], 'password' => $input['password']))) {
             return Response::json([
                 'status' => false,
                 'message' => 'Credentials not match',

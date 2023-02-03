@@ -69,8 +69,13 @@ class BaseServiceProvider extends ServiceProvider
         $DS = DIRECTORY_SEPARATOR;
         $url = url("/");
 
-        if (!config('mybizna.is_local')) {
+        $composer = json_decode(file_get_contents(realpath(base_path()) . $DS . 'composer.json'), true);
+        $version = $composer['version'];
+        
+        $current_url = url()->current();
+        if (strpos($current_url, "https") === 0) {
             $url = secure_url("/");
+            $version = rand(1000, 5000);
         }
 
         $assets_url = $url . '/mybizna/';
@@ -81,16 +86,16 @@ class BaseServiceProvider extends ServiceProvider
             $assets_url = MYBIZNA_ASSETS_URL;
         }
 
-        $composer = json_decode(file_get_contents(realpath(base_path()) . $DS . 'composer.json'), true);
-        $version = $composer['version'];
-
-        $version = rand(1000, 5000);
-
         if (defined('MYBIZNA_BASE_URL')) {
             $url = MYBIZNA_BASE_URL;
         }
 
-        view()->share(['version' => $version, 'url' => $url, 'assets_url' => $assets_url, 'autologin' => $autologin]);
+        view()->share([
+            'version' => $version,
+            'mybizna_base_url' => $url,
+            'assets_url' => $assets_url,
+            'autologin' => $autologin,
+        ]);
 
     }
 

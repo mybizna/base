@@ -12,7 +12,7 @@
 
     <script>
         PUBLIC_PATH = '{!!  $assets_url; !!}';
-        var base_url = '{!!  $url; !!}';
+        var base_url = '{!!  $mybizna_base_url; !!}';
         var assets_url = '{!!  $assets_url; !!}';
         var autologin =  '{!!  $autologin; !!}';
 
