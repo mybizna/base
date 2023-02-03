@@ -73,6 +73,7 @@ class BaseServiceProvider extends ServiceProvider
         $version = $composer['version'];
 
         $current_url = env('APP_URL') ?? url()->current();
+        $current_url =  url()->current();
      
         if (strpos($current_url, "https") === 0) {
             $url = secure_url("/");
