@@ -97,9 +97,9 @@ class FetchRoutes
                                     $vs_path = $module_name . '/' . $folder . '/' . $vs_foldername . '/' . $vs_sx_filename;
 
                                     $t_folder_path = $v_folder_path . '/' . $vs_sx_filename;
-
+                                    
                                     if (File::isFile($vs_folders . '/search.vue')) {
-                                        $search_path = $t_folder_path . '/search.vue';
+                                        $search_path = $module_name . '/' . $folder . '/' . $vs_foldername  . '/search.vue';
                                     }
                                     
                                     if ($vs_sx_filename == 'list') {
