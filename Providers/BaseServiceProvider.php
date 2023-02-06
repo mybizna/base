@@ -28,13 +28,7 @@ class BaseServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
         $this->setGlobalVariables();
-
-        URL::forceRootUrl(Config::get('app.url'));
-        if (str_contains(Config::get('app.url'), 'https://')) {
-            URL::forceScheme('https');
-        }
 
         require_once base_path() . '/Modules/Base/Helpers/GlobalFunctions.php';
 
@@ -72,10 +66,8 @@ class BaseServiceProvider extends ServiceProvider
         $composer = json_decode(file_get_contents(realpath(base_path()) . $DS . 'composer.json'), true);
         $version = $composer['version'];
 
-        $current_url = env('APP_URL') ?? url()->current();
-        $current_url =  url()->current();
-     
-        if (strpos($current_url, "https") === 0) {
+        if(request()->server->has('HTTP_X_FORWARDED_PROTO')){
+            URL::forceScheme(request()->server()['HTTP_X_FORWARDED_PROTO']);
             $url = secure_url("/");
         } else {
             $version = rand(1000, 5000);
