@@ -258,6 +258,8 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
         } catch (\Throwable$th) {
             //throw $th;
         }
+
+        return $result;
     }
 
     public function generateQuery($params)
