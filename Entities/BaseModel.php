@@ -99,7 +99,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             $result['status'] = 1;
             $result['records'] = $query->get();
             $result['message'] = 'Records Found Successfully.';
-        } catch (\Throwable$th) {
+        } catch (\Throwable $th) {
             throw $th;
         }
 
@@ -128,7 +128,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             $result['status'] = 1;
             $result['record'] = $query->first();
             $result['message'] = 'Record Found Successfully.';
-        } catch (\Throwable$th) {
+        } catch (\Throwable $th) {
             //throw $th;
         }
 
@@ -185,7 +185,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             $result['status'] = 1;
             $result['records'] = $list;
             $result['message'] = 'Records Found Successfully.';
-        } catch (\Throwable$th) {
+        } catch (\Throwable $th) {
             //throw $th;
         }
 
@@ -209,9 +209,11 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             $result['status'] = 1;
             $result['record'] = $this->create($args);
             $result['message'] = 'Record Created Successfully.';
-        } catch (\Throwable$th) {
+        } catch (\Throwable $th) {
             //throw $th;
         }
+
+        return $result;
     }
 
     public function updateRecord($args = [])
@@ -234,9 +236,11 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             $result['status'] = 1;
             $result['record'] = $this->save();
             $result['message'] = 'Record Updated Successfully.';
-        } catch (\Throwable$th) {
+        } catch (\Throwable $th) {
             //throw $th;
         }
+
+        return $result;
     }
     public function deleteRecord($id)
     {
@@ -255,7 +259,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             $result['status'] = 1;
             $result['record'] = $this->where('id', $id)->firstorfail()->delete();
             $result['message'] = "ID:$id Record Delete Successfully.";
-        } catch (\Throwable$th) {
+        } catch (\Throwable $th) {
             //throw $th;
         }
 
