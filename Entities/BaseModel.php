@@ -254,7 +254,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             $result['error'] = 0;
             $result['status'] = 1;
             $result['record'] = $this->where('id', $id)->firstorfail()->delete();
-            $result['message'] = `ID:$id Record Delete Successfully.`;
+            $result['message'] = "ID:$id Record Delete Successfully.";
         } catch (\Throwable$th) {
             //throw $th;
         }
