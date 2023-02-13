@@ -14,8 +14,6 @@
         integrity="sha512-gxWow8Mo6q6pLa1XH/CcH8JyiSDEtiwJV78E+D+QP0EVasFs8wKXq16G8CLD4CJ2SnonHr4Lm/yY2fSI2+cbmw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <script defer="defer" src="{{  $assets_url; }}/tinymce/tinymce.min.js?{{ $version }}"></script>
-    <script defer="defer" src="{{  $assets_url; }}/js/app.js?{{ $version }}"></script>
     <link href="{{  $assets_url; }}/css/app.css?{{ $version }}" rel="stylesheet">
     <script src="{{  $assets_url; }}/js/tailwindcss.js?{{ $version }}"></script>
 

@@ -11,33 +11,40 @@
     <title>{{ config('app.name', 'Mybizna Erp') }}</title>
 
     <script>
-        PUBLIC_PATH = '{!!  $assets_url; !!}';
-        var base_url = '{!!  $mybizna_base_url; !!}';
-        var assets_url = '{!!  $assets_url; !!}';
-        var autologin =  '{!!  $autologin; !!}';
+        PUBLIC_PATH = '{!! $assets_url !!}';
+        var base_url = '{!! $mybizna_base_url !!}';
+        var assets_url = '{!! $assets_url !!}';
+        var autologin = '{!! $autologin !!}';
 
-        function __(title, select){
+        function __(title, select) {
             return title;
         }
-
     </script>
 
-    <script defer="defer" src="{{  $assets_url; }}/tinymce/tinymce.min.js?{{ $version }}"></script>
-    <script defer="defer" src="{{  $assets_url; }}/js/app.js?{{ $version }}"></script>
-    <link href="{{  $assets_url; }}/css/app.css?{{ $version }}" rel="stylesheet">
-    <script src="{{  $assets_url; }}/js/tailwindcss.js?{{ $version }}"></script>
+    <script src="{{ $assets_url }}/tinymce/tinymce.min.js?{{ $version }}"></script>
+    <script src="{{ $assets_url }}/vue3-sfc-loader/vue3-sfc-loader.js?{{ $version }}"></script>
+    <script defer="defer" src="{{ $assets_url }}/js/app.js?{{ $version }}"></script>
+    <link href="{{ $assets_url }}/css/app.css?{{ $version }}" rel="stylesheet">
+    <script src="{{ $assets_url }}/js/tailwindcss.js?{{ $version }}"></script>
 
     <script>
         tailwind.config = {
             important: true,
+            theme: {
+                extend: {
+                    backdropBlur: {
+                        xs: '2px',
+                    }
+                }
+            }
         }
     </script>
 
-  
+
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
-    <link href="{{  $assets_url; }}/fontawesome/css/all.css" rel="stylesheet">
+    <link href="{{ $assets_url }}/fontawesome/css/all.css" rel="stylesheet">
 
 
     <style>
