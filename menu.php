@@ -1,5 +1,6 @@
 <?php
 
+/*
 $this->add_module_info("dashboard", [
     'title' => 'Dashboard',
     'description' => 'Dashboard',
@@ -16,3 +17,4 @@ $this->add_menu("dashboard", "setting", "Settings", "/settings", "fas fa-cogs", 
 
 $this->add_submenu("dashboard", "setting", "Gateway", "/account/admin/gateway", 5);
 $this->add_submenu("dashboard", "setting", "", "", 5);
+*/
