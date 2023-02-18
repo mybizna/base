@@ -15,6 +15,8 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <link href="{{  $assets_url; }}/css/app.css?{{ $version }}" rel="stylesheet">
+    <link href="{{ $assets_url }}/fontawesome/css/all.css" rel="stylesheet">
+
     <script src="{{  $assets_url; }}/js/tailwindcss.js?{{ $version }}"></script>
 
 </head>
