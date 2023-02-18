@@ -1,7 +1,7 @@
 <template>
     <div class="p-3">
-        <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-1 match-height">
-            <div v-for="(item, index) in $store.state.system.menu" :key="index" >
+        <div class="row match-height">
+            <div v-for="(item, index) in $store.state.system.menu" :key="index" class="col-6 col-sm-3 col-md-2">
                 <image-link :title="item.title" :url="'#'+item.path" :icon="item.icon" :class_str="item.class_str" @click="loadModule(item.path, index)">
                 </image-link>
             </div>
@@ -38,7 +38,7 @@
 export default {
     components: {
         ImageLink: window.$func.fetchComponent(
-            "components/widgets/ImageLink.vue"
+            "components/common/widgets/link/ImageLink.vue"
         ),
         DashboardCongratulationJohn: window.$func.fetchComponent(
             "base/admin/dashboard/DashboardCongratulationJohn.vue"
