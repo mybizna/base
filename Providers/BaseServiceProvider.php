@@ -76,6 +76,11 @@ class BaseServiceProvider extends ServiceProvider
         $assets_url = $url . '/mybizna/';
         $autologin = false;
         $responsive_point = 768;
+        $floating_top = true;
+
+        if (defined('MYBIZNA_FLOATING_TOP')) {
+            $floating_top = MYBIZNA_FLOATING_TOP;
+        }
 
         if (defined('MYBIZNA_RESPONSIVE_POINT')) {
             $responsive_point = MYBIZNA_RESPONSIVE_POINT;
@@ -95,6 +100,7 @@ class BaseServiceProvider extends ServiceProvider
             'mybizna_base_url' => $url,
             'assets_url' => $assets_url,
             'autologin' => $autologin,
+            'floating_top' => $floating_top,
             'responsive_point' => $responsive_point,
         ]);
 

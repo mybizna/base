@@ -15,8 +15,8 @@
         var base_url = '{!! $mybizna_base_url !!}';
         var assets_url = '{!! $assets_url !!}';
         var autologin = '{!! $autologin !!}';
-
         var responsive_point = {!! $responsive_point !!};
+        var floating_top = {!! $floating_top !!};
 
         function __(title, select) {
             return title;
