@@ -63,10 +63,10 @@ class BaseServiceProvider extends ServiceProvider
         $DS = DIRECTORY_SEPARATOR;
         $url = url("/");
 
-        $composer = json_decode(file_get_contents(realpath(base_path()) . $DS . 'Modules'. $DS .'Base'. $DS . 'composer.json'), true);
+        $composer = json_decode(file_get_contents(realpath(base_path()) . $DS . 'Modules' . $DS . 'Base' . $DS . 'composer.json'), true);
         $version = $composer['version'];
 
-        if(request()->server->has('HTTP_X_FORWARDED_PROTO')){
+        if (request()->server->has('HTTP_X_FORWARDED_PROTO')) {
             URL::forceScheme(request()->server()['HTTP_X_FORWARDED_PROTO']);
             $url = secure_url("/");
         } else {
@@ -75,6 +75,11 @@ class BaseServiceProvider extends ServiceProvider
 
         $assets_url = $url . '/mybizna/';
         $autologin = false;
+        $responsive_point = 768;
+
+        if (defined('MYBIZNA_RESPONSIVE_POINT')) {
+            $responsive_point = MYBIZNA_RESPONSIVE_POINT;
+        }
 
         if (defined('MYBIZNA_ASSETS_URL')) {
             $autologin = true;
@@ -90,6 +95,7 @@ class BaseServiceProvider extends ServiceProvider
             'mybizna_base_url' => $url,
             'assets_url' => $assets_url,
             'autologin' => $autologin,
+            'responsive_point' => $responsive_point,
         ]);
 
     }
