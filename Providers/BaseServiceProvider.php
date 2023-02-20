@@ -63,7 +63,7 @@ class BaseServiceProvider extends ServiceProvider
         $DS = DIRECTORY_SEPARATOR;
         $url = url("/");
 
-        $composer = json_decode(file_get_contents(realpath(base_path()) . $DS . 'composer.json'), true);
+        $composer = json_decode(file_get_contents(realpath(base_path()) . $DS . 'Modules'. $DS .'Base'. $DS . 'composer.json'), true);
         $version = $composer['version'];
 
         if(request()->server->has('HTTP_X_FORWARDED_PROTO')){
