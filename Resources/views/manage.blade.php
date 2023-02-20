@@ -16,7 +16,7 @@
         var assets_url = '{!! $assets_url !!}';
         var autologin = '{!! $autologin !!}';
         var responsive_point = {!! $responsive_point !!};
-        var floating_top = {{ $floating_top ? 1 : 0 }};
+        var floating_top = {{ $floating_top ? 'true' : 'false' }};
 
         function __(title, select) {
             return title;
