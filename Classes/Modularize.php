@@ -127,6 +127,15 @@ class Modularize
     }
 
     //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    //Fetching Vue
+    public function fetchVue($current_uri)
+    {
+        $fetchvue = new FetchVue();
+
+        return $fetchvue->fetchVue($current_uri);
+    }
+
+    //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     //Fetching Menu
     public function fetchMenus()
     {

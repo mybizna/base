@@ -37,6 +37,22 @@ class BaseController extends Controller
         return view('base::manage');
     }
 
+    public function fetchVue(Request $request)
+    {
+        $current_uri = $request->segments();
+
+        $modularize = new Modularize();
+
+        [$contents, $status] = $modularize->fetchVue($current_uri);
+
+        $response = Response::make($contents, $status);
+
+        $response->header('Content-Type', 'application/javascript');
+
+        return $response;
+
+    }
+
     // http://127.0.0.1:8000/api/account/journal/?s[name][str]=test&s[name][ope]==&s[keyword]=test
     public function getAllRecords(Request $request, $module, $model)
     {

@@ -34,7 +34,6 @@ Route::get('fetch_menus', $apicontroller . '@fetchMenus');
 Route::get('fetch_routes', $apicontroller . '@fetchRoutes');
 
 
-
 Route::middleware('auth:sanctum')->group(function () {
     $apicontroller = 'Modules\Base\Http\Controllers\BaseController';
 

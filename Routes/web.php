@@ -14,6 +14,9 @@ use Modules\Base\Classes\Datasetter;
 use Modules\Base\Http\Controllers\BaseController;
 use Mybizna\Automigrator\Commands\MigrateCommand;
 
+$apicontroller = 'Modules\Base\Http\Controllers\BaseController';
+Route::get('fetch_vue/{section}', [BaseController::class, 'fetchVue'])->where(['section' => '.*']);
+
 //manage new user
 Route::get('/manage', [BaseController::class, 'manage']);
 
