@@ -1,6 +1,6 @@
 <template>
-    <div class="row match-height">
-        <div v-for="(item, index) in $store.state.system.menu" :key="index" class="col-6 col-sm-3 col-md-2">
+    <div class="p-2 grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-18  gap-4">
+        <div v-for="(item, index) in $store.state.system.menu" :key="index" class="">
             <image-link :title="item.title" :url="'#' + item.path" :icon="item.icon" :class_str="item.class_str"
                 @click="loadModule(item.path, index)">
             </image-link>
