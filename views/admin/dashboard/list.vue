@@ -8,10 +8,10 @@
     </div>
 
     <div class="row mt-1 mx-1">
-        <div class="col-12 col-md-4 px-1">
+        <div class="col-12 col-md-4 px-1 mb-1">
             <dashboard-congratulation-john></dashboard-congratulation-john>
         </div>
-        <div class="col-12 col-md-8 px-1">
+        <div class="col-12 col-md-8 px-1 mb-1">
 
             <div class="card">
                 <div class="card-body p-1">
