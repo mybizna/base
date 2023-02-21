@@ -1,29 +1,28 @@
 <template>
-    <div class="p-3">
-        <div class="row match-height">
-            <div v-for="(item, index) in $store.state.system.menu" :key="index" class="col-6 col-sm-3 col-md-2">
-                <image-link :title="item.title" :url="'#'+item.path" :icon="item.icon" :class_str="item.class_str" @click="loadModule(item.path, index)">
-                </image-link>
-            </div>
+    <div class="row match-height">
+        <div v-for="(item, index) in $store.state.system.menu" :key="index" class="col-6 col-sm-3 col-md-2">
+            <image-link :title="item.title" :url="'#' + item.path" :icon="item.icon" :class_str="item.class_str"
+                @click="loadModule(item.path, index)">
+            </image-link>
         </div>
+    </div>
 
-        <div class="row mt-3">
-            <div class="col-12 col-md-4">
-                <dashboard-congratulation-john></dashboard-congratulation-john>
-            </div>
-            <div class="col-12 col-md-8">
+    <div class="row mt-1 mx-1">
+        <div class="col-12 col-md-4 px-1">
+            <dashboard-congratulation-john></dashboard-congratulation-john>
+        </div>
+        <div class="col-12 col-md-8 px-1">
 
-                <div class="card">
-                    <div class="card-body p-1">
-                        <div class="d-flex justify-content-between">
-                            <h3 class="me-3 p-1">Events</h3>
-                            <div class="text-xs text--disabled cursor-pointer p-1">
-                                View All
-                            </div>
+            <div class="card">
+                <div class="card-body p-1">
+                    <div class="d-flex justify-content-between">
+                        <h3 class="me-3 p-1">Events</h3>
+                        <div class="text-xs text--disabled cursor-pointer p-1">
+                            View All
                         </div>
-                        <div class="py-1">
-                            <calendar></calendar>
-                        </div>
+                    </div>
+                    <div class="py-1">
+                        <calendar></calendar>
                     </div>
                 </div>
             </div>
