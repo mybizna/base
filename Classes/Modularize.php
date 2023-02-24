@@ -11,7 +11,7 @@ class Modularize
     public $menus = [];
     public $layouts = [];
 
-    function __construct($module = '', $model = '')
+    public function __construct($module = '', $model = '')
     {
         $this->module = $module;
         $this->model = $model;
@@ -23,10 +23,13 @@ class Modularize
 
         if ($classname) {
             if (method_exists($classname, 'getAllRecords')) {
+                $classname->module = $this->module;
+                $classname->model = $this->model;
                 $result = $classname->getAllRecords($args);
             }
         } else {
-            $result['message'] = 'No Model Found with name ' . $this->module . '-' . $this->model;
+            $result = $this->prepareResult('No Model Found with name ' . $this->module . '-' . $this->model, true);
+
         }
 
         return $result;
@@ -38,10 +41,12 @@ class Modularize
 
         if ($classname) {
             if (method_exists($classname, 'getRecord')) {
+                $classname->module = $this->module;
+                $classname->model = $this->model;
                 $result = $classname->getRecord($id, $args);
             }
         } else {
-            $result['message'] = 'No Model Found with name ' . $this->module . '-' . $this->model;
+            $result = $this->prepareResult('No Model Found with name ' . $this->module . '-' . $this->model);
         }
 
         return $result;
@@ -53,15 +58,16 @@ class Modularize
 
         if ($classname) {
             if (method_exists($classname, 'getRecordSelect')) {
+                $classname->module = $this->module;
+                $classname->model = $this->model;
                 $result = $classname->getRecordSelect($args);
             }
         } else {
-            $result['message'] = 'No Model Found with name ' . $this->module . '-' . $this->model;
+            $result = $this->prepareResult('No Model Found with name ' . $this->module . '-' . $this->model);
         }
 
         return $result;
     }
-
 
     public function createRecord($args = [])
     {
@@ -69,10 +75,12 @@ class Modularize
 
         if ($classname) {
             if (method_exists($classname, 'createRecord')) {
+                $classname->module = $this->module;
+                $classname->model = $this->model;
                 $result = $classname->createRecord($args);
             }
         } else {
-            $result['message'] = 'No Model Found with name ' . $this->module . '-' . $this->model;
+            $result = $this->prepareResult('No Model Found with name ' . $this->module . '-' . $this->model);
         }
 
         return $result;
@@ -84,10 +92,12 @@ class Modularize
 
         if ($classname) {
             if (method_exists($classname, 'updateRecord')) {
+                $classname->module = $this->module;
+                $classname->model = $this->model;
                 $result = $classname->updateRecord($args);
             }
         } else {
-            $result['message'] = 'No Model Found with name ' . $this->module . '-' . $this->model;
+            $result = $this->prepareResult('No Model Found with name ' . $this->module . '-' . $this->model);
         }
 
         return $result;
@@ -99,10 +109,12 @@ class Modularize
 
         if ($classname) {
             if (method_exists($classname, 'deleteRecord')) {
+                $classname->module = $this->module;
+                $classname->model = $this->model;
                 $result = $classname->deleteRecord($id);
             }
         } else {
-            $result['message'] = 'No Model Found with name ' . $this->module . '-' . $this->model;
+            $result = $this->prepareResult('No Model Found with name ' . $this->module . '-' . $this->model);
         }
 
         return $result;
@@ -152,6 +164,27 @@ class Modularize
 
         return $fetchsettings->fetchSettings();
     }
+
+    public function prepareResult($message, $is_many = false)
+    {
+        $result = [
+            'module' => $this->module,
+            'model' => $this->model,
+            'status' => 0,
+            'error' => 1,
+            'message' => $message,
+        ];
+        if ($is_many) {
+            $result['records'] = [];
+        } else {
+            $result['record'] = [];
+
+        }
+
+        return $result;
+
+    }
+
     //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     //General Classes
     private function getClassName()

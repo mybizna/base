@@ -96,7 +96,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
         }
 
         try {
-            //code.. $result['error'] = 0;
+            $result['error'] = 0;
             $result['status'] = 1;
             $result['records'] = $query->get();
             $result['message'] = 'Records Found Successfully.';
@@ -124,13 +124,12 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
         $query = $this->generateQuery($args);
 
         try {
-            //code..
             $result['error'] = 0;
             $result['status'] = 1;
             $result['record'] = $query->first();
             $result['message'] = 'Record Found Successfully.';
         } catch (\Throwable$th) {
-            //throw $th;
+            throw $th;
         }
 
         return $result;
@@ -182,7 +181,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
                 $list->push(['value' => $record->id, 'label' => $template_str]);
             }
 
-            //code.. $result['error'] = 0;
+            $result['error'] = 0;
             $result['status'] = 1;
             $result['records'] = $list;
             $result['message'] = 'Records Found Successfully.';
@@ -205,13 +204,12 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
         ];
 
         try {
-            //code..
             $result['error'] = 0;
             $result['status'] = 1;
             $result['record'] = $this->create($args);
             $result['message'] = 'Record Created Successfully.';
         } catch (\Throwable$th) {
-            //throw $th;
+            throw $th;
         }
 
         return $result;
@@ -228,17 +226,17 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             'message' => 'No Record',
         ];
 
-        $this->fill($args);
-        $this->save();
-
+        
         try {
-            //code..
+
+            $this->fill($args);
+
             $result['error'] = 0;
             $result['status'] = 1;
             $result['record'] = $this->save();
             $result['message'] = 'Record Updated Successfully.';
         } catch (\Throwable$th) {
-            //throw $th;
+            throw $th;
         }
 
         return $result;
@@ -255,13 +253,12 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
         ];
 
         try {
-            //code..
             $result['error'] = 0;
             $result['status'] = 1;
             $result['record'] = $this->where('id', $id)->firstorfail()->delete();
             $result['message'] = "ID:$id Record Delete Successfully.";
         } catch (\Throwable$th) {
-            //throw $th;
+            throw $th;
         }
 
         return $result;
@@ -291,7 +288,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
                 $parent_alias = $main_table_alias;
 
                 $f_alias = $f = trim(preg_replace("/\s+/", " ", $field_str), ' ');
-        
+
                 $field_arr = explode(' ', $f);
                 if (!empty(array_intersect($as_arr, $field_arr))) {
                     $f = $field_arr[0];
@@ -331,7 +328,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
 
                 } else {
                     $main_field = $f;
-                    $select->push($main_table_alias . '.' . $f. ' AS ' . $f_alias);
+                    $select->push($main_table_alias . '.' . $f . ' AS ' . $f_alias);
                 }
 
             }
