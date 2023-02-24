@@ -16,6 +16,8 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
     //use SoftDeletes;
     use Notifiable;
 
+    public $alias = [];
+
     /**
      * Get the table associated with the model. Copies getTable() in Model
      *
@@ -76,12 +78,11 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             's' => [],
 
         ];
-       
+
         $params = array_merge($defaults, $args);
 
         $query = $this->generateQuery($params);
 
-    
         if ($params['count']) {
             $result['total'] = $query->count();
         }
@@ -99,7 +100,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             $result['status'] = 1;
             $result['records'] = $query->get();
             $result['message'] = 'Records Found Successfully.';
-        } catch (\Throwable $th) {
+        } catch (\Throwable$th) {
             throw $th;
         }
 
@@ -128,7 +129,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             $result['status'] = 1;
             $result['record'] = $query->first();
             $result['message'] = 'Record Found Successfully.';
-        } catch (\Throwable $th) {
+        } catch (\Throwable$th) {
             //throw $th;
         }
 
@@ -185,7 +186,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             $result['status'] = 1;
             $result['records'] = $list;
             $result['message'] = 'Records Found Successfully.';
-        } catch (\Throwable $th) {
+        } catch (\Throwable$th) {
             //throw $th;
         }
 
@@ -209,7 +210,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             $result['status'] = 1;
             $result['record'] = $this->create($args);
             $result['message'] = 'Record Created Successfully.';
-        } catch (\Throwable $th) {
+        } catch (\Throwable$th) {
             //throw $th;
         }
 
@@ -236,7 +237,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             $result['status'] = 1;
             $result['record'] = $this->save();
             $result['message'] = 'Record Updated Successfully.';
-        } catch (\Throwable $th) {
+        } catch (\Throwable$th) {
             //throw $th;
         }
 
@@ -259,7 +260,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             $result['status'] = 1;
             $result['record'] = $this->where('id', $id)->firstorfail()->delete();
             $result['message'] = "ID:$id Record Delete Successfully.";
-        } catch (\Throwable $th) {
+        } catch (\Throwable$th) {
             //throw $th;
         }
 
@@ -268,60 +269,73 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
 
     public function generateQuery($params)
     {
-        $alias = collect(['']);
+        $this->alias = collect([]);
         $query = $this::query();
 
-        $table_name = $this->table;
-        list($main_table_alias, $alias_exist, $alias) = $this->getAlias($table_name, $alias);
+        $main_table_name = $this->table;
+        list($main_table_alias, $alias_exist) = $this->getAlias($main_table_name);
         $select = collect([$main_table_alias . '.*']);
 
-        $query->from($table_name . ' as ' . $main_table_alias);
+        $query->from($main_table_name . ' as ' . $main_table_alias);
 
         if (isset($params['f']) && is_array($params['f'])) {
             $select = collect([$main_table_alias . '.id']);
             $main_field = '';
+            $as_arr = ['as', 'AS', 'As', 'aS'];
 
-            foreach ($params['f'] as $field => $f) {
-                list($table_alias, $alias_exist, $alias) = $this->getAlias($table_name, $alias);
+            foreach ($params['f'] as $field => $field_str) {
 
-                if (strpos($f, '.')) {
-                    $tables_concat = '';
-                    $sub_main_field = $main_field;
-                    $pre_leftjoin_alias = $table_alias;
+                $tables_concats = '';
+                $parent_field_name = '';
+                $field_name = '';
+                $parent_alias = $main_table_alias;
 
-                    $table_levels = explode('.', $f);
+                $f_alias = $f = trim(preg_replace("/\s+/", " ", $field_str), ' ');
+        
+                $field_arr = explode(' ', $f);
+                if (!empty(array_intersect($as_arr, $field_arr))) {
+                    $f = $field_arr[0];
+                    $f_alias = $field_arr[2];
+                }
+
+                if (strpos($f, '__')) {
+                    $table_levels = [$f];
+
+                    if (strpos($f, '___')) {
+                        $table_levels = explode('___', $f);
+                    }
+
                     foreach ($table_levels as $key => $table_level) {
-                        $table_parts = explode('__', $table_level);
-                        $tables_concat = ($tables_concat == '') ? $sub_main_field . '_' . $table_parts[0] : $tables_concat . '_' . $sub_main_field . '_' . $table_parts[0];
 
-                        list($leftjoin_alias, $alias_exist, $alias) = $this->getAlias($tables_concat, $alias);
-                        $leftjoin_table = $table_parts[0] . ' as ' . $leftjoin_alias;
+                        $table_parts = explode('__', $table_level);
+
+                        $parent_field_name = (count($table_parts) == 2 && $key) ? $parent_field_name : $table_parts[0];
+                        $sub_table_name = (count($table_parts) == 2 && $key) ? $table_parts[0] : $table_parts[1];
+                        $field_name = (count($table_parts) == 2 && $key) ? $table_parts[1] : $table_parts[2];
+
+                        $table_concat = $parent_field_name . '__' . $sub_table_name;
+
+                        $tables_concats = ($tables_concats != '') ? $tables_concats . '___' . $table_concat : $table_concat;
+
+                        list($table_alias, $alias_exist) = $this->getAlias($tables_concats);
 
                         if (!$alias_exist) {
-                            $query->leftJoin($leftjoin_table, $leftjoin_alias . '.id', '=', $pre_leftjoin_alias . '.' . $sub_main_field);
+                            $query->leftJoin($sub_table_name . ' AS ' . $table_alias, $table_alias . '.id', '=', $parent_alias . '.' . $parent_field_name);
                         }
 
-                        $sub_main_field = $table_parts[1];
-                        $pre_leftjoin_alias = $leftjoin_alias;
+                        $parent_alias = $table_alias;
+                        $parent_field_name = $field_name;
                     }
 
-                    $select->push($pre_leftjoin_alias . '.' . $sub_main_field . ' as ' . $main_field . '.' . $f);
-                } elseif (strpos($f, '__')) {
-                    $table_parts = explode('__', $f);
+                    $select->push($parent_alias . '.' . $field_name . ' AS ' . $f_alias);
 
-                    list($leftjoin_alias, $alias_exist, $alias) = $this->getAlias($main_field . '_' . $table_parts[0], $alias);
-                    $leftjoin_table = $table_parts[0] . ' as ' . $leftjoin_alias;
-
-                    if (!$alias_exist) {
-                        $query->leftJoin($leftjoin_table, $leftjoin_alias . '.id', '=', $main_table_alias . '.' . $main_field);
-                    }
-
-                    $select->push($leftjoin_alias . '.' . $table_parts[1] . ' as ' . $main_field . '.' . $f);
                 } else {
                     $main_field = $f;
-                    $select->push($main_table_alias . '.' . $f);
+                    $select->push($main_table_alias . '.' . $f. ' AS ' . $f_alias);
                 }
+
             }
+
         }
 
         $query = $query->select($select->all());
@@ -342,19 +356,20 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
         return $query;
     }
 
-    private function getAlias($table_name, $alias)
+    private function getAlias($table_name, $field = '')
     {
+        $table_name_field = ($field != '') ? $field . '_' . $table_name : $table_name;
         $alias_exist = false;
         $alpha = range('a', 'z');
-        $key = $alias->search($table_name);
+        $key = $this->alias->search($table_name_field);
 
         if (!$key) {
-            $alias->push($table_name);
-            $key = $alias->search($table_name);
+            $this->alias->push($table_name_field);
+            $key = $this->alias->search($table_name_field);
         } else {
             $alias_exist = true;
         }
 
-        return [$alpha[$key], $alias_exist, $alias];
+        return [$alpha[$key], $alias_exist];
     }
 }
