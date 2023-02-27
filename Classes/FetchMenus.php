@@ -2,8 +2,6 @@
 
 namespace Modules\Base\Classes;
 
-use Illuminate\Support\Str;
-
 class FetchMenus
 {
 
@@ -11,11 +9,13 @@ class FetchMenus
 
     public function fetchMenus()
     {
+        $column = 'position';
+
         $DS = DIRECTORY_SEPARATOR;
 
         $modules_path = realpath(base_path()) . $DS . 'Modules';
 
-        $base_path = $modules_path  . $DS . 'Base';
+        $base_path = $modules_path . $DS . 'Base';
 
         $this->loadDefaultMenus($base_path);
 
@@ -26,14 +26,14 @@ class FetchMenus
                 if (!$fileinfo->isDot() && $fileinfo->isDir()) {
                     $module_name = $fileinfo->getFilename();
 
-                    if($base_path == $modules_path  . $DS . $module_name){
+                    if ($base_path == $modules_path . $DS . $module_name) {
                         continue;
                     }
 
                     $file_names = ['menu', 'menus'];
 
                     foreach ($file_names as $key => $file_name) {
-                        $menu_file = $modules_path .  $DS . $module_name .  $DS . $file_name . '.php';
+                        $menu_file = $modules_path . $DS . $module_name . $DS . $file_name . '.php';
 
                         if (file_exists($menu_file)) {
                             include_once $menu_file;
@@ -43,9 +43,18 @@ class FetchMenus
             }
         }
 
+
         // Reorder Menu
+        usort($this->menus, function ($a, $b) use ($column) {
+            if (isset($a[$column]) && isset($b[$column])) {
+                return $a[$column] <=> $b[$column];
+            }
+            return -1;
+        });
+
+        // Reorder SubMenu
         foreach ($this->menus as $module => $menu) {
-            $column = 'position';
+            
             $tmp_menus = $this->menus[$module]['menus'];
 
             usort($tmp_menus, function ($a, $b) use ($column) {
@@ -54,7 +63,6 @@ class FetchMenus
                 }
                 return -1;
             });
-
 
             foreach ($tmp_menus as $key => $tmp_submenu) {
                 $tmp_submenu_list = $tmp_submenu['list'];
@@ -70,7 +78,7 @@ class FetchMenus
                 });
 
                 $tmp_menus[$tmp_submenu['key']]['list'] = [];
-                $tmp_menus[$tmp_submenu['key']]['list'] =  $tmp_submenu_list;
+                $tmp_menus[$tmp_submenu['key']]['list'] = $tmp_submenu_list;
             }
 
             $this->menus[$module]['menus'] = [];
@@ -80,7 +88,6 @@ class FetchMenus
         return $this->menus;
     }
 
-
     public function add_module_info($module, $data)
     {
         if (!array_key_exists($module, $this->menus)) {
@@ -88,6 +95,7 @@ class FetchMenus
         }
 
         $data['key'] = $module;
+        $data['position'] = (isset($data['position'])) ? $data['position'] : 5;
 
         $this->menus[$module] = array_merge($this->menus[$module], $data);
     }
@@ -99,7 +107,6 @@ class FetchMenus
         $this->menus[$module]['menus'][$key]['path'] = $path;
         $this->menus[$module]['menus'][$key]['position'] = $position;
         $this->menus[$module]['menus'][$key]['icon'] = $icon;
-
 
         if (!isset($this->menus[$module]['menus'][$key]['list'])) {
             $this->menus[$module]['menus'][$key]['list'] = [];
@@ -116,14 +123,15 @@ class FetchMenus
         ];
     }
 
-    private function loadDefaultMenus($base_path){
-   
+    private function loadDefaultMenus($base_path)
+    {
+
         $DS = DIRECTORY_SEPARATOR;
-        
+
         $file_names = ['menu', 'menus'];
 
         foreach ($file_names as $key => $file_name) {
-            $menu_file = $base_path.  $DS . $file_name . '.php';
+            $menu_file = $base_path . $DS . $file_name . '.php';
 
             if (file_exists($menu_file)) {
                 include_once $menu_file;
