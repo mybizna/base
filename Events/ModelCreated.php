@@ -4,21 +4,22 @@ namespace Modules\Base\Events;
 
 use Illuminate\Queue\SerializesModels;
 
-class ReservedUsernames
-
+class ModelCreated
 {
 
     use SerializesModels;
 
-    public $username;
+    public $table_name;
+    public $model;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($username)
+    public function __construct($table_name, $model)
     {
-        $this->username = $username;
+        $this->table_name = $table_name;
+        $this->model = $model;
     }
 
     /**

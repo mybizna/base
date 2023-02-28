@@ -5,6 +5,9 @@ namespace Modules\Base\Entities;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Modules\Base\Events\ModelCreated;
+use Modules\Base\Events\ModelDeleted;
+use Modules\Base\Events\ModelUpdated;
 use Wildside\Userstamps\Userstamps;
 
 class BaseModel extends \Illuminate\Database\Eloquent\Model
@@ -45,6 +48,19 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
         static::deleting(function ($model) {
             $model->deleted_by = is_object(Auth::guard(config('app.guards.web'))->user()) ? Auth::guard(config('app.guards.web'))->user()->id : 1;
         });
+
+        static::created(function ($model) {
+            event(new ModelCreated( $model->getTableName(), $model));
+        });
+
+        static::deleted(function ($model) {
+            event(new ModelDeleted( $model->getTableName(), $model));
+        });
+
+        static::updated(function ($model) {
+            event(new ModelUpdated( $model->getTableName(), $model));
+        });
+
     }
 
     /**
@@ -226,7 +242,6 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             'message' => 'No Record',
         ];
 
-        
         try {
 
             $this->fill($args);
