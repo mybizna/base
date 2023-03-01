@@ -52,7 +52,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get($prefix . '/{id}', $apicontroller . '@getRecord')->where(['id' => '[0-9]+']);
     Route::get($prefix . '/recordselect', $apicontroller . '@getRecordSelect');
     Route::post($prefix, $apicontroller . '@createRecord');
-    Route::put($prefix . '/{id}', $apicontroller . '@updateRecord')->where(['id' => '[0-9]+']);
+    Route::post($prefix . '/{id}', $apicontroller . '@updateRecord')->where(['id' => '[0-9]+']);
     Route::delete($prefix . '/{id}', $apicontroller . '@deleteRecord')->where(['id' => '[0-9]+']);
     Route::match(['get', 'post'], $prefix . '/{function}/',  $apicontroller . '@functionCall');
 });
