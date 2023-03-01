@@ -32,6 +32,18 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
         return $table ?? Str::snake(Str::pluralStudly(class_basename(static::class)));
     }
 
+    public static function getSlug($slug)
+    {
+
+        $slug = preg_replace('/\s+/', ' ', $slug);
+
+        $slug = preg_replace('/[^A-Za-z0-9\-]/', '', $slug);
+
+        $slug = str_replace(' ', '-', $slug);
+
+        return strtolower($slug);
+    }
+
     protected static function boot()
     {
         parent::boot();
@@ -39,10 +51,26 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
         static::creating(function ($model) {
             $model->created_by = is_object(Auth::guard(config('app.guards.web'))->user()) ? Auth::guard(config('app.guards.web'))->user()->id : 1;
             $model->updated_by = null;
+
+            if (isset($model->slug)) {
+                $title = (isset($model->title)) ? $model->title : '';
+                $title = (isset($model->name) && $title == '') ? $model->name : $title;
+                $title = (isset($model->username) && $title == '') ? $model->username : $title;
+
+                $model->slug = self::getSlug($model->slug) ?? self::getSlug($title);
+            }
         });
 
         static::updating(function ($model) {
             $model->updated_by = is_object(Auth::guard(config('app.guards.web'))->user()) ? Auth::guard(config('app.guards.web'))->user()->id : 1;
+          
+            if (isset($model->slug)) {
+                $title = (isset($model->title)) ? $model->title : '';
+                $title = (isset($model->name) && $title == '') ? $model->name : $title;
+                $title = (isset($model->username) && $title == '') ? $model->username : $title;
+
+                $model->slug = self::getSlug($model->slug) ?? self::getSlug($title);
+            }
         });
 
         static::deleting(function ($model) {
@@ -50,15 +78,15 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
         });
 
         static::created(function ($model) {
-            event(new ModelCreated( $model->getTableName(), $model));
+            event(new ModelCreated($model->getTableName(), $model));
         });
 
         static::deleted(function ($model) {
-            event(new ModelDeleted( $model->getTableName(), $model));
+            event(new ModelDeleted($model->getTableName(), $model));
         });
 
         static::updated(function ($model) {
-            event(new ModelUpdated( $model->getTableName(), $model));
+            event(new ModelUpdated($model->getTableName(), $model));
         });
 
     }
