@@ -34,12 +34,11 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
 
     public static function getSlug($slug)
     {
-
         $slug = preg_replace('/\s+/', ' ', $slug);
 
-        $slug = preg_replace('/[^A-Za-z0-9\-]/', '', $slug);
-
         $slug = str_replace(' ', '-', $slug);
+        
+        $slug = preg_replace('/[^A-Za-z0-9\-\_]/', '', $slug);
 
         return strtolower($slug);
     }
@@ -63,7 +62,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
 
         static::updating(function ($model) {
             $model->updated_by = is_object(Auth::guard(config('app.guards.web'))->user()) ? Auth::guard(config('app.guards.web'))->user()->id : 1;
-          
+
             if (isset($model->slug)) {
                 $title = (isset($model->title)) ? $model->title : '';
                 $title = (isset($model->name) && $title == '') ? $model->name : $title;
@@ -295,13 +294,15 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             'message' => 'No Record.',
         ];
 
-        try {
-            $result['error'] = 0;
-            $result['status'] = 1;
-            $result['record'] = $this->where('id', $id)->firstorfail()->delete();
-            $result['message'] = "ID:$id Record Delete Successfully.";
-        } catch (\Throwable$th) {
-            throw $th;
+        if (isset($this->can_delete) && $this->can_delete) {
+            try {
+                $result['error'] = 0;
+                $result['status'] = 1;
+                $result['record'] = $this->where('id', $id)->firstorfail()->delete();
+                $result['message'] = "ID:$id Record Delete Successfully.";
+            } catch (\Throwable$th) {
+                throw $th;
+            }
         }
 
         return $result;
