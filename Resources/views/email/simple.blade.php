@@ -1,6 +1,5 @@
 <!DOCTYPE html
     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-{% load static %}
 
 <html xmlns:v="urn:schemas-microsoft-com:vml">
 
@@ -13,7 +12,7 @@
     <link href='https://fonts.googleapis.com/css?family=Quicksand:300,400,700' rel="stylesheet">
     <!--<![endif]-->
 
-    <title>{{  theme_title }}</title>
+    <title>{{  $theme_title }}</title>
 
     <style type="text/css">
         body {
@@ -169,7 +168,7 @@
             <td>
                 <div
                     style="overflow:hidden;display:none;font-size:1px;color:#ffffff;line-height:1px;font-family:Arial;max-height:0px;max-width:0px;opacity:0;">
-                    {{  theme_title }}
+                    {{  $theme_title }}
                 </div>
             </td>
         </tr>
@@ -197,7 +196,7 @@
                                         <a href=""
                                             style="display: block; border-style: none !important; border: 0 !important;">
                                             <img width="100" border="0" style="display: block; width: 100px;"
-                                                src="{{  theme_logo }}" alt="" />
+                                                src="{{  $theme_logo }}" alt="" />
                                         </a>
                                     </td>
                                 </tr>
@@ -232,7 +231,7 @@
 
                             <div style="line-height: 35px">
 
-                                {{  theme_title }}
+                                {{  $theme_title }}
 
                             </div>
                         </td>
@@ -265,7 +264,7 @@
                                     <td align="left"
                                         style="color: #888888; font-size: 16px; font-family: 'Work Sans', Calibri, sans-serif; line-height: 24px;">
                                         <!-- section text ======-->
-                                        {{ body }}
+                                        {{ $body }}
                                     </td>
                                 </tr>
                             </table>
@@ -314,7 +313,7 @@
                                                     <a href=""
                                                         style="display: block; border-style: none !important; border: 0 !important;"><img
                                                             width="80" border="0" style="display: block; width: 80px;"
-                                                            src="{{ theme_logo }}" alt="" /></a>
+                                                            src="{{ $theme_logo }}" alt="" /></a>
                                                 </td>
                                             </tr>
 
@@ -330,7 +329,7 @@
                                                         style="color: #333333; font-size: 14px; font-family: 'Work Sans', Calibri, sans-serif; font-weight: 600; mso-line-height-rule: exactly; line-height: 23px;">
 
                                                         Email us: <a href="mailto:"
-                                                            style="color: #888888; font-size: 14px; font-family: 'Hind Siliguri', Calibri, Sans-serif; font-weight: 400;">{{ contact_email }}</a>
+                                                            style="color: #888888; font-size: 14px; font-family: 'Hind Siliguri', Calibri, Sans-serif; font-weight: 400;">{{ $contact_email }}</a>
 
                                                         <br />
                                                         <br />
@@ -371,14 +370,14 @@
                                                     <table border="0" align="right" cellpadding="0" cellspacing="0">
                                                         <tr>
                                                             <td>
-                                                                <a href="{{ facebook_link }}"
+                                                                <a href="{{ $facebook_link }}"
                                                                     style="display: block; border-style: none !important; border: 0 !important;"><img
                                                                         width="24" border="0" style="display: block;"
                                                                         src="http://i.imgur.com/Qc3zTxn.png" alt=""></a>
                                                             </td>
                                                             <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
                                                             <td>
-                                                                <a href="{{ twitter_link }}"
+                                                                <a href="{{ $twitter_link }}"
                                                                     style="display: block; border-style: none !important; border: 0 !important;"><img
                                                                         width="24" border="0" style="display: block;"
                                                                         src="http://i.imgur.com/RBRORq1.png" alt=""></a>
@@ -453,7 +452,7 @@
                                             <tr>
                                                 <td align="center">
                                                     <a style="font-size: 14px; font-family: 'Work Sans', Calibri, sans-serif; line-height: 24px;color: #5caad2; text-decoration: none;font-weight:bold;"
-                                                        href="{{ unsubscribe_url }}">UNSUBSCRIBE</a>
+                                                        href="{{ $unsubscribe_url }}">UNSUBSCRIBE</a>
                                                 </td>
                                             </tr>
                                         </table>
