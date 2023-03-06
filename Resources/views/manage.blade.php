@@ -17,6 +17,7 @@
         var autologin = '{!! $autologin !!}';
         var responsive_point = {!! $responsive_point !!};
         var floating_top = {{ $floating_top ? 'true' : 'false' }};
+        var margin_top = {{ $margin_top ? 'true' : 'false' }};
 
         function __(title, select) {
             return title;
