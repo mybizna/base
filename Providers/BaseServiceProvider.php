@@ -28,6 +28,10 @@ class BaseServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->commands([
+            \Modules\Base\Console\Commands\DataProcessor::class,
+        ]);
+
         $this->setGlobalVariables();
 
         require_once base_path() . '/Modules/Base/Helpers/GlobalFunctions.php';

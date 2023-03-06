@@ -15,9 +15,7 @@ class AuthRoutes
         return function ($options = []) {
            
             $namespace = class_exists($this->prependGroupNamespace('Auth\LoginController')) ? null : 'App\Http\Controllers';
-            print_r($this->prependGroupNamespace('Auth\LoginController'));
-            print_r($namespace);
-            print_r("\n");
+    
             $this->group(['namespace' => 'Modules\Base\Http\Controllers'], function() use($options) {
                 // Login Routes...
                 if ($options['login'] ?? true) {

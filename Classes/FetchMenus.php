@@ -5,40 +5,31 @@ namespace Modules\Base\Classes;
 class FetchMenus
 {
 
-    public $menus = [];
-
+    public $menus = [];   
+    public $paths = [];
+ 
+    public function __construct()
+    {
+        $groups = (is_file('../readme.txt')) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
+        foreach ($groups as $key => $group) {
+            $this->paths = array_merge($this->paths, glob(base_path($group)));
+        }
+    }
+    
     public function fetchMenus()
     {
         $column = 'position';
 
         $DS = DIRECTORY_SEPARATOR;
 
-        $modules_path = realpath(base_path()) . $DS . 'Modules';
+        foreach ($this->paths as $key => $path) {
+            $file_names = ['menu', 'menus'];
+            
+            foreach ($file_names as $key => $file_name) {
+                $menu_file = $path  . $DS . $file_name . '.php';
 
-        $base_path = $modules_path . $DS . 'Base';
-
-        $this->loadDefaultMenus($base_path);
-
-        if (is_dir($modules_path)) {
-            $dir = new \DirectoryIterator($modules_path);
-
-            foreach ($dir as $fileinfo) {
-                if (!$fileinfo->isDot() && $fileinfo->isDir()) {
-                    $module_name = $fileinfo->getFilename();
-
-                    if ($base_path == $modules_path . $DS . $module_name) {
-                        continue;
-                    }
-
-                    $file_names = ['menu', 'menus'];
-
-                    foreach ($file_names as $key => $file_name) {
-                        $menu_file = $modules_path . $DS . $module_name . $DS . $file_name . '.php';
-
-                        if (file_exists($menu_file)) {
-                            include_once $menu_file;
-                        }
-                    }
+                if (file_exists($menu_file)) {
+                    include_once $menu_file;
                 }
             }
         }

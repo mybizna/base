@@ -8,6 +8,18 @@ use Modules\Core\Entities\DataMigrated;
 
 class Datasetter
 {
+    public $paths = [];
+    public $show_logs = false;
+    public $file_logging = false;
+
+    public function __construct()
+    {
+        $groups = (is_file('../readme.txt')) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
+        foreach ($groups as $key => $group) {
+            $this->paths = array_merge($this->paths, glob(base_path($group)));
+        }
+
+    }
 
     //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     //Data Modules
@@ -17,51 +29,48 @@ class Datasetter
 
         $DS = DIRECTORY_SEPARATOR;
 
-        $modules_path = realpath(base_path()) . $DS . 'Modules';
+        foreach ($this->paths as $key => $path) {
 
-        if (is_dir($modules_path)) {
-            $dir = new \DirectoryIterator($modules_path);
+            $path_arr = array_reverse(explode('/', $path));
 
-            foreach ($dir as $fileinfo) {
-                if (!$fileinfo->isDot() && $fileinfo->isDir()) {
-                    $module_name = $fileinfo->getFilename();
-                    $namespace = 'Modules\\' . $module_name . '\\Entities\\Data';
-                    $data_folder = $modules_path . $DS . $module_name . $DS . 'Entities' . $DS . 'Data';
+            $module_name = $path_arr[0];
 
-                    if (is_dir($data_folder)) {
-                        $data_dir = new \DirectoryIterator($data_folder);
+            $namespace = 'Modules\\' . $module_name . '\\Entities\\Data';
+            $data_folder = $path . $DS . 'Entities' . $DS . 'Data';
 
-                        foreach ($data_dir as $fileinfo) {
-                            if ($fileinfo->isFile()) {
-                                $data_name = $fileinfo->getFilename();
+            if (is_dir($data_folder)) {
+                $data_dir = new \DirectoryIterator($data_folder);
 
-                                $model = $namespace . str_replace(
-                                    ['/', '.php'],
-                                    ['\\', ''],
-                                    '\\' . $data_name
-                                );
+                foreach ($data_dir as $fileinfo) {
+                    if ($fileinfo->isFile()) {
+                        $data_name = $fileinfo->getFilename();
 
-                                if (method_exists($model, 'data')) {
-                                    $models->push([
-                                        'data_folder' => $data_folder,
-                                        'object' => $object = app($model),
-                                        'order' => $object->ordering ?? 0,
-                                    ]);
-                                }
-                            }
+                        $model = $namespace . str_replace(
+                            ['/', '.php'],
+                            ['\\', ''],
+                            '\\' . $data_name
+                        );
+
+                        if (method_exists($model, 'data')) {
+                            $models->push([
+                                'data_folder' => $data_folder,
+                                'object' => $object = app($model),
+                                'order' => $object->ordering ?? 0,
+                            ]);
                         }
                     }
                 }
             }
+        }
 
-            foreach ($models->sortBy('order') as $model) {
-                $this->output('Model: ' . $model['data_folder'], true);
+        foreach ($models->sortBy('order') as $model) {
+            $this->logOutput('Model: ' . $model['data_folder'], 'title');
 
-                if (!isset($model['object']->run_later) || !$model['object']->run_later) {
-                    $model['object']->data($this);
-                }
+            if (!isset($model['object']->run_later) || !$model['object']->run_later) {
+                $model['object']->data($this);
             }
         }
+
     }
 
     public function add_data($module, $model, $main_field, $data)
@@ -78,7 +87,7 @@ class Datasetter
         $json_data = json_encode($data);
         $hash = md5($json_data);
 
-        $this->output($json_data);
+        $this->logOutput($json_data);
 
         $data_migrated = DataMigrated::where($data_to_migrate)
             ->whereNotNull('item_id')->first();
@@ -105,24 +114,39 @@ class Datasetter
             DataMigrated::create($data_to_migrate);
         }
     }
-    private function output($string, $with_space = false)
+    private function logOutput($message, $type = 'info')
     {
-        if ($with_space) {
-            Log::channel('datasetter')->info('');
-            Log::channel('datasetter')->info('');
-            Log::channel('datasetter')->info('-----------------------------------');
-            Log::channel('datasetter')->info($string);
-            Log::channel('datasetter')->info('');
-        } else {
-            Log::channel('datasetter')->info($string);
+        $output = new \Symfony\Component\Console\Output\ConsoleOutput();
+
+        if ($this->show_logs) {
+            if ($type == 'title') {
+                if ($this->file_logging) {
+                    Log::channel('datasetter')->info('');
+                    Log::channel('datasetter')->info($message);
+                    Log::channel('datasetter')->info('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
+                    Log::channel('datasetter')->info('');
+                } else {
+                    $output->writeln("<info></info>");
+                    $output->writeln("<info>$message</info>");
+                    $output->writeln("<info>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</info>");
+                    $output->writeln("<info></info>");
+                }
+            } else {
+                if ($this->file_logging) {
+                    Log::channel('datasetter')->info($message);
+                } else {
+                    $output->writeln("<info>$message</info>");
+                }
+            }
         }
+
     }
 
     private function getClassName($module, $model)
     {
         $classname = 'Modules\\' . ucfirst($module) . '\Entities\\' . ucfirst(Str::camel($model));
 
-        Log::channel('datasetter')->info($classname);
+        $this->logOutput($classname);
 
         return (class_exists($classname)) ? new $classname() : false;
     }

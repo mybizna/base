@@ -7,12 +7,20 @@ use Illuminate\Support\Str;
 
 class DiscoverModules
 {
-
+    public $paths = [];
+ 
+    public function __construct()
+    {
+        $groups = (is_file('../readme.txt')) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
+        foreach ($groups as $key => $group) {
+            $this->paths = array_merge($this->paths, glob(base_path($group)));
+        }
+    }
+    
     public function discoverModules()
     {
 
         return; 
-
         
         $DS = DIRECTORY_SEPARATOR;
 
