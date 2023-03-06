@@ -23,8 +23,6 @@ class FetchRoutes
 
     public function fetchRoutes()
     {
-        $DS = DIRECTORY_SEPARATOR;
-
         Cache::forget('fetch_routes');
 
         if (Cache::has("fetch_routes") && Cache::has("fetch_layouts")) {
@@ -37,7 +35,7 @@ class FetchRoutes
 
                 $routes = $this->getModuleRoute($path, $routes);
 
-                $routes_file = $path . $DS . 'routes.json';
+                $routes_file = $path . DIRECTORY_SEPARATOR . 'routes.json';
                 if (file_exists($routes_file)) {
                     $routes_arr = json_decode(file_get_contents($routes_file), true);
                     if (!empty($routes_arr)) {
@@ -58,7 +56,6 @@ class FetchRoutes
     public function getModuleRoute($path, $routes)
     {
 
-        $DS = DIRECTORY_SEPARATOR;
 
         $path_arr = array_reverse(explode('/', $path));
         
@@ -66,7 +63,7 @@ class FetchRoutes
         $module_route = $this->addRouteToList('/' . $module_name, $m_folder_path, 'router_view');
 
         foreach (['admin', 'web'] as $folder) {
-            $vue_folders = $path . $DS . 'views' . $DS . $folder;
+            $vue_folders = $path . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . $folder;
 
             $f_folder_path = $m_folder_path . '/' . $folder;
             $folder_route = $this->addRouteToList($folder, $f_folder_path, 'router_view');
@@ -77,7 +74,7 @@ class FetchRoutes
                 foreach ($dir as $fileinfo) {
                     if (!$fileinfo->isDot() && $fileinfo->isDir()) {
                         $vs_foldername = $fileinfo->getFilename();
-                        $vs_folders = $vue_folders . $DS . $vs_foldername;
+                        $vs_folders = $vue_folders . DIRECTORY_SEPARATOR . $vs_foldername;
                         $v_folder_path = $f_folder_path . '/' . $vs_foldername;
                         
                         $vs_route = $this->addRouteToList($vs_foldername, $v_folder_path, 'router_view');

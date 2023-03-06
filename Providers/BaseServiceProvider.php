@@ -117,22 +117,26 @@ class BaseServiceProvider extends ServiceProvider
      */
     public function registerTranslations()
     {
+        $paths = [];
+
         $DS = DIRECTORY_SEPARATOR;
-        $modules_path = realpath(base_path()) . $DS . 'Modules';
 
-        if (is_dir($modules_path)) {
-            $dir = new \DirectoryIterator($modules_path);
+        $groups = (is_file('../readme.txt')) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
 
-            foreach ($dir as $fileinfo) {
-                if (!$fileinfo->isDot() && $fileinfo->isDir()) {
-                    $module_name = $fileinfo->getFilename();
-
-                    if (is_dir($modules_path . $DS . $module_name . $DS . 'Resources/lang')) {
-                        $this->loadTranslationsFrom(module_path($module_name, 'Resources/lang'), Str::lower($module_name));
-                    }
-                }
-            }
+        foreach ($groups as $key => $group) {
+            $paths = array_merge($paths, glob(base_path($group)));
         }
+
+        foreach ($paths as $key => $path) {
+            $path_arr = array_reverse(explode('/', $path));
+            $module_name = $path_arr[0];
+
+            if (is_dir($path . $DS . 'Resources/lang')) {
+                $this->loadTranslationsFrom(module_path($module_name, 'Resources/lang'), Str::lower($module_name));
+            }
+
+        }
+
     }
 
     /**
@@ -145,41 +149,41 @@ class BaseServiceProvider extends ServiceProvider
         // TODO: Rework using setting
 
         $DS = DIRECTORY_SEPARATOR;
-        $modules_path = realpath(base_path()) . $DS . 'Modules';
 
-        if (is_dir($modules_path)) {
-            $dir = new \DirectoryIterator($modules_path);
+        $paths = [];
 
-            foreach ($dir as $fileinfo) {
-                if (!$fileinfo->isDot() && $fileinfo->isDir()) {
-                    $merged_settings = [];
-                    $module_name = $fileinfo->getFilename();
-                    $module_name_l = Str::lower($module_name);
-                    $config_path = $modules_path . $DS . $module_name . $DS . 'settings.php';
+        $groups = (is_file('../readme.txt')) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
+        foreach ($groups as $key => $group) {
+            $paths = array_merge($paths, glob(base_path($group)));
+        }
 
-                    if (file_exists($config_path)) {
+        foreach ($paths as $key => $path) {
+            $path_arr = array_reverse(explode('/', $path));
+            $module_name = $path_arr[0];
 
-                        $settings = require $config_path;
+            $module_name_l = Str::lower($module_name);
+            $config_path = $path . $DS . 'settings.php';
 
-                        foreach ($settings as $key => $setting) {
+            if (file_exists($config_path)) {
 
-                            $value = $setting['value'];
-                            $db_setting = Setting::where(['module' => $module_name_l, 'name' => $key])->first();
+                $settings = require $config_path;
 
-                            if ($db_setting) {
-                                $value = $db_setting->value;
-                            }
+                foreach ($settings as $key => $setting) {
 
-                            $merged_settings[$key] = $value;
+                    $value = $setting['value'];
+                    $db_setting = Setting::where(['module' => $module_name_l, 'name' => $key])->first();
 
-                        }
-
-                        $config = $this->app['config']->get($module_name_l, []);
-                        $this->app['config']->set($module_name_l, array_merge($merged_settings, $config));
-
+                    if ($db_setting) {
+                        $value = $db_setting->value;
                     }
 
+                    $merged_settings[$key] = $value;
+
                 }
+
+                $config = $this->app['config']->get($module_name_l, []);
+                $this->app['config']->set($module_name_l, array_merge($merged_settings, $config));
+
             }
         }
 
@@ -194,31 +198,32 @@ class BaseServiceProvider extends ServiceProvider
     {
 
         $DS = DIRECTORY_SEPARATOR;
-        $modules_path = realpath(base_path()) . $DS . 'Modules';
 
-        if (is_dir($modules_path)) {
-            $dir = new \DirectoryIterator($modules_path);
+        $paths = [];
 
-            foreach ($dir as $fileinfo) {
-                if (!$fileinfo->isDot() && $fileinfo->isDir()) {
-                    $module_name = $fileinfo->getFilename();
+        $groups = (is_file('../readme.txt')) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
+        foreach ($groups as $key => $group) {
+            $paths = array_merge($paths, glob(base_path($group)));
+        }
 
-                    $viewPath = resource_path('views/modules/' . Str::lower($module_name));
+        foreach ($paths as $key => $path) {
+            $path_arr = array_reverse(explode('/', $path));
+            $module_name = $path_arr[0];
 
-                    $sourcePath = $modules_path . $DS . $module_name . $DS . 'Resources' . $DS . 'views';
+            $viewPath = resource_path('views/modules/' . Str::lower($module_name));
+            
+            $sourcePath = $path . $DS . 'Resources' . $DS . 'views';
 
-                    if (is_dir($sourcePath)) {
-                        $this->publishes([
-                            $sourcePath => $viewPath,
-                        ], 'views');
+            if (is_dir($sourcePath)) {
+                $this->publishes([
+                    $sourcePath => $viewPath,
+                ], 'views');
 
-                        $this->loadViewsFrom(array_merge(array_map(function ($path) use ($module_name) {
-                            return $path . '/modules/' . Str::lower($module_name);
-                        }, \Config::get('view.paths')), [$sourcePath]), Str::lower($module_name));
-                    }
-
-                }
+                $this->loadViewsFrom(array_merge(array_map(function ($path) use ($module_name) {
+                    return $path . '/modules/' . Str::lower($module_name);
+                }, \Config::get('view.paths')), [$sourcePath]), Str::lower($module_name));
             }
+
         }
 
     }

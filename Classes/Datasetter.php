@@ -27,16 +27,13 @@ class Datasetter
     {
         $models = collect();
 
-        $DS = DIRECTORY_SEPARATOR;
-
         foreach ($this->paths as $key => $path) {
 
             $path_arr = array_reverse(explode('/', $path));
-
             $module_name = $path_arr[0];
 
             $namespace = 'Modules\\' . $module_name . '\\Entities\\Data';
-            $data_folder = $path . $DS . 'Entities' . $DS . 'Data';
+            $data_folder = $path . DIRECTORY_SEPARATOR . 'Entities' . DIRECTORY_SEPARATOR . 'Data';
 
             if (is_dir($data_folder)) {
                 $data_dir = new \DirectoryIterator($data_folder);

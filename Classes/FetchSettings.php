@@ -9,62 +9,62 @@ class FetchSettings
 {
 
     public $settings = [];
+    public $paths = [];
 
+    public function __construct()
+    {
+        $groups = (is_file('../readme.txt')) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
+        foreach ($groups as $key => $group) {
+            $this->paths = array_merge($this->paths, glob(base_path($group)));
+        }
+
+    }
     public function fetchSettings()
     {
-        $DS = DIRECTORY_SEPARATOR;
 
-        $modules_path = realpath(base_path()) . $DS . 'Modules';
+        foreach ($this->paths as $key => $path) {
+            $path_arr = array_reverse(explode('/', $path));
+            $module_name = $path_arr[0];
 
-        if (is_dir($modules_path)) {
-            $dir = new \DirectoryIterator($modules_path);
+            $module_name_slug = Str::lower($module_name);
+            
+            $file_names = ['setting', 'settings'];
 
-            foreach ($dir as $fileinfo) {
-                if (!$fileinfo->isDot() && $fileinfo->isDir()) {
-                    $module_name = $fileinfo->getFilename();
-                    $module_name_slug = Str::lower($module_name);
+            foreach ($file_names as $key => $file_name) {
+                $setting_file = $path. DIRECTORY_SEPARATOR . $file_name . '.php';
+                
+                if (file_exists($setting_file)) {
+                    $this->add_module_info($module_name_slug, [
+                        'title' => $module_name,
+                        'description' => $module_name,
+                    ]);
 
-                    
+                    //TODO: Change this to be logging errors silently.
+                    try {
+                        $settings = require $setting_file;
+                    } catch (\Throwable$th) {
+                        //throw $th;
+                    }
 
-                    $file_names = ['setting', 'settings'];
+                    foreach ($settings as $setting_name => $setting) {
+                        $category = (isset($setting['category']) && $setting['category'] != '')
+                        ? $setting['category']
+                        : 'Main';
+                        $category_slug = Str::snake(Str::lower($category));
 
-                    foreach ($file_names as $key => $file_name) {
-                        $setting_file = $modules_path . $DS . $module_name . $DS . $file_name . '.php';
-                        if (file_exists($setting_file)) {
-                            $this->add_module_info($module_name_slug, [
-                                'title' => $module_name,
-                                'description' => $module_name,
-                            ]);
+                        $category_position = ($category_slug == 'main') ? 5 : 1;
+                        $field_position = (isset($setting['position']) && $setting['position'] != '')
+                        ? $setting['position']
+                        : 5;
 
-                            //TODO: Change this to be logging errors silently.
-                            try {
-                                $settings = require $setting_file;
-                            } catch (\Throwable $th) {
-                                //throw $th;
-                            }
-                            
+                        $this->add_setting_category($module_name_slug, $category_slug, $category, $category_position);
 
-                            foreach ($settings as $setting_name => $setting) {
-                                $category = (isset($setting['category']) && $setting['category'] != '')
-                                ? $setting['category']
-                                : 'Main';
-                                $category_slug = Str::snake(Str::lower($category));
-
-                                $category_position = ($category_slug == 'main') ? 5 : 1;
-                                $field_position = (isset($setting['position']) && $setting['position'] != '')
-                                ? $setting['position']
-                                : 5;
-
-                                $this->add_setting_category($module_name_slug, $category_slug, $category, $category_position);
-
-                                $this->add_setting($module_name_slug, $category_slug, $setting_name, $field_position, $setting);
-                            }
-                        }
+                        $this->add_setting($module_name_slug, $category_slug, $setting_name, $field_position, $setting);
                     }
                 }
             }
         }
-
+        
         return $this->settings;
     }
 
@@ -79,7 +79,7 @@ class FetchSettings
 
     public function add_setting_category($module, $key, $title, $position, $params = [])
     {
-        if (!array_key_exists($key,  $this->settings[$module]['settings'])) {
+        if (!array_key_exists($key, $this->settings[$module]['settings'])) {
             $this->settings[$module]['settings'][$key] = [
                 'title' => $title,
                 'position' => $position,
@@ -101,6 +101,6 @@ class FetchSettings
             'name' => $name,
             'position' => $position,
             'params' => $params,
-        ]; 
+        ];
     }
 }

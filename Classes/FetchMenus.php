@@ -20,20 +20,17 @@ class FetchMenus
     {
         $column = 'position';
 
-        $DS = DIRECTORY_SEPARATOR;
-
         foreach ($this->paths as $key => $path) {
             $file_names = ['menu', 'menus'];
-            
+       
             foreach ($file_names as $key => $file_name) {
-                $menu_file = $path  . $DS . $file_name . '.php';
-
+                $menu_file = $path  . DIRECTORY_SEPARATOR . $file_name . '.php';
+                
                 if (file_exists($menu_file)) {
                     include_once $menu_file;
                 }
             }
         }
-
 
         // Reorder Menu
         usort($this->menus, function ($a, $b) use ($column) {
@@ -117,12 +114,10 @@ class FetchMenus
     private function loadDefaultMenus($base_path)
     {
 
-        $DS = DIRECTORY_SEPARATOR;
-
         $file_names = ['menu', 'menus'];
 
         foreach ($file_names as $key => $file_name) {
-            $menu_file = $base_path . $DS . $file_name . '.php';
+            $menu_file = $base_path . DIRECTORY_SEPARATOR . $file_name . '.php';
 
             if (file_exists($menu_file)) {
                 include_once $menu_file;
