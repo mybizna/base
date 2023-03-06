@@ -81,9 +81,14 @@ class BaseServiceProvider extends ServiceProvider
         $autologin = false;
         $responsive_point = 768;
         $floating_top = true;
+        $margin_top = true;
 
         if (defined('MYBIZNA_FLOATING_TOP')) {
             $floating_top = MYBIZNA_FLOATING_TOP;
+        } 
+        
+        if (defined('MYBIZNA_MARGIN_TOP')) {
+            $margin_top = MYBIZNA_MARGIN_TOP;
         }
 
         if (defined('MYBIZNA_RESPONSIVE_POINT')) {
@@ -105,6 +110,7 @@ class BaseServiceProvider extends ServiceProvider
             'assets_url' => $assets_url,
             'autologin' => $autologin,
             'floating_top' => $floating_top,
+            'margin_top' => $margin_top,
             'responsive_point' => $responsive_point,
         ]);
 
