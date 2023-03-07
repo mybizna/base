@@ -5,6 +5,8 @@ namespace Modules\Base\Providers;
 use App\Models\User;
 use Artisan;
 use Config;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\URL;
@@ -301,11 +303,11 @@ class BaseServiceProvider extends ServiceProvider
        
         if ($need_migration) {
 
-            if (class_exists('CreateCacheTable')) {
+            if (!Schema::hasTable('cache') && !class_exists('CreateCacheTable')) {
                 Artisan::call('cache:table');
             }
 
-            if (class_exists('CreateSessionsTable')) {
+            if (!Schema::hasTable('cache') && !class_exists('CreateSessionsTable')) {
                 Artisan::call('session:table');
             }
 
