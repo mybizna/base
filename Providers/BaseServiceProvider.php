@@ -303,11 +303,11 @@ class BaseServiceProvider extends ServiceProvider
        
         if ($need_migration) {
 
-            if (!Schema::hasTable('cache') && !class_exists('CreateCacheTable')) {
+            if (!Schema::hasTable('cache') && !$this->migrationFileExists('create_cache_table')) {
                 Artisan::call('cache:table');
             }
 
-            if (!Schema::hasTable('cache') && !class_exists('CreateSessionsTable')) {
+            if (!Schema::hasTable('cache') && !$this->migrationFileExists('create_cache_table')) {
                 Artisan::call('session:table');
             }
 
@@ -316,6 +316,21 @@ class BaseServiceProvider extends ServiceProvider
             $this->initiateUser();
             $datasetter->dataProcess();
         }
+    }
+
+    protected function migrationFileExists($mgr)
+    {
+        $path = database_path('migrations/');
+        $files = scandir($path);
+        $pos = false;
+        foreach ($files as &$value) {
+            $pos = strpos($value, $mgr);
+            if ($pos !== false) {
+                return true;
+            }
+
+        }
+        return false;
     }
 
     private function initiateUser()
