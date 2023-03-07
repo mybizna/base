@@ -5,10 +5,9 @@ namespace Modules\Base\Providers;
 use App\Models\User;
 use Artisan;
 use Config;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -84,10 +83,9 @@ class BaseServiceProvider extends ServiceProvider
     public function setGlobalVariables()
     {
 
-        $DS = DIRECTORY_SEPARATOR;
         $url = url("/");
 
-        $composer = json_decode(file_get_contents(realpath(base_path()) . $DS . 'Modules' . $DS . 'Base' . $DS . 'composer.json'), true);
+        $composer = json_decode(file_get_contents(realpath(base_path()) . DIRECTORY_SEPARATOR . 'Modules' . DIRECTORY_SEPARATOR . 'Base' . DIRECTORY_SEPARATOR . 'composer.json'), true);
         $version = $composer['version'];
 
         if (request()->server->has('HTTP_X_FORWARDED_PROTO')) {
@@ -145,8 +143,6 @@ class BaseServiceProvider extends ServiceProvider
     {
         $paths = [];
 
-        $DS = DIRECTORY_SEPARATOR;
-
         $groups = (is_file(base_path('../readme.txt'))) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
         foreach ($groups as $key => $group) {
             $paths = array_merge($paths, glob(base_path($group)));
@@ -156,7 +152,7 @@ class BaseServiceProvider extends ServiceProvider
             $path_arr = array_reverse(explode('/', $path));
             $module_name = $path_arr[0];
 
-            if (is_dir($path . $DS . 'Resources/lang')) {
+            if (is_dir($path . DIRECTORY_SEPARATOR . 'Resources/lang')) {
                 $this->loadTranslationsFrom(module_path($module_name, 'Resources/lang'), Str::lower($module_name));
             }
 
@@ -173,8 +169,6 @@ class BaseServiceProvider extends ServiceProvider
     {
         // TODO: Rework using setting
 
-        $DS = DIRECTORY_SEPARATOR;
-
         $paths = [];
 
         $groups = (is_file(base_path('../readme.txt'))) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
@@ -187,7 +181,7 @@ class BaseServiceProvider extends ServiceProvider
             $module_name = $path_arr[0];
 
             $module_name_l = Str::lower($module_name);
-            $config_path = $path . $DS . 'settings.php';
+            $config_path = $path . DIRECTORY_SEPARATOR . 'settings.php';
 
             if (file_exists($config_path)) {
 
@@ -226,8 +220,6 @@ class BaseServiceProvider extends ServiceProvider
     public function registerViews()
     {
 
-        $DS = DIRECTORY_SEPARATOR;
-
         $paths = [];
 
         $groups = (is_file(base_path('../readme.txt'))) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
@@ -241,7 +233,7 @@ class BaseServiceProvider extends ServiceProvider
 
             $viewPath = resource_path('views/modules/' . Str::lower($module_name));
 
-            $sourcePath = $path . $DS . 'Resources' . $DS . 'views';
+            $sourcePath = $path . DIRECTORY_SEPARATOR . 'Resources' . DIRECTORY_SEPARATOR . 'views';
 
             if (is_dir($sourcePath)) {
                 $this->publishes([
@@ -285,7 +277,7 @@ class BaseServiceProvider extends ServiceProvider
             $path_arr = array_reverse(explode('/', $path));
             $module_name = $path_arr[0];
 
-            $composer = $this->getComposer($module_name);
+            $composer = $this->getComposer($path);
 
             if (!isset($versions[$module_name]) || $versions[$module_name] != $composer['version']) {
                 $need_migration = true;
@@ -300,7 +292,7 @@ class BaseServiceProvider extends ServiceProvider
 
         $this->saveFile(realpath(base_path()) . DIRECTORY_SEPARATOR . 'modules_statuses.json', $modules);
         $this->saveFile(realpath(base_path()) . DIRECTORY_SEPARATOR . 'versions.json', $new_versions);
-       
+
         if ($need_migration) {
 
             if (!Schema::hasTable('cache') && !$this->migrationFileExists('create_cache_table')) {
@@ -364,9 +356,7 @@ class BaseServiceProvider extends ServiceProvider
     private function getVersions()
     {
 
-        $DS = DIRECTORY_SEPARATOR;
-
-        $path = realpath(base_path()) . $DS . 'versions.json';
+        $path = realpath(base_path()) . DIRECTORY_SEPARATOR . 'versions.json';
         if (file_exists($path)) {
 
             $json = file_get_contents($path);
@@ -376,11 +366,9 @@ class BaseServiceProvider extends ServiceProvider
         return [];
     }
 
-    private function getComposer($module_name)
+    private function getComposer($path)
     {
-        $DS = DIRECTORY_SEPARATOR;
-
-        $path = realpath(base_path()) . $DS . 'Modules' . $DS . $module_name . $DS . 'composer.json';
+        $path = $path . DIRECTORY_SEPARATOR . 'composer.json';
 
         $json = file_get_contents($path);
 
