@@ -34,6 +34,8 @@ class BaseServiceProvider extends ServiceProvider
 
         $this->setGlobalVariables();
 
+        $this->setGlobalVariables();
+
         require_once base_path() . '/Modules/Base/Helpers/GlobalFunctions.php';
 
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
@@ -127,7 +129,7 @@ class BaseServiceProvider extends ServiceProvider
 
         $DS = DIRECTORY_SEPARATOR;
 
-        $groups = (is_file('../readme.txt')) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
+        $groups = (is_file(base_path('../readme.txt'))) ? [base_path('Modules/*'), base_path('../../*/Modules/*')] : [base_path('Modules/*')];
 
         foreach ($groups as $key => $group) {
             $paths = array_merge($paths, glob(base_path($group)));
@@ -158,7 +160,7 @@ class BaseServiceProvider extends ServiceProvider
 
         $paths = [];
 
-        $groups = (is_file('../readme.txt')) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
+        $groups = (is_file(base_path('../readme.txt'))) ? [base_path('Modules/*'), base_path('../../*/Modules/*')] : [base_path('Modules/*')];
         foreach ($groups as $key => $group) {
             $paths = array_merge($paths, glob(base_path($group)));
         }
@@ -211,7 +213,8 @@ class BaseServiceProvider extends ServiceProvider
 
         $paths = [];
 
-        $groups = (is_file('../readme.txt')) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
+        $groups = (is_file(base_path('../readme.txt'))) ? [base_path('Modules/*'), base_path('../../*/Modules/*')] : [base_path('Modules/*')];
+        
         foreach ($groups as $key => $group) {
             $paths = array_merge($paths, glob(base_path($group)));
         }

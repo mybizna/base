@@ -51,7 +51,7 @@ class RouteServiceProvider extends ServiceProvider
         $DS = DIRECTORY_SEPARATOR;
         $paths = [];
 
-        $groups = (is_file('../readme.txt')) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
+        $groups = (is_file(base_path('../readme.txt'))) ? [base_path('Modules/*'), base_path('../../*/Modules/*')] : [base_path('Modules/*')];
         foreach ($groups as $key => $group) {
             $paths = array_merge($paths, glob(base_path($group)));
         }
@@ -81,8 +81,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         $DS = DIRECTORY_SEPARATOR;
         $paths = [];
-
-        $groups = (is_file('../readme.txt')) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
+        $groups = (is_file(base_path('../readme.txt'))) ? [base_path('Modules/*'), base_path('../../*/Modules/*')] : [base_path('Modules/*')];
         foreach ($groups as $key => $group) {
             $paths = array_merge($paths, glob(base_path($group)));
         }

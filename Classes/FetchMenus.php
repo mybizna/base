@@ -10,7 +10,7 @@ class FetchMenus
  
     public function __construct()
     {
-        $groups = (is_file('../readme.txt')) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
+        $groups = (is_file(base_path('../readme.txt'))) ? [base_path('Modules/*'), base_path('../../*/Modules/*')] : [base_path('Modules/*')];
         foreach ($groups as $key => $group) {
             $this->paths = array_merge($this->paths, glob(base_path($group)));
         }
