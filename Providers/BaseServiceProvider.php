@@ -85,8 +85,8 @@ class BaseServiceProvider extends ServiceProvider
 
         if (defined('MYBIZNA_FLOATING_TOP')) {
             $floating_top = MYBIZNA_FLOATING_TOP;
-        } 
-        
+        }
+
         if (defined('MYBIZNA_MARGIN_TOP')) {
             $margin_top = MYBIZNA_MARGIN_TOP;
         }
@@ -177,10 +177,14 @@ class BaseServiceProvider extends ServiceProvider
                 foreach ($settings as $key => $setting) {
 
                     $value = $setting['value'];
-                    $db_setting = Setting::where(['module' => $module_name_l, 'name' => $key])->first();
+                    try {
+                        $db_setting = Setting::where(['module' => $module_name_l, 'name' => $key])->first();
 
-                    if ($db_setting) {
-                        $value = $db_setting->value;
+                        if ($db_setting) {
+                            $value = $db_setting->value;
+                        }
+                    } catch (\Throwable $th) {
+                        //throw $th;
                     }
 
                     $merged_settings[$key] = $value;
@@ -217,7 +221,7 @@ class BaseServiceProvider extends ServiceProvider
             $module_name = $path_arr[0];
 
             $viewPath = resource_path('views/modules/' . Str::lower($module_name));
-            
+
             $sourcePath = $path . $DS . 'Resources' . $DS . 'views';
 
             if (is_dir($sourcePath)) {
