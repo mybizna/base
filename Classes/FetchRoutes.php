@@ -15,7 +15,7 @@ class FetchRoutes
 
     public function __construct()
     {
-        $groups = (is_file(base_path('../readme.txt'))) ? [base_path('Modules/*'), base_path('../../*/Modules/*')] : [base_path('Modules/*')];
+        $groups = (is_file(base_path('../readme.txt'))) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
         foreach ($groups as $key => $group) {
             $this->paths = array_merge($this->paths, glob(base_path($group)));
         }
@@ -56,10 +56,9 @@ class FetchRoutes
     public function getModuleRoute($path, $routes)
     {
 
-
         $path_arr = array_reverse(explode('/', $path));
-        
-        $m_folder_path = $module_name= $path_arr[0];
+
+        $m_folder_path = $module_name = $path_arr[0];
         $module_route = $this->addRouteToList('/' . $module_name, $m_folder_path, 'router_view');
 
         foreach (['admin', 'web'] as $folder) {
@@ -67,16 +66,16 @@ class FetchRoutes
 
             $f_folder_path = $m_folder_path . '/' . $folder;
             $folder_route = $this->addRouteToList($folder, $f_folder_path, 'router_view');
-            
+
             if (is_dir($vue_folders)) {
                 $dir = new \DirectoryIterator($vue_folders);
-                
+
                 foreach ($dir as $fileinfo) {
                     if (!$fileinfo->isDot() && $fileinfo->isDir()) {
                         $vs_foldername = $fileinfo->getFilename();
                         $vs_folders = $vue_folders . DIRECTORY_SEPARATOR . $vs_foldername;
                         $v_folder_path = $f_folder_path . '/' . $vs_foldername;
-                        
+
                         $vs_route = $this->addRouteToList($vs_foldername, $v_folder_path, 'router_view');
 
                         if (is_dir($vs_folders)) {

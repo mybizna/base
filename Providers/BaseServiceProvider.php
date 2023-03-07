@@ -34,8 +34,6 @@ class BaseServiceProvider extends ServiceProvider
 
         $this->setGlobalVariables();
 
-        $this->setGlobalVariables();
-
         require_once base_path() . '/Modules/Base/Helpers/GlobalFunctions.php';
 
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
@@ -129,8 +127,7 @@ class BaseServiceProvider extends ServiceProvider
 
         $DS = DIRECTORY_SEPARATOR;
 
-        $groups = (is_file(base_path('../readme.txt'))) ? [base_path('Modules/*'), base_path('../../*/Modules/*')] : [base_path('Modules/*')];
-
+        $groups = (is_file(base_path('../readme.txt'))) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
         foreach ($groups as $key => $group) {
             $paths = array_merge($paths, glob(base_path($group)));
         }
@@ -160,7 +157,7 @@ class BaseServiceProvider extends ServiceProvider
 
         $paths = [];
 
-        $groups = (is_file(base_path('../readme.txt'))) ? [base_path('Modules/*'), base_path('../../*/Modules/*')] : [base_path('Modules/*')];
+        $groups = (is_file(base_path('../readme.txt'))) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
         foreach ($groups as $key => $group) {
             $paths = array_merge($paths, glob(base_path($group)));
         }
@@ -185,7 +182,7 @@ class BaseServiceProvider extends ServiceProvider
                         if ($db_setting) {
                             $value = $db_setting->value;
                         }
-                    } catch (\Throwable $th) {
+                    } catch (\Throwable$th) {
                         //throw $th;
                     }
 
@@ -213,12 +210,11 @@ class BaseServiceProvider extends ServiceProvider
 
         $paths = [];
 
-        $groups = (is_file(base_path('../readme.txt'))) ? [base_path('Modules/*'), base_path('../../*/Modules/*')] : [base_path('Modules/*')];
-        
+        $groups = (is_file(base_path('../readme.txt'))) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
         foreach ($groups as $key => $group) {
             $paths = array_merge($paths, glob(base_path($group)));
         }
-
+        
         foreach ($paths as $key => $path) {
             $path_arr = array_reverse(explode('/', $path));
             $module_name = $path_arr[0];

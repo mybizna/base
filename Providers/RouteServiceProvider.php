@@ -51,7 +51,7 @@ class RouteServiceProvider extends ServiceProvider
         $DS = DIRECTORY_SEPARATOR;
         $paths = [];
 
-        $groups = (is_file(base_path('../readme.txt'))) ? [base_path('Modules/*'), base_path('../../*/Modules/*')] : [base_path('Modules/*')];
+        $groups = (is_file(base_path('../readme.txt'))) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
         foreach ($groups as $key => $group) {
             $paths = array_merge($paths, glob(base_path($group)));
         }
@@ -60,13 +60,12 @@ class RouteServiceProvider extends ServiceProvider
             $path_arr = array_reverse(explode('/', $path));
             $module_name = $path_arr[0];
 
-            if ( file_exists($path . $DS . 'Routes/web.php')) {
+            if (file_exists($path . $DS . 'Routes/web.php')) {
                 Route::middleware('web')
                     ->namespace('Modules\\' . $module_name . '\Http\Controllers')
                     ->group(module_path($module_name, '/Routes/web.php'));
             }
         }
-
 
     }
 
@@ -81,7 +80,8 @@ class RouteServiceProvider extends ServiceProvider
     {
         $DS = DIRECTORY_SEPARATOR;
         $paths = [];
-        $groups = (is_file(base_path('../readme.txt'))) ? [base_path('Modules/*'), base_path('../../*/Modules/*')] : [base_path('Modules/*')];
+
+        $groups = (is_file(base_path('../readme.txt'))) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
         foreach ($groups as $key => $group) {
             $paths = array_merge($paths, glob(base_path($group)));
         }

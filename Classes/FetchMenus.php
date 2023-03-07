@@ -5,27 +5,27 @@ namespace Modules\Base\Classes;
 class FetchMenus
 {
 
-    public $menus = [];   
+    public $menus = [];
     public $paths = [];
- 
+
     public function __construct()
     {
-        $groups = (is_file(base_path('../readme.txt'))) ? [base_path('Modules/*'), base_path('../../*/Modules/*')] : [base_path('Modules/*')];
+        $groups = (is_file(base_path('../readme.txt'))) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
         foreach ($groups as $key => $group) {
             $this->paths = array_merge($this->paths, glob(base_path($group)));
         }
     }
-    
+
     public function fetchMenus()
     {
         $column = 'position';
 
         foreach ($this->paths as $key => $path) {
             $file_names = ['menu', 'menus'];
-       
+
             foreach ($file_names as $key => $file_name) {
-                $menu_file = $path  . DIRECTORY_SEPARATOR . $file_name . '.php';
-                
+                $menu_file = $path . DIRECTORY_SEPARATOR . $file_name . '.php';
+
                 if (file_exists($menu_file)) {
                     include_once $menu_file;
                 }
@@ -42,7 +42,7 @@ class FetchMenus
 
         // Reorder SubMenu
         foreach ($this->menus as $module => $menu) {
-            
+
             $tmp_menus = $this->menus[$module]['menus'];
 
             usort($tmp_menus, function ($a, $b) use ($column) {

@@ -13,7 +13,7 @@ class FetchSettings
 
     public function __construct()
     {
-        $groups = (is_file(base_path('../readme.txt'))) ? [base_path('Modules/*'), base_path('../../*/Modules/*')] : [base_path('Modules/*')];
+        $groups = (is_file(base_path('../readme.txt'))) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
         foreach ($groups as $key => $group) {
             $this->paths = array_merge($this->paths, glob(base_path($group)));
         }
@@ -27,12 +27,12 @@ class FetchSettings
             $module_name = $path_arr[0];
 
             $module_name_slug = Str::lower($module_name);
-            
+
             $file_names = ['setting', 'settings'];
 
             foreach ($file_names as $key => $file_name) {
-                $setting_file = $path. DIRECTORY_SEPARATOR . $file_name . '.php';
-                
+                $setting_file = $path . DIRECTORY_SEPARATOR . $file_name . '.php';
+
                 if (file_exists($setting_file)) {
                     $this->add_module_info($module_name_slug, [
                         'title' => $module_name,
@@ -64,7 +64,7 @@ class FetchSettings
                 }
             }
         }
-        
+
         return $this->settings;
     }
 
