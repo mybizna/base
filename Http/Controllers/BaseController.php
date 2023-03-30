@@ -106,8 +106,8 @@ class BaseController extends Controller
     public function updateRecord(Request $request, $module, $model, $id)
     {
         $modularize = new Modularize($module, $model);
-
-        $args = $request->query();
+        
+        $args = $request->all();
 
         $result = $modularize->updateRecord($id, $args);
 

@@ -86,15 +86,16 @@ class Modularize
         return $result;
     }
 
-    public function updateRecord($args = [])
+    public function updateRecord($id, $args = [])
     {
+        
         $classname = $this->getClassName($this->module, $this->model);
 
         if ($classname) {
             if (method_exists($classname, 'updateRecord')) {
                 $classname->module = $this->module;
                 $classname->model = $this->model;
-                $result = $classname->updateRecord($args);
+                $result = $classname->updateRecord($id, $args);
             }
         } else {
             $result = $this->prepareResult('No Model Found with name ' . $this->module . '-' . $this->model);

@@ -258,7 +258,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
         return $result;
     }
 
-    public function updateRecord($args = [])
+    public function updateRecord($id, $args = [])
     {
         $result = [
             'module' => $this->module,
@@ -270,12 +270,13 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
         ];
 
         try {
-
-            $this->fill($args);
-
+            $record = $this->where('id', $id)->first();
+            
+            $record->fill($args);
+            
             $result['error'] = 0;
             $result['status'] = 1;
-            $result['record'] = $this->save();
+            $result['record'] = $record->save();
             $result['message'] = 'Record Updated Successfully.';
         } catch (\Throwable$th) {
             throw $th;
