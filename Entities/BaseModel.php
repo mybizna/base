@@ -295,7 +295,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             'message' => 'No Record.',
         ];
 
-        if (isset($this->can_delete) && $this->can_delete) {
+        if (!isset($this->can_delete) || $this->can_delete) {
             try {
                 $result['error'] = 0;
                 $result['status'] = 1;
