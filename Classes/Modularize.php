@@ -150,6 +150,16 @@ class Modularize
 
     //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     //Fetching Menu
+    public function fetchPositions()
+    {
+        $fetchpositions = new FetchPositions();
+
+        return $fetchpositions->fetchPositions();
+    }
+
+
+    //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    //Fetching Menu
     public function fetchMenus()
     {
         $fetchmenus = new FetchMenus();

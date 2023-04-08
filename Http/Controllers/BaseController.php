@@ -106,7 +106,7 @@ class BaseController extends Controller
     public function updateRecord(Request $request, $module, $model, $id)
     {
         $modularize = new Modularize($module, $model);
-        
+
         $args = $request->all();
 
         $result = $modularize->updateRecord($id, $args);
@@ -146,6 +146,15 @@ class BaseController extends Controller
         return Response::json($result);
     }
 
+    public function fetchPositions(Request $request)
+    {
+        $modularize = new Modularize();
+
+        $result = $modularize->fetchPositions();
+
+        return Response::json($result);
+    }
+    
     public function fetchMenus(Request $request)
     {
         $modularize = new Modularize();
