@@ -88,7 +88,7 @@ class Modularize
 
     public function updateRecord($id, $args = [])
     {
-        
+
         $classname = $this->getClassName($this->module, $this->model);
 
         if ($classname) {
@@ -156,7 +156,6 @@ class Modularize
 
         return $fetchpositions->fetchPositions();
     }
-
 
     //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     //Fetching Menu

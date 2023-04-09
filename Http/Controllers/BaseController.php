@@ -123,11 +123,6 @@ class BaseController extends Controller
         return Response::json($result);
     }
 
-    public function functionCall(Request $request, $module, $model, $function)
-    {
-        // logic to update a record record goes here
-    }
-
     public function discoverModules(Request $request)
     {
         $modularize = new Modularize();
@@ -154,7 +149,7 @@ class BaseController extends Controller
 
         return Response::json($result);
     }
-    
+
     public function fetchMenus(Request $request)
     {
         $modularize = new Modularize();

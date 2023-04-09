@@ -56,7 +56,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post($prefix, $apicontroller . '@createRecord');
     Route::post($prefix . '/{id}', $apicontroller . '@updateRecord')->where(['id' => '[0-9]+']);
     Route::delete($prefix . '/{id}', $apicontroller . '@deleteRecord')->where(['id' => '[0-9]+']);
-    Route::match(['get', 'post'], $prefix . '/{function}/',  $apicontroller . '@functionCall');
 });
 
 
