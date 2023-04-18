@@ -2,6 +2,7 @@
 
 namespace Modules\Base\Entities;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -86,6 +87,10 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
 
         static::updated(function ($model) {
             event(new ModelUpdated($model->getTableName(), $model));
+        });
+
+        static::addGlobalScope('order', function (Builder $builder) {
+            $builder->orderBy('id', 'DESC');
         });
 
     }
