@@ -33,6 +33,7 @@ Route::get('discover_modules',  $apicontroller . '@discoverModules');
 Route::get('fetch_menus', $apicontroller . '@fetchMenus');
 Route::get('fetch_routes', $apicontroller . '@fetchRoutes');
 Route::get('fetch_positions', $apicontroller . '@fetchPositions');
+Route::get('fetch_rights', $apicontroller . '@fetchRights');
 Route::get('fetch_settings', $apicontroller . '@fetchSettings');
 
 

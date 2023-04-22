@@ -149,6 +149,15 @@ class Modularize
     }
 
     //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    //Fetching Rights
+    public function fetchRights()
+    {
+        $fetchrights = new FetchRights();
+
+        return $fetchrights->fetchRights();
+    }
+
+    //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     //Fetching Menu
     public function fetchPositions()
     {

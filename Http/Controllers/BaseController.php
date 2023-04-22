@@ -141,6 +141,14 @@ class BaseController extends Controller
         return Response::json($result);
     }
 
+    public function fetchRights(Request $request)
+    {
+        $modularize = new Modularize();
+
+        $result = $modularize->fetchRights();
+
+        return Response::json($result);
+    }
     public function fetchPositions(Request $request)
     {
         $modularize = new Modularize();
