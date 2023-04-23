@@ -2,6 +2,7 @@
 
 namespace Modules\Base\Classes;
 
+use Auth;
 use Illuminate\Support\Str;
 
 class Modularize
@@ -19,6 +20,14 @@ class Modularize
 
     public function getAllRecords($args)
     {
+        $user = Auth::user();
+
+        $can = $user->can($this->module . "_" . $this->model . "_view");
+
+        if (!$can) {
+            return $this->prepareResult('User' . $user->username . ' does not have right to view ' . $this->module . '-' . $this->model, true);
+        }
+
         $classname = $this->getClassName($this->module, $this->model);
 
         if ($classname) {
@@ -37,6 +46,14 @@ class Modularize
 
     public function getRecord($id, $args = [])
     {
+        $user = Auth::user();
+
+        $can = $user->can($this->module . "_" . $this->model . "_view");
+
+        if (!$can) {
+            return $this->prepareResult('User' . $user->username . ' does not have right to view ' . $this->module . '-' . $this->model, true);
+        }
+
         $classname = $this->getClassName($this->module, $this->model);
 
         if ($classname) {
@@ -54,6 +71,14 @@ class Modularize
 
     public function getRecordSelect($args)
     {
+        $user = Auth::user();
+
+        $can = $user->can($this->module . "_" . $this->model . "_view");
+
+        if (!$can) {
+            return $this->prepareResult('User' . $user->username . ' does not have right to view ' . $this->module . '-' . $this->model, true);
+        }
+
         $classname = $this->getClassName($this->module, $this->model);
 
         if ($classname) {
@@ -71,6 +96,14 @@ class Modularize
 
     public function createRecord($args = [])
     {
+        $user = Auth::user();
+
+        $can = $user->can($this->module . "_" . $this->model . "_add");
+
+        if (!$can) {
+            return $this->prepareResult('User' . $user->username . ' does not have right to add ' . $this->module . '-' . $this->model, true);
+        }
+
         $classname = $this->getClassName($this->module, $this->model);
 
         if ($classname) {
@@ -88,6 +121,13 @@ class Modularize
 
     public function updateRecord($id, $args = [])
     {
+        $user = Auth::user();
+
+        $can = $user->can($this->module . "_" . $this->model . "_edit");
+
+        if (!$can) {
+            return $this->prepareResult('User' . $user->username . ' does not have right to edit ' . $this->module . '-' . $this->model, true);
+        }
 
         $classname = $this->getClassName($this->module, $this->model);
 
@@ -106,6 +146,14 @@ class Modularize
 
     public function deleteRecord($id)
     {
+        $user = Auth::user();
+
+        $can = $user->can($this->module . "_" . $this->model . "_delete");
+
+        if ($can) {
+            return $this->prepareResult('User' . $user->username . ' does not have right to delete ' . $this->module . '-' . $this->model, true);
+        }
+
         $classname = $this->getClassName($this->module, $this->model);
 
         if ($classname) {

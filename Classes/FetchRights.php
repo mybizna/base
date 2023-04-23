@@ -2,9 +2,10 @@
 
 namespace Modules\Base\Classes;
 
+use App\Models\User;
+use Illuminate\Support\Facades\Cache;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-use App\Models\User;
 
 class FetchRights
 {
@@ -17,26 +18,57 @@ class FetchRights
         foreach ($groups as $key => $group) {
             $this->paths = array_merge($this->paths, glob(base_path($group)));
         }
-
     }
 
     public function fetchRights()
     {
-        foreach ($this->paths as $key => $path) {
-            $file_names = ['right', 'rights'];
+        $started_processing = false;
+        $limit = 2;
+        $counter = 0;
+        $result = ['status' => true, 'completed' => true];
+        $last_path = '';
 
+        if (Cache::has("fetch_right_last_path")) {
+            $last_path = Cache::get("fetch_right_last_path", '');
+        }
+
+        foreach ($this->paths as $key => $path) {
+            if ($counter == $limit) {
+                $result['completed'] = false;
+                break;
+            }
+
+
+            if ($last_path == '' || $path == $last_path) {
+                $started_processing = true;
+            }
+
+            if (!$started_processing) {
+                continue;
+            }
+
+            $file_names = ['right', 'rights'];
             foreach ($file_names as $key => $file_name) {
                 $position_file = $path . DIRECTORY_SEPARATOR . $file_name . '.php';
+
                 if (file_exists($position_file)) {
                     include_once $position_file;
                 }
             }
+
+            $counter = $counter + 1;
+
+            Cache::put("fetch_right_last_path", $path, 3600);
         }
 
-        $user = User::find(1);
+        $user = User::where('id', 1)->first();
         $user->assignRole('administrator');
 
-        return ['status' => true];
+        if ($result['completed'] == true) {
+            Cache::put("fetch_right_last_path", '', 3600);
+        }
+
+        return $result;
     }
 
     public function add_right($module, $model, $role_name, $view = false, $add = false, $edit = false, $delete = false)
@@ -50,6 +82,15 @@ class FetchRights
         $add_permission_name = $module . "_" . $model . "_add";
         $edit_permission_name = $module . "_" . $model . "_edit";
         $delete_permission_name = $module . "_" . $model . "_delete";
+
+        print_r($view_permission_name);
+        print_r('<br>');
+        print_r($add_permission_name);
+        print_r('<br>');
+        print_r($edit_permission_name);
+        print_r('<br>');
+        print_r($delete_permission_name);
+        print_r('<br>');
 
         $this->getPermission($view_permission_name);
         $this->getPermission($add_permission_name);
@@ -100,6 +141,7 @@ class FetchRights
         }
 
         return $role;
+
     }
 
     protected function getPermission($name)
