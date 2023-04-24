@@ -18,11 +18,23 @@ class Modularize
         $this->model = $model;
     }
 
-    public function getAllRecords($args)
+    public function checkUserCan($user)
     {
         $user = Auth::user();
 
-        $can = $user->can($this->module . "_" . $this->model . "_view");
+        $roles = $user->getRoleNames();
+
+        if (empty($roles)) {
+            $user->assignRole('registered');
+        }
+
+        return $user->can($this->module . "_" . $this->model . "_view");
+
+    }
+
+    public function getAllRecords($args)
+    {
+        $can = $this->checkUserCan($this->module . "_" . $this->model . "_view");
 
         if (!$can) {
             return $this->prepareResult('User' . $user->username . ' does not have right to view ' . $this->module . '-' . $this->model, true);
@@ -46,9 +58,7 @@ class Modularize
 
     public function getRecord($id, $args = [])
     {
-        $user = Auth::user();
-
-        $can = $user->can($this->module . "_" . $this->model . "_view");
+        $can = $this->checkUserCan($this->module . "_" . $this->model . "_view");
 
         if (!$can) {
             return $this->prepareResult('User' . $user->username . ' does not have right to view ' . $this->module . '-' . $this->model, true);
@@ -71,9 +81,7 @@ class Modularize
 
     public function getRecordSelect($args)
     {
-        $user = Auth::user();
-
-        $can = $user->can($this->module . "_" . $this->model . "_view");
+        $can = $this->checkUserCan($this->module . "_" . $this->model . "_view");
 
         if (!$can) {
             return $this->prepareResult('User' . $user->username . ' does not have right to view ' . $this->module . '-' . $this->model, true);
@@ -96,9 +104,7 @@ class Modularize
 
     public function createRecord($args = [])
     {
-        $user = Auth::user();
-
-        $can = $user->can($this->module . "_" . $this->model . "_add");
+        $can = $this->checkUserCan($this->module . "_" . $this->model . "_add");
 
         if (!$can) {
             return $this->prepareResult('User' . $user->username . ' does not have right to add ' . $this->module . '-' . $this->model, true);
@@ -121,9 +127,7 @@ class Modularize
 
     public function updateRecord($id, $args = [])
     {
-        $user = Auth::user();
-
-        $can = $user->can($this->module . "_" . $this->model . "_edit");
+        $can = $this->checkUserCan($this->module . "_" . $this->model . "_edit");
 
         if (!$can) {
             return $this->prepareResult('User' . $user->username . ' does not have right to edit ' . $this->module . '-' . $this->model, true);
@@ -146,11 +150,9 @@ class Modularize
 
     public function deleteRecord($id)
     {
-        $user = Auth::user();
+        $can = $this->checkUserCan($this->module . "_" . $this->model . "_delete");
 
-        $can = $user->can($this->module . "_" . $this->model . "_delete");
-
-        if ($can) {
+        if (!$can) {
             return $this->prepareResult('User' . $user->username . ' does not have right to delete ' . $this->module . '-' . $this->model, true);
         }
 

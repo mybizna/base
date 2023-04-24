@@ -62,7 +62,9 @@ class FetchRights
         }
 
         $user = User::where('id', 1)->first();
-        $user->assignRole('administrator');
+        if( $user){
+            $user->assignRole('administrator');
+        }
 
         if ($result['completed'] == true) {
             Cache::put("fetch_right_last_path", '', 3600);
