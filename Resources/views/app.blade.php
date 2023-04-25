@@ -26,7 +26,7 @@
     </script>
 </head>
 
-<body class="bg-blue-50 dark:bg-blue-900">
+<body class="bg-blue-50">
 
     @yield('content')
 
