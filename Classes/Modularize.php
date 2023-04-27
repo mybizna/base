@@ -37,7 +37,7 @@ class Modularize
         $can = $this->checkUserCan($this->module . "_" . $this->model . "_view");
 
         if (!$can) {
-            return $this->prepareResult('User' . $user->username . ' does not have right to view ' . $this->module . '-' . $this->model, true);
+            return $this->prepareResult('User does not have right to view ' . $this->module . '-' . $this->model, true);
         }
 
         $classname = $this->getClassName($this->module, $this->model);
@@ -61,7 +61,7 @@ class Modularize
         $can = $this->checkUserCan($this->module . "_" . $this->model . "_view");
 
         if (!$can) {
-            return $this->prepareResult('User' . $user->username . ' does not have right to view ' . $this->module . '-' . $this->model, true);
+            return $this->prepareResult('User does not have right to view ' . $this->module . '-' . $this->model, true);
         }
 
         $classname = $this->getClassName($this->module, $this->model);
@@ -84,7 +84,7 @@ class Modularize
         $can = $this->checkUserCan($this->module . "_" . $this->model . "_view");
 
         if (!$can) {
-            return $this->prepareResult('User' . $user->username . ' does not have right to view ' . $this->module . '-' . $this->model, true);
+            return $this->prepareResult('User does not have right to view ' . $this->module . '-' . $this->model, true);
         }
 
         $classname = $this->getClassName($this->module, $this->model);
@@ -107,7 +107,7 @@ class Modularize
         $can = $this->checkUserCan($this->module . "_" . $this->model . "_add");
 
         if (!$can) {
-            return $this->prepareResult('User' . $user->username . ' does not have right to add ' . $this->module . '-' . $this->model, true);
+            return $this->prepareResult('User does not have right to add ' . $this->module . '-' . $this->model, true);
         }
 
         $classname = $this->getClassName($this->module, $this->model);
@@ -130,7 +130,7 @@ class Modularize
         $can = $this->checkUserCan($this->module . "_" . $this->model . "_edit");
 
         if (!$can) {
-            return $this->prepareResult('User' . $user->username . ' does not have right to edit ' . $this->module . '-' . $this->model, true);
+            return $this->prepareResult('User does not have right to edit ' . $this->module . '-' . $this->model, true);
         }
 
         $classname = $this->getClassName($this->module, $this->model);
@@ -153,7 +153,7 @@ class Modularize
         $can = $this->checkUserCan($this->module . "_" . $this->model . "_delete");
 
         if (!$can) {
-            return $this->prepareResult('User' . $user->username . ' does not have right to delete ' . $this->module . '-' . $this->model, true);
+            return $this->prepareResult('User does not have right to delete ' . $this->module . '-' . $this->model, true);
         }
 
         $classname = $this->getClassName($this->module, $this->model);
