@@ -36,6 +36,7 @@ class BaseServiceProvider extends ServiceProvider
     {
 
         if (defined('DB_NAME')) {
+            Config::set('app.key', MYBIZNA_APPKEY);
             Config::set('database.connections.mysql.database', DB_NAME);
             Config::set('database.connections.mysql.username', DB_USER);
             Config::set('database.connections.mysql.password', DB_PASSWORD);

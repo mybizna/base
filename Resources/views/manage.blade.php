@@ -31,16 +31,18 @@
     <script src="{{ $assets_url }}/tailwind/tailwindcss.js?{{ $version }}"></script>
 
     <script>
-        tailwind.config = {
-            important: true,
-            theme: {
-                extend: {
-                    backdropBlur: {
-                        xs: '2px',
+        window.addEventListener('load', function() {
+            tailwind.config = {
+                important: true,
+                theme: {
+                    extend: {
+                        backdropBlur: {
+                            xs: '2px',
+                        }
                     }
                 }
             }
-        }
+        });
     </script>
 
 
