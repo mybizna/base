@@ -273,6 +273,7 @@ class BaseServiceProvider extends ServiceProvider
         $new_versions = [];
         $need_migration = false;
         $versions = $this->getVersions();
+        
 
         foreach ($paths as $key => $path) {
             $path_arr = array_reverse(explode('/', $path));
