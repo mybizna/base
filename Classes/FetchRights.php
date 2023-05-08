@@ -11,6 +11,8 @@ class FetchRights
 {
 
     public $paths = [];
+    public $show_logs = false;
+    public $file_logging = false;
 
     public function __construct()
     {
@@ -20,10 +22,9 @@ class FetchRights
         }
     }
 
-    public function fetchRights()
+    public function fetchRights($limit = 2)
     {
         $started_processing = false;
-        $limit = 2;
         $counter = 0;
         $result = ['status' => true, 'completed' => true];
         $last_path = '';
@@ -37,7 +38,6 @@ class FetchRights
                 $result['completed'] = false;
                 break;
             }
-
 
             if ($last_path == '' || $path == $last_path) {
                 $started_processing = true;
@@ -62,7 +62,7 @@ class FetchRights
         }
 
         $user = User::where('id', 1)->first();
-        if( $user){
+        if ($user) {
             $user->assignRole('administrator');
         }
 
@@ -86,13 +86,13 @@ class FetchRights
         $delete_permission_name = $module . "_" . $model . "_delete";
 
         print_r($view_permission_name);
-        print_r('<br>');
+        print_r("\n");
         print_r($add_permission_name);
-        print_r('<br>');
+        print_r("\n");
         print_r($edit_permission_name);
-        print_r('<br>');
+        print_r("\n");
         print_r($delete_permission_name);
-        print_r('<br>');
+        print_r("\n");
 
         $this->getPermission($view_permission_name);
         $this->getPermission($add_permission_name);
@@ -155,6 +155,34 @@ class FetchRights
         }
 
         return $permission;
+    }
+
+    private function logOutput($message, $type = 'info')
+    {
+        $output = new \Symfony\Component\Console\Output\ConsoleOutput ();
+
+        if ($this->show_logs) {
+            if ($type == 'title') {
+                if ($this->file_logging) {
+                    Log::channel('datasetter')->info('');
+                    Log::channel('datasetter')->info($message);
+                    Log::channel('datasetter')->info('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
+                    Log::channel('datasetter')->info('');
+                } else {
+                    $output->writeln("<info></info>");
+                    $output->writeln("<info>$message</info>");
+                    $output->writeln("<info>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</info>");
+                    $output->writeln("<info></info>");
+                }
+            } else {
+                if ($this->file_logging) {
+                    Log::channel('datasetter')->info($message);
+                } else {
+                    $output->writeln("<info>$message</info>");
+                }
+            }
+        }
+
     }
 
 }

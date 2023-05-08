@@ -4,6 +4,7 @@ namespace Modules\Base\Console\Commands;
 
 use Illuminate\Console\Command;
 use Modules\Base\Classes\Datasetter;
+use Modules\Base\Classes\FetchRights;
 
 class DataProcessor extends Command
 {
@@ -38,11 +39,14 @@ class DataProcessor extends Command
      */
     public function handle()
     {
+
         $data_setter = new Datasetter();
+        $fetch_rights = new FetchRights();
 
         $data_setter->show_logs = true;
 
         $data_setter->dataProcess();
+        $fetch_rights->fetchRights(100);
 
         return 0;
     }

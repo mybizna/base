@@ -111,6 +111,7 @@ class Datasetter
             DataMigrated::create($data_to_migrate);
         }
     }
+    
     private function logOutput($message, $type = 'info')
     {
         $output = new \Symfony\Component\Console\Output\ConsoleOutput();
