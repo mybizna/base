@@ -1,12 +1,60 @@
 <?php
 
 use Modules\Base\Jobs\AppMailerJob;
+use Modules\Core\Entities\LanguageTranslation;
+
+if (!function_exists('___')) {
+
+    function ___($slug)
+    {
+        $string = $slug;
+
+        Cache::forget("core_language_translation_" . $slug);
+
+        if (Cache::has("core_language_translation_" . $slug)) {
+            $translation = Cache::get("core_language_translation_" . $slug);
+            return $translation;
+        } else {
+            try {
+                $translation = LanguageTranslation::where('slug', $slug)->first();
+
+                if ($translation) {
+                    Cache::put("core_language_translation_" . $slug, $translation->phrase, 3600);
+                    return $translation->phrase;
+                }
+            } catch (\Throwable $th) {
+                throw $th;
+            }
+        }
+
+        return $string;
+    }
+}
+
 
 if (!function_exists('__')) {
 
     function __($slug)
     {
         $string = $slug;
+
+        Cache::forget("core_language_translation_" . $slug);
+
+        if (Cache::has("core_language_translation_" . $slug)) {
+            $translation = Cache::get("core_language_translation_" . $slug);
+            return $translation;
+        } else {
+            try {
+                $translation = LanguageTranslation::where('slug', $slug)->first();
+
+                if ($translation) {
+                    Cache::put("core_language_translation_" . $slug, $translation->phrase, 3600);
+                    return $translation->phrase;
+                }
+            } catch (\Throwable $th) {
+                throw $th;
+            }
+        }
 
         return $string;
     }
