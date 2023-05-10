@@ -1,6 +1,7 @@
 <?php
 
 use Modules\Base\Jobs\AppMailerJob;
+use Modules\Core\Classes\Language;
 use Modules\Core\Entities\LanguageTranslation;
 
 if (!function_exists('___')) {
@@ -9,46 +10,22 @@ if (!function_exists('___')) {
     {
         $string = $slug;
 
-        Cache::forget("core_language_translation_" . $slug);
+        $language = new Language();
 
-        if (Cache::has("core_language_translation_" . $slug)) {
-            $translation = Cache::get("core_language_translation_" . $slug);
+        $default_language = $language->getDefaultLanguage();
+        $language_id = $default_language->id;
+
+        if (Cache::has("core_language_translation_" . $language_id . '_' . $slug)) {
+            $translation = Cache::get("core_language_translation_" . $language_id . '_' . $slug);
             return $translation;
         } else {
             try {
-                $translation = LanguageTranslation::where('slug', $slug)->first();
+                $translation = LanguageTranslation::where('language_id', $language_id)
+                    ->where('slug', $slug)
+                    ->first();
 
                 if ($translation) {
-                    Cache::put("core_language_translation_" . $slug, $translation->phrase, 3600);
-                    return $translation->phrase;
-                }
-            } catch (\Throwable $th) {
-                throw $th;
-            }
-        }
-
-        return $string;
-    }
-}
-
-
-if (!function_exists('__')) {
-
-    function __($slug)
-    {
-        $string = $slug;
-
-        Cache::forget("core_language_translation_" . $slug);
-
-        if (Cache::has("core_language_translation_" . $slug)) {
-            $translation = Cache::get("core_language_translation_" . $slug);
-            return $translation;
-        } else {
-            try {
-                $translation = LanguageTranslation::where('slug', $slug)->first();
-
-                if ($translation) {
-                    Cache::put("core_language_translation_" . $slug, $translation->phrase, 3600);
+                    Cache::put("core_language_translation_" . $language_id . '_' . $slug, $translation->phrase, 3600);
                     return $translation->phrase;
                 }
             } catch (\Throwable $th) {
