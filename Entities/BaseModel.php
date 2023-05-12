@@ -38,7 +38,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
         $slug = preg_replace('/\s+/', ' ', $slug);
 
         $slug = str_replace(' ', '-', $slug);
-        
+
         $slug = preg_replace('/[^A-Za-z0-9\-\_]/', '', $slug);
 
         return strtolower($slug);
@@ -48,7 +48,10 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
     {
         parent::boot();
 
+        //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
         static::creating(function ($model) {
+
             $model->created_by = is_object(Auth::guard(config('app.guards.web'))->user()) ? Auth::guard(config('app.guards.web'))->user()->id : 1;
             $model->updated_by = null;
 
@@ -73,9 +76,23 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             }
         });
 
+        static::saving(function ($model) {
+            $model->updated_by = is_object(Auth::guard(config('app.guards.web'))->user()) ? Auth::guard(config('app.guards.web'))->user()->id : 1;
+
+            if (isset($model->slug)) {
+                $title = (isset($model->title)) ? $model->title : '';
+                $title = (isset($model->name) && $title == '') ? $model->name : $title;
+                $title = (isset($model->username) && $title == '') ? $model->username : $title;
+
+                $model->slug = self::getSlug($model->slug) ?? self::getSlug($title);
+            }
+        });
+
         static::deleting(function ($model) {
             $model->deleted_by = is_object(Auth::guard(config('app.guards.web'))->user()) ? Auth::guard(config('app.guards.web'))->user()->id : 1;
         });
+
+        //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
         static::created(function ($model) {
             event(new ModelCreated($model->getTableName(), $model));
@@ -87,6 +104,14 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
 
         static::updated(function ($model) {
             event(new ModelUpdated($model->getTableName(), $model));
+        });
+
+        static::saved(function ($model) {
+            if ($model->updated_by == null) {
+                event(new ModelCreated($model->getTableName(), $model));
+            } else {
+                event(new ModelUpdated($model->getTableName(), $model));
+            }
         });
 
         static::addGlobalScope('order', function (Builder $builder) {
@@ -148,7 +173,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             $result['status'] = 1;
             $result['records'] = $query->get();
             $result['message'] = 'Records Found Successfully.';
-        } catch (\Throwable$th) {
+        } catch (\Throwable $th) {
             throw $th;
         }
 
@@ -176,7 +201,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             $result['status'] = 1;
             $result['record'] = $query->first();
             $result['message'] = 'Record Found Successfully.';
-        } catch (\Throwable$th) {
+        } catch (\Throwable $th) {
             throw $th;
         }
 
@@ -233,7 +258,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             $result['status'] = 1;
             $result['records'] = $list;
             $result['message'] = 'Records Found Successfully.';
-        } catch (\Throwable$th) {
+        } catch (\Throwable $th) {
             //throw $th;
         }
 
@@ -256,7 +281,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             $result['status'] = 1;
             $result['record'] = $this->create($args);
             $result['message'] = 'Record Created Successfully.';
-        } catch (\Throwable$th) {
+        } catch (\Throwable $th) {
             throw $th;
         }
 
@@ -276,14 +301,14 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
 
         try {
             $record = $this->where('id', $id)->first();
-            
+
             $record->fill($args);
-            
+
             $result['error'] = 0;
             $result['status'] = 1;
             $result['record'] = $record->save();
             $result['message'] = 'Record Updated Successfully.';
-        } catch (\Throwable$th) {
+        } catch (\Throwable $th) {
             throw $th;
         }
 
@@ -306,7 +331,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
                 $result['status'] = 1;
                 $result['record'] = $this->where('id', $id)->firstorfail()->delete();
                 $result['message'] = "ID:$id Record Delete Successfully.";
-            } catch (\Throwable$th) {
+            } catch (\Throwable $th) {
                 throw $th;
             }
         }
