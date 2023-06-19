@@ -93,7 +93,7 @@ class Datasetter
             if ($hash != $data_migrated->hash) {
                 $saved_record = $class_name::find($data_migrated->item_id);
 
-                if (!$saved_record->is_modified) {
+                if ($saved_record && !$saved_record->is_modified) {
                     $saved_record->fill($data);
                     $saved_record->save();
                 }
