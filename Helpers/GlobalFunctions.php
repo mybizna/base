@@ -8,6 +8,7 @@ if (!function_exists('___')) {
 
     function ___($slug)
     {
+
         $string = $slug;
 
         $language = new Language();
@@ -15,6 +16,8 @@ if (!function_exists('___')) {
         $default_language = $language->getDefaultLanguage();
         $language_id = $default_language->id;
 
+
+     
         if (Cache::has("core_language_translation_" . $language_id . '_' . $slug)) {
             $translation = Cache::get("core_language_translation_" . $language_id . '_' . $slug);
             return $translation;

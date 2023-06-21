@@ -36,7 +36,7 @@ class Datasetter
             $data_folder = $path . DIRECTORY_SEPARATOR . 'Entities' . DIRECTORY_SEPARATOR . 'Data';
 
             if (is_dir($data_folder)) {
-                $data_dir = new \DirectoryIterator($data_folder);
+                $data_dir = new \DirectoryIterator ($data_folder);
 
                 foreach ($data_dir as $fileinfo) {
                     if ($fileinfo->isFile()) {
@@ -72,10 +72,17 @@ class Datasetter
 
     public function add_data($module, $model, $main_field, $data)
     {
+        $main_fields = (is_array($main_field)) ? $main_field : [$main_field];
+
+        $slug = '';
+        foreach ($main_fields as $key => $field) {
+            $slug .= $data[$field];
+        }
+
         $data_to_migrate = array(
             'module' => $module,
             'table_name' => $model,
-            "array_key" => $data[$main_field],
+            "array_key" => $slug,
         );
 
         $class_name = $this->getClassName($module, $model);
@@ -111,10 +118,10 @@ class Datasetter
             DataMigrated::create($data_to_migrate);
         }
     }
-    
+
     private function logOutput($message, $type = 'info')
     {
-        $output = new \Symfony\Component\Console\Output\ConsoleOutput();
+        $output = new \Symfony\Component\Console\Output\ConsoleOutput ();
 
         if ($this->show_logs) {
             if ($type == 'title') {
