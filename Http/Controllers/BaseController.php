@@ -100,7 +100,6 @@ class BaseController extends Controller
 
         return Response::json($result);
 
-        exit;
     }
 
     public function updateRecord(Request $request, $module, $model, $id)

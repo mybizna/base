@@ -15,8 +15,6 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
 {
 
     use Userstamps;
-    //use SoftDeletes;
-    //use SoftDeletes;
     use Notifiable;
 
     public $alias = [];
