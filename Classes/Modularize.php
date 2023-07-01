@@ -134,7 +134,7 @@ class Modularize
         }
 
         $classname = $this->getClassName($this->module, $this->model);
-
+        
         if ($classname) {
             if (method_exists($classname, 'updateRecord')) {
                 $classname->module = $this->module;
