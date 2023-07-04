@@ -6,6 +6,7 @@ use App\Models\User;
 use Artisan;
 use Config;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
@@ -197,7 +198,7 @@ class BaseServiceProvider extends ServiceProvider
                         if ($db_setting) {
                             $value = $db_setting->value;
                         }
-                    } catch (\Throwable$th) {
+                    } catch (\Throwable $th) {
                         //throw $th;
                     }
 
@@ -273,7 +274,6 @@ class BaseServiceProvider extends ServiceProvider
         $new_versions = [];
         $need_migration = false;
         $versions = $this->getVersions();
-        
 
         foreach ($paths as $key => $path) {
             $path_arr = array_reverse(explode('/', $path));
@@ -289,22 +289,28 @@ class BaseServiceProvider extends ServiceProvider
             $new_versions[$module_name] = $composer['version'];
         }
 
+        if (!Schema::hasTable('cache') && !$this->migrationFileExists('create_cache_table')) {
+            Artisan::call('cache:table');
+        }
+
+        if (!Schema::hasTable('sessions') && !$this->migrationFileExists('create_sessions_table')) {
+            Artisan::call('session:table');
+        }
+
+        if (!Schema::hasTable('cache') || !Schema::hasTable('sessions')) {
+            Artisan::call('migrate');
+        }
+
         ksort($modules);
         ksort($new_versions);
 
-        $this->saveFile(realpath(base_path()) . DIRECTORY_SEPARATOR . 'modules_statuses.json', $modules);
-        $this->saveFile(realpath(base_path()) . DIRECTORY_SEPARATOR . 'versions.json', $new_versions);
+        Cache::forget('mybizna_base_modules');
+        Cache::forget('mybizna_base_versions');
+
+        Cache::forever('mybizna_base_modules', $modules);
+        Cache::forever('mybizna_base_versions', $new_versions);
 
         if ($need_migration) {
-
-            if (!Schema::hasTable('cache') && !$this->migrationFileExists('create_cache_table')) {
-                Artisan::call('cache:table');
-            }
-
-            if (!Schema::hasTable('cache') && !$this->migrationFileExists('create_cache_table')) {
-                Artisan::call('session:table');
-            }
-
             Artisan::call('migrate');
             $migrate_command->migrateModels(true);
             $this->initiateUser();
@@ -357,14 +363,10 @@ class BaseServiceProvider extends ServiceProvider
 
     private function getVersions()
     {
-
-        $path = realpath(base_path()) . DIRECTORY_SEPARATOR . 'versions.json';
-        if (file_exists($path)) {
-
-            $json = file_get_contents($path);
-
-            return json_decode($json, true);
+        if (Cache::has('mybizna_base_versions')) {
+            return Cache::get('mybizna_base_versions');
         }
+
         return [];
     }
 
@@ -375,21 +377,6 @@ class BaseServiceProvider extends ServiceProvider
         $json = file_get_contents($path);
 
         return json_decode($json, true);
-    }
-
-    private function saveFile($path, $data)
-    {
-        $modules_str = json_encode($data, JSON_PRETTY_PRINT);
-
-        try {
-            touch($path);
-            chmod($path, 0775);
-            $fp = fopen($path, 'w');
-            fwrite($fp, $modules_str);
-            fclose($fp);
-        } catch (\Throwable$th) {
-            //throw $th;
-        }
     }
 
     private function initializeConfig()
