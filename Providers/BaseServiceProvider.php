@@ -295,7 +295,7 @@ class BaseServiceProvider extends ServiceProvider
 
         if (!Schema::hasTable('sessions') && !$this->migrationFileExists('create_sessions_table')) {
             Artisan::call('session:table');
-        }
+        } 
 
         if (!Schema::hasTable('cache') || !Schema::hasTable('sessions')) {
             Artisan::call('migrate');
