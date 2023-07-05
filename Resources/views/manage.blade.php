@@ -50,7 +50,7 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
-    <link href="{{ $assets_url }}/fontawesome/css/all.css" rel="stylesheet">
+    <link href="{{ $assets_url }}/fontawesome/css/all.min.css" rel="stylesheet">
 
 
     <style>
