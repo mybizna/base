@@ -169,7 +169,9 @@ class BaseServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
-        // TODO: Rework using setting
+        if (!Schema::hasTable('core_setting')) {
+            return;
+        }
 
         $paths = [];
 
@@ -264,8 +266,10 @@ class BaseServiceProvider extends ServiceProvider
         $paths = [];
 
         $this->initializeConfig();
+        $this->runSessionNCacheMigration();
 
         $groups = (is_file(base_path('../readme.txt'))) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
+
         foreach ($groups as $key => $group) {
             $paths = array_merge($paths, glob(base_path($group)));
         }
@@ -289,18 +293,6 @@ class BaseServiceProvider extends ServiceProvider
             $new_versions[$module_name] = $composer['version'];
         }
 
-        if (!Schema::hasTable('cache') && !$this->migrationFileExists('create_cache_table')) {
-            Artisan::call('cache:table');
-        }
-
-        if (!Schema::hasTable('sessions') && !$this->migrationFileExists('create_sessions_table')) {
-            Artisan::call('session:table');
-        } 
-
-        if (!Schema::hasTable('cache') || !Schema::hasTable('sessions')) {
-            Artisan::call('migrate');
-        }
-
         ksort($modules);
         ksort($new_versions);
 
@@ -316,6 +308,23 @@ class BaseServiceProvider extends ServiceProvider
             $this->initiateUser();
             $datasetter->dataProcess();
         }
+    }
+
+    protected function runSessionNCacheMigration()
+    {
+
+        if (!Schema::hasTable('cache') && !$this->migrationFileExists('create_cache_table')) {
+            Artisan::call('cache:table');
+        }
+
+        if (!Schema::hasTable('sessions') && !$this->migrationFileExists('create_sessions_table')) {
+            Artisan::call('session:table');
+        }
+
+        if (!Schema::hasTable('cache') || !Schema::hasTable('sessions')) {
+            Artisan::call('migrate');
+        }
+
     }
 
     protected function migrationFileExists($mgr)

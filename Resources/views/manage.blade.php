@@ -126,15 +126,21 @@
 </head>
 
 <body>
-    <div id="app">
-        <div id="loaderDiv" class="animate-bottom my-5">
-            <h2 class="my-3">Loading!....</h2>
-            <p class="mb-5">The system require's javascript.</p>
+    @if ($has_setting)
+        <div id="app">
+            <div id="loaderDiv" class="animate-bottom my-5">
+                <h2 class="my-3">Loading!....</h2>
+                <p class="mb-5">The system require's javascript.</p>
+            </div>
+            <div>
+                <div id="loader"></div>
+            </div>
         </div>
-        <div>
-            <div id="loader"></div>
+    @else
+        <div class="">
+            @include('base::migration.wizard')
         </div>
-    </div>
+    @endif
 </body>
 
 </html>

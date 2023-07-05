@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Modules\Base\Classes\Autocomplete;
 use Modules\Base\Classes\Modularize;
+use Illuminate\Support\Facades\Schema;
 
 class BaseController extends Controller
 {
@@ -34,7 +35,11 @@ class BaseController extends Controller
      */
     public function manage()
     {
-        return view('base::manage');
+        $result = [
+            'has_setting' => Schema::hasTable('core_setting'),
+        ];
+
+        return view('base::manage', $result);
     }
 
     public function fetchVue(Request $request)
