@@ -1,5 +1,5 @@
 <div form="address"
-    class="absolute top-0 left-0 flex flex-col invisible w-full h-0 min-w-0 p-4 break-words bg-white border-0 opacity-0 dark:bg-gray-950 dark:shadow-soft-dark-xl shadow-soft-xl rounded-2xl bg-clip-border">
+    class="flex flex-col d-none w-full h-0 min-w-0 p-4 break-words bg-white border-0 opacity-0 dark:bg-gray-950 dark:shadow-soft-dark-xl shadow-soft-xl rounded-2xl bg-clip-border">
 
     <div class="flex flex-wrap -mx-3 text-center">
         <div class="w-10/12 max-w-full px-3 mx-auto flex-0">

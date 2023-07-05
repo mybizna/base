@@ -13,7 +13,7 @@
 
             <div class="flex flex-wrap">
                 <div class="w-full max-w-full px-3 m-auto flex-0 lg:w-8/12">
-                    <form class="relative mb-32">
+                    <form class="relative">
 
                         @include('base::migration.admin-account')
                         @include('base::migration.migrate-db')
