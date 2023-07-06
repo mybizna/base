@@ -25,6 +25,18 @@ class Datasetter
     //Data Modules
     public function dataProcess()
     {
+        $models = $this->migrateModels();
+
+        foreach ($models->sortBy('order') as $model) {
+            $this->logOutput('Model: ' . $model['data_folder'], 'title');
+
+            if (!isset($model['object']->run_later) || !$model['object']->run_later) {
+                $model['object']->data($this);
+            }
+        }
+    }
+    public function migrateModels()
+    {
         $models = collect();
 
         foreach ($this->paths as $key => $path) {
@@ -36,7 +48,7 @@ class Datasetter
             $data_folder = $path . DIRECTORY_SEPARATOR . 'Entities' . DIRECTORY_SEPARATOR . 'Data';
 
             if (is_dir($data_folder)) {
-                $data_dir = new \DirectoryIterator ($data_folder);
+                $data_dir = new \DirectoryIterator($data_folder);
 
                 foreach ($data_dir as $fileinfo) {
                     if ($fileinfo->isFile()) {
@@ -51,6 +63,7 @@ class Datasetter
                         if (method_exists($model, 'data')) {
                             $models->push([
                                 'data_folder' => $data_folder,
+                                'class' =>  $model,
                                 'object' => $object = app($model),
                                 'order' => $object->ordering ?? 0,
                             ]);
@@ -60,13 +73,7 @@ class Datasetter
             }
         }
 
-        foreach ($models->sortBy('order') as $model) {
-            $this->logOutput('Model: ' . $model['data_folder'], 'title');
-
-            if (!isset($model['object']->run_later) || !$model['object']->run_later) {
-                $model['object']->data($this);
-            }
-        }
+        return $models->sortBy('order');
 
     }
 
@@ -121,7 +128,7 @@ class Datasetter
 
     private function logOutput($message, $type = 'info')
     {
-        $output = new \Symfony\Component\Console\Output\ConsoleOutput ();
+        $output = new \Symfony\Component\Console\Output\ConsoleOutput();
 
         if ($this->show_logs) {
             if ($type == 'title') {

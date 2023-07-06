@@ -50,7 +50,7 @@ class BaseServiceProvider extends ServiceProvider
 
         if (!App::runningInConsole()) {
             // app is running in console
-            $this->runMigration();
+            //$this->runMigration();
         }
 
         $this->setGlobalVariables();
@@ -146,6 +146,7 @@ class BaseServiceProvider extends ServiceProvider
         $paths = [];
 
         $groups = (is_file(base_path('../readme.txt'))) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
+
         foreach ($groups as $key => $group) {
             $paths = array_merge($paths, glob(base_path($group)));
         }
@@ -273,6 +274,7 @@ class BaseServiceProvider extends ServiceProvider
         foreach ($groups as $key => $group) {
             $paths = array_merge($paths, glob(base_path($group)));
         }
+        print_r($paths);exit;
 
         $modules = [];
         $new_versions = [];

@@ -7,9 +7,11 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
-use Modules\Base\Classes\Autocomplete;
-use Modules\Base\Classes\Modularize;
 use Illuminate\Support\Facades\Schema;
+use Modules\Base\Classes\Autocomplete;
+use Modules\Base\Classes\Datasetter;
+use Modules\Base\Classes\Migration;
+use Modules\Base\Classes\Modularize;
 
 class BaseController extends Controller
 {
@@ -35,7 +37,27 @@ class BaseController extends Controller
      */
     public function manage()
     {
+
+        $db_list = [];
+        $data_list = [];
+
+        $migration = new Migration();
+        $datasetter = new Datasetter();
+
+        $dbmodels = $migration->migrateModels(true);
+        foreach ($dbmodels as $item) {
+            $db_list[] = $item['class'];
+        }
+
+        $datamodels = $datasetter->migrateModels();
+        foreach ($datamodels as $item) {
+            $data_list[] = $item['class'];
+        }
+
         $result = [
+            'data_list' => $data_list,
+            'db_list' => $db_list,
+            'has_user' => false,
             'has_setting' => Schema::hasTable('core_setting'),
         ];
 

@@ -58,6 +58,13 @@ Route::get('/mybizna-dataprocessor', function () {
     return 'View cache has been cleared';
 });
 
+// Clear view cache:
+Route::post('/setup', function () {
+    //$Datasetter = new Datasetter();
+    //$Datasetter->dataProcess();
+    return 'View cache has been cleared';
+})->name('setup');
+
 Route::get('/reset-all', function () {
 
     Artisan::call('cache:clear');

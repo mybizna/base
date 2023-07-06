@@ -138,7 +138,7 @@
         </div>
     @else
         <div class="">
-            @include('base::migration.wizard')
+            @include('base::setup.wizard')
         </div>
     @endif
 </body>
