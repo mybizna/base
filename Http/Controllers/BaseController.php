@@ -2,13 +2,11 @@
 
 namespace Modules\Base\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Schema;
-use Modules\Base\Classes\Autocomplete;
 use Modules\Base\Classes\Datasetter;
 use Modules\Base\Classes\Migration;
 use Modules\Base\Classes\Modularize;
@@ -35,14 +33,25 @@ class BaseController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function manage()
+    public function manage(Request $request)
     {
 
+        $has_user = false;
+        $url = url('/');
         $db_list = [];
         $data_list = [];
 
         $migration = new Migration();
         $datasetter = new Datasetter();
+
+        define('MYBIZNA_MIGRATION', true);
+
+        $userCount = $has_user = User::count();
+
+        if (!$userCount && defined('MYBIZNA_BASE_URL')) {
+            $datasetter->initiateUser();
+            $has_user = true;
+        }
 
         $dbmodels = $migration->migrateModels(true);
         foreach ($dbmodels as $item) {
@@ -54,30 +63,24 @@ class BaseController extends Controller
             $data_list[] = $item['class'];
         }
 
+        if (defined('MYBIZNA_BASE_URL')) {
+            $url = MYBIZNA_BASE_URL;
+        }
+
+        //print_r($db_list); exit;
+
+        $request->session()->put('migration_db_list', $db_list);
+        $request->session()->put('migration_data_list', $data_list);
+
         $result = [
-            'data_list' => $data_list,
-            'db_list' => $db_list,
-            'has_user' => false,
+            'url' => $url,
+            'data_list' => array_keys($data_list),
+            'db_list' => array_keys($db_list),
+            'has_user' => $has_user,
             'has_setting' => Schema::hasTable('core_setting'),
         ];
 
         return view('base::manage', $result);
-    }
-
-    public function fetchVue(Request $request)
-    {
-        $current_uri = $request->segments();
-
-        $modularize = new Modularize();
-
-        [$contents, $status] = $modularize->fetchVue($current_uri);
-
-        $response = Response::make($contents, $status);
-
-        $response->header('Content-Type', 'application/javascript');
-
-        return $response;
-
     }
 
     // http://127.0.0.1:8000/api/account/journal/?s[name][str]=test&s[name][ope]==&s[keyword]=test
@@ -149,127 +152,4 @@ class BaseController extends Controller
         return Response::json($result);
     }
 
-    public function discoverModules(Request $request)
-    {
-        $modularize = new Modularize();
-
-        $result = $modularize->discoverModules();
-
-        return Response::json($result);
-    }
-
-    public function fetchRoutes(Request $request)
-    {
-        $modularize = new Modularize();
-
-        $result = $modularize->fetchRoutes();
-
-        return Response::json($result);
-    }
-
-    public function fetchRights(Request $request)
-    {
-        $modularize = new Modularize();
-
-        $result = $modularize->fetchRights();
-
-        return Response::json($result);
-    }
-    public function fetchPositions(Request $request)
-    {
-        $modularize = new Modularize();
-
-        $result = $modularize->fetchPositions();
-
-        return Response::json($result);
-    }
-
-    public function fetchMenus(Request $request)
-    {
-        $modularize = new Modularize();
-
-        $result = $modularize->fetchMenus();
-
-        return Response::json($result);
-    }
-
-    public function fetchSettings(Request $request)
-    {
-        $modularize = new Modularize();
-
-        $result = $modularize->fetchSettings();
-
-        return Response::json($result);
-    }
-
-    public function currentUser(Request $request)
-    {
-
-        $this->user = Auth::user();
-
-        $user = $request->user();
-
-        return Response::json($user);
-    }
-
-    public function profile(Request $request)
-    {
-
-        $this->user = Auth::user();
-
-        $user = $request->user();
-
-        return Response::json($user);
-    }
-
-    public function dashboardData(Request $request)
-    {
-
-        $result = [
-            [
-                'is_amount' => false,
-                'title' => "Purchase",
-                'icon' => "fas fa-chart-line",
-                'color' => "primary",
-                'total' => DB::table('account_transaction')->count(),
-            ],
-            [
-                'is_amount' => false,
-                'title' => "Partner",
-                'icon' => "fas fa-users",
-                'color' => "success",
-                'total' => DB::table('partner')->count(),
-            ],
-            [
-                'is_amount' => false,
-                'title' => "Product",
-                'icon' => "fas fa-store",
-                'color' => "warning",
-                'total' => DB::table('product')->count(),
-            ],
-            [
-                'is_amount' => true,
-                'title' => "Sales",
-                'icon' => "fas fa-sack-dollar",
-                'color' => "info",
-                'total' => DB::table('sale')->count(),
-            ],
-        ];
-
-        return Response::json($result);
-    }
-
-    public function autocomplete(Request $request)
-    {
-        $search = $request->get('search');
-        $table_name = $request->get('table_name');
-        $display_fields = $request->get('display_fields');
-        $search_fields = $request->get('search_fields');
-
-        $autocomplete = new Autocomplete();
-
-        $records = $autocomplete->dataResult($search, $table_name, $display_fields, $search_fields);
-
-        return $records;
-    }
 }

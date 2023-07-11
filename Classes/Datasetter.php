@@ -2,6 +2,8 @@
 
 namespace Modules\Base\Classes;
 
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Modules\Core\Entities\DataMigrated;
@@ -28,13 +30,10 @@ class Datasetter
         $models = $this->migrateModels();
 
         foreach ($models->sortBy('order') as $model) {
-            $this->logOutput('Model: ' . $model['data_folder'], 'title');
-
-            if (!isset($model['object']->run_later) || !$model['object']->run_later) {
-                $model['object']->data($this);
-            }
+            $this->migrateModel($model['object']);
         }
     }
+
     public function migrateModels()
     {
         $models = collect();
@@ -63,7 +62,7 @@ class Datasetter
                         if (method_exists($model, 'data')) {
                             $models->push([
                                 'data_folder' => $data_folder,
-                                'class' =>  $model,
+                                'class' => $model,
                                 'object' => $object = app($model),
                                 'order' => $object->ordering ?? 0,
                             ]);
@@ -75,6 +74,15 @@ class Datasetter
 
         return $models->sortBy('order');
 
+    }
+
+    public function migrateModel($model)
+    {
+        $this->logOutput('Model: ' . get_class($model), 'title');
+
+        if (!isset($model->run_later) || !$model->run_later) {
+            $model->data($this);
+        }
     }
 
     public function add_data($module, $model, $main_field, $data)
@@ -124,6 +132,43 @@ class Datasetter
 
             DataMigrated::create($data_to_migrate);
         }
+    }
+
+    public function initiateUser($user = [])
+    {
+        //Create Admin User
+        if (!empty($user)) {
+            $user_cls = new User();
+            $user_cls->password = Hash::make($user['password']);
+            $user_cls->email = $user['email'];
+            $user_cls->name = $user['name'];
+            $user_cls->save();
+        } else {
+            $userCount = User::count();
+
+            if (!$userCount) {
+
+                $user_cls = new User();
+
+                if (defined('MYBIZNA_USER_LIST')) {
+                    $wp_user_list = MYBIZNA_USER_LIST;
+                    foreach ($wp_user_list as $key => $wp_user) {
+                        $user_cls->password = Hash::make(uniqid());
+                        $user_cls->email = $wp_user->user_email;
+                        $user_cls->name = $wp_user->user_nicename;
+                        $user_cls->save();
+                    }
+
+                } else {
+
+                    $user_cls->password = Hash::make('admin');
+                    $user_cls->email = 'admin@admin.com';
+                    $user_cls->name = 'Admin User';
+                    $user_cls->save();
+                }
+            }
+        }
+
     }
 
     private function logOutput($message, $type = 'info')

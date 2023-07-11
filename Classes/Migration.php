@@ -2,8 +2,12 @@
 
 namespace Modules\Base\Classes;
 
+use Doctrine\DBAL\Schema\Comparator;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 
 class Migration
 {
@@ -115,7 +119,7 @@ class Migration
 
     }
 
-    protected function migrateModel(Model $model)
+    public function migrateModel(Model $model)
     {
         $this->logOutput(get_class($model));
 

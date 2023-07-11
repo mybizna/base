@@ -28,8 +28,28 @@
 </div>
 
 <script>
+    var log_wrapper = '';
+
+    function loggingOutput(log_content, log_type = 'migration') {
+
+        log_wrapper += 'DB Migration >$ ' + log_content + "\n";
+
+        if (log_type === 'dataprocessor') {
+            log_wrapper += 'Data Processor >$ ' + log_content + "\n";
+        } else if (log_type === 'create_user') {
+            log_wrapper += 'Create User >$ ' + log_content + "\n";
+        }
+
+        var element = document.getElementById('terminal_logger');
+        element.textContent = log_wrapper;
+        element.scrollTop = element.scrollHeight;
+    }
+
     // Function to retrieve form input values
     function getFormValues() {
+
+        var log_type = 'create_user';
+
         var form = document.getElementById('setup-wizard');
 
         var firstName = form.elements['first_name'].value;
@@ -39,11 +59,19 @@
         var phone = form.elements['phone'].value;
         var email = form.elements['email'].value;
 
+
         // Validate the inputs
         if (firstName === '' || lastName === '' || username === '' || password === '' || phone === '' || email === '') {
             alert('Please fill in all the fields.');
             return;
         }
+
+        const adminAccount = document.getElementById('admin-account');
+        adminAccount.classList.remove('d-block');
+        adminAccount.classList.add('d-none');
+
+        const migrateDB = document.getElementById('migrate-db');
+        migrateDB.classList.remove('d-none');
 
         // Create an object with the form data
         var formData = {
@@ -58,32 +86,8 @@
         // Convert the object to JSON
         var jsonData = JSON.stringify(formData);
 
-        var modules = [{
-                name: 'base',
-                icon: 'fa fa-base'
-            },
-            {
-                name: 'core',
-                icon: 'fa fa-core'
-            }
-        ];
-
-        // Set up the fetch request for automigrator
-        fetch('/automigrator-migrate', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': form.elements['_token'].value
-                }
-            })
-            .then(function(response) {
-                if (!response.ok) {
-                    throw new Error('Automigrator migration failed.');
-                }
-            });
-
         // Set up the fetch request
-        fetch('{!! url(route('setup')) !!}', {
+        fetch('{!! $url !!}/base/create-user', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -93,30 +97,92 @@
             })
             .then(function(response) {
                 if (response.ok) {
-                    alert('Form data submitted successfully!');
+                    loggingOutput('Form data submitted successfully!', log_type);
                 } else {
-                    alert('Error occurred. Please try again.');
+                    loggingOutput('Error occurred. Please try again.', log_type);
                 }
             })
             .catch(function(error) {
-                alert('Error occurred. Please try again.');
+                loggingOutput('Error occurred. Please try again.', log_type);
             });
 
-        // Run the data processor
-        fetch('/mybizna-dataprocessor', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': form.elements['_token'].value
-                }
-            })
-            .then(function(response) {
-                if (!response.ok) {
-                    throw new Error('Data processor migration failed.');
-                }
-            });
+        processList();
 
     }
+
+    //function for processing posting to the server
+    async function processList() {
+        var log_type = 'migration';
+        var form = document.getElementById('setup-wizard');
+
+        var db_list = {!! json_encode($db_list) !!};
+        var data_list = {!! json_encode($data_list) !!};
+
+        // Set up the fetch request for automigrator
+        await (async (db_list) => {
+
+            for (const classname of db_list) {
+
+                loggingOutput('Migrating ' + classname + '...', log_type);
+
+                await fetch('{!! $url !!}/base/automigrator-migrate?class=' + classname, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': form.elements['_token'].value
+                        },
+                    })
+                    .then(function(response) {
+                        if (!response.ok) {
+                            loggingOutput('Automigrator migration failed.', log_type);
+                        }
+
+                        return response.json();
+
+                    }).then(data => {
+                        loggingOutput(data.message, log_type);
+                        loggingOutput('', log_type);
+                    });
+
+            }
+        })(db_list);
+
+        loggingOutput('', log_type);
+        loggingOutput('', log_type);
+
+        log_type = 'dataprocessor';
+
+        // Run the data processor
+        await (async (data_list) => {
+
+            for (const classname of data_list) {
+
+                await fetch('{!! $url !!}/base/mybizna-dataprocessor?class=' + classname, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': form.elements['_token'].value
+                        },
+                    })
+                    .then(function(response) {
+                        if (!response.ok) {
+                            loggingOutput('Data processor migration failed.', log_type);
+                        }
+
+                        return response.json();
+                    }).then(data => {
+                        loggingOutput(data.message, log_type);
+                        loggingOutput('', log_type);
+                    });
+            }
+
+        })(data_list);
+
+    }
+
+    @if ($has_user)
+        processList();
+    @endif
 </script>
 
 
@@ -186,7 +252,7 @@
         box-shadow: 0px 0px 10px rgba(0, 0, 0, .4)
     }
 
-    .line4{
+    .line4 {
         background: black;
         color: #7AFB4C;
     }

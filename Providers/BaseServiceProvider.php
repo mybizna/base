@@ -50,7 +50,7 @@ class BaseServiceProvider extends ServiceProvider
 
         if (!App::runningInConsole()) {
             // app is running in console
-            //$this->runMigration();
+            $this->runMigration();
         }
 
         $this->setGlobalVariables();
@@ -175,6 +175,7 @@ class BaseServiceProvider extends ServiceProvider
         }
 
         $paths = [];
+        $merged_settings = [];
 
         $groups = (is_file(base_path('../readme.txt'))) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
         foreach ($groups as $key => $group) {
@@ -259,7 +260,7 @@ class BaseServiceProvider extends ServiceProvider
      * Run Migration
      * xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
      * */
-    public function runMigration()
+    public function runMigrationOld()
     {
         $migrate_command = new MigrateCommand();
         $datasetter = new Datasetter();
@@ -267,14 +268,13 @@ class BaseServiceProvider extends ServiceProvider
         $paths = [];
 
         $this->initializeConfig();
-        $this->runSessionNCacheMigration();
+        // $this->runSessionNCacheMigration();
 
         $groups = (is_file(base_path('../readme.txt'))) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
 
         foreach ($groups as $key => $group) {
             $paths = array_merge($paths, glob(base_path($group)));
         }
-        print_r($paths);exit;
 
         $modules = [];
         $new_versions = [];
@@ -312,7 +312,7 @@ class BaseServiceProvider extends ServiceProvider
         }
     }
 
-    protected function runSessionNCacheMigration()
+    protected function runMigration()
     {
 
         if (!Schema::hasTable('cache') && !$this->migrationFileExists('create_cache_table')) {

@@ -1,5 +1,5 @@
-<div form="account"
-    class=" @if ($has_user) d-none @endif w-full min-w-0 break-words bg-white border-0 dark:bg-gray-950 dark:shadow-soft-dark-xl shadow-soft-xl rounded-2xl bg-clip-border">
+<div form="account" id="migrate-db"
+    class=" @if (!$has_user) d-none @endif w-full min-w-0 break-words bg-white border-0 dark:bg-gray-950 dark:shadow-soft-dark-xl shadow-soft-xl rounded-2xl bg-clip-border">
 
     <div class="p-2 grid grid-cols-2 sm:grid-cols-5 lg:grid-cols-18  gap-2 overflow-hidden">
         <div class=" my-1">
@@ -86,10 +86,10 @@
             <div class="title">Migrate DB & Data</div>
         </div>
 
-        <pre class="body  text-left m-0 text-base">
-DB Migration >$ commands
+        <pre id="terminal_logger" class="body  text-left m-0 text-xs overflow-x-hidden overflow-y-scroll h-32">
+DB Migration >$ Starting....
         </pre>
-        <p class="line4  text-left text-base">DB Migration >$ <span class="cursor4">_</span></p>
+        <p class="line4  text-left text-sm">DB Migration >$ <span class="cursor4">_</span></p>
     </div>
 
 

@@ -10,69 +10,21 @@
 | contains the "web" middleware group. Now create something great!
 |
  */
-use Modules\Base\Classes\Datasetter;
-use Modules\Base\Http\Controllers\BaseController;
-use Mybizna\Automigrator\Commands\MigrateCommand;
-
-$apicontroller = 'Modules\Base\Http\Controllers\BaseController';
-Route::get('fetch_vue/{section}', [BaseController::class, 'fetchVue'])->where(['section' => '.*']);
+use Modules\Base\Http\Controllers\GeneralController;
 
 //manage new user
-Route::get('/manage', [BaseController::class, 'manage']);
+Route::get('/manage', [GeneralController::class, 'manage']);
 
-// Clear application cache:
-Route::get('/clear-cache', function () {
-    Artisan::call('cache:clear');
-    return 'Application cache has been cleared';
-});
+Route::get('fetch_vue/{section}', [GeneralController::class, 'fetchVue'])->where(['section' => '.*']);
 
-//Clear route cache:
-Route::get('/route-cache', function () {
-    Artisan::call('route:cache');
-    return 'Routes cache has been cleared';
-});
+Route::get('base/clear-cache', [GeneralController::class, 'clearCache']);
+Route::get('base/route-cache', [GeneralController::class, 'routeCache']);
+Route::get('base/config-cache', [GeneralController::class, 'configCache']);
+Route::get('base/view-clear', [GeneralController::class, 'viewClear']);
 
-//Clear config cache:
-Route::get('/config-cache', function () {
-    Artisan::call('config:cache');
-    return 'Config cache has been cleared';
-});
-
-// Clear view cache:
-Route::get('/view-clear', function () {
-    Artisan::call('view:clear');
-    return 'View cache has been cleared';
-});
-
-// Clear view cache:
-Route::get('/automigrator-migrate', function () {
-    $MigrateCommand = new MigrateCommand();
-    $MigrateCommand->migrateModels();
-    return 'View cache has been cleared';
-});
-
-// Clear view cache:
-Route::get('/mybizna-dataprocessor', function () {
-    $Datasetter = new Datasetter();
-    $Datasetter->dataProcess();
-    return 'View cache has been cleared';
-});
-
-// Clear view cache:
-Route::post('/setup', function () {
-    //$Datasetter = new Datasetter();
-    //$Datasetter->dataProcess();
-    return 'View cache has been cleared';
-})->name('setup');
-
-Route::get('/reset-all', function () {
-
-    Artisan::call('cache:clear');
-    Artisan::call('route:cache');
-    Artisan::call('config:cache');
-    Artisan::call('view:clear');
-
-    return 'Clear all reset.';
-});
+Route::get('base/automigrator-migrate', [GeneralController::class, 'automigratorMigrate']);
+Route::get('base/mybizna-dataprocessor', [GeneralController::class, 'dataProcessor']);
+Route::get('base/create-user', [GeneralController::class, 'createUser'])->name('create-user');
+Route::get('base/reset-all', [GeneralController::class, 'resetAll']);
 
 require_once 'auth.php';

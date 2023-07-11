@@ -1,6 +1,6 @@
 <ol class="items-center w-full space-y-4 sm:flex sm:space-x-8 sm:space-y-0">
     
-    @if ($has_user)
+    @if (!$has_user)
         <li class="flex items-center text-blue-600 dark:text-blue-500 space-x-2.5">
             <span
                 class="flex items-center justify-center w-8 h-8 border border-blue-600 rounded-full shrink-0 dark:border-blue-500">
