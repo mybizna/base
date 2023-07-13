@@ -10,9 +10,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Modules\Base\Classes\Autocomplete;
 use Modules\Base\Classes\Datasetter;
-use Modules\Base\Classes\Modularize;
 use Modules\Base\Classes\Migration;
-
+use Modules\Base\Classes\Modularize;
 
 class GeneralController extends Controller
 {
@@ -184,7 +183,7 @@ class GeneralController extends Controller
     {
 
         define('MYBIZNA_MIGRATION', true);
-        
+
         $postData = $request->all();
 
         $status = false;
@@ -217,18 +216,17 @@ class GeneralController extends Controller
     public function dataProcessor(Request $request)
     {
 
-
         define('MYBIZNA_MIGRATION', true);
 
         $postData = $request->all();
 
         $message = 'Dont know what happened';
 
-        if(isset($postData['class']) && $request->session()->has('migration_data_list')) {
+        if (isset($postData['class']) && $request->session()->has('migration_data_list')) {
             $class = $postData['class'];
             $data_list = $request->session()->get('migration_data_list');
 
-            if(in_array($class, array_keys($data_list))) {
+            if (in_array($class, array_keys($data_list))) {
                 $classname = $data_list[$class];
 
                 $datasetter = new Datasetter();
@@ -244,21 +242,37 @@ class GeneralController extends Controller
             $message = 'No class sent in the request';
         }
 
-
         return ['message' => $message, 'status' => true];
     }
 
     public function createUser(Request $request)
     {
-        $post = $request->post();
+        $status = false;
+        $message = 'Dont know what happened';
 
         $datasetter = new Datasetter();
-        if (isset($post['username']) && isset($post['password']) && isset($post['email'])) {
-            $datasetter->initiateUser($post);
-            return ['message' => 'User created', 'status' => true];
+
+        $post = $request->post();
+
+        if (defined('MYBIZNA_PLUGINS_URL')) {
+            $datasetter->initiateUser();
+
+            $message = "Wordpress User Migrated Successfully";
+            $status = true;
         } else {
-            return ['message' => 'User not created', 'status' => true];
+            if (isset($post['username']) && isset($post['password']) && isset($post['email'])) {
+                $datasetter->initiateUser($post);
+                return ['message' => 'User created', 'status' => true];
+                $message = 'User created';
+                $status = true;
+            } else {
+                $message = 'User not created: Username, Password and Email are required';
+                $status = false;
+            }
+
         }
+
+        return ['message' => $message, 'status' => $status];
     }
 
     public function resetAll(Request $request)

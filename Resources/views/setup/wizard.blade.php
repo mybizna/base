@@ -32,12 +32,12 @@
 
     function loggingOutput(log_content, log_type = 'migration') {
 
-        log_wrapper += 'DB Migration >$ ' + log_content + "\n";
-
         if (log_type === 'dataprocessor') {
             log_wrapper += 'Data Processor >$ ' + log_content + "\n";
         } else if (log_type === 'create_user') {
             log_wrapper += 'Create User >$ ' + log_content + "\n";
+        } else {
+            log_wrapper += 'Migration >$ ' + log_content + "\n";
         }
 
         var element = document.getElementById('terminal_logger');
@@ -48,7 +48,6 @@
     // Function to retrieve form input values
     function getFormValues() {
 
-        var log_type = 'create_user';
 
         var form = document.getElementById('setup-wizard');
 
@@ -87,7 +86,8 @@
         var jsonData = JSON.stringify(formData);
 
         // Set up the fetch request
-        fetch('{!! $url !!}/base/create-user', {
+        var log_type = 'create_user';
+        fetch('{!! $mybizna_base_url !!}/base/create-user', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -112,20 +112,25 @@
 
     //function for processing posting to the server
     async function processList() {
-        var log_type = 'migration';
         var form = document.getElementById('setup-wizard');
 
         var db_list = {!! json_encode($db_list) !!};
         var data_list = {!! json_encode($data_list) !!};
 
         // Set up the fetch request for automigrator
+        var log_type = 'migration';
         await (async (db_list) => {
+
+            loggingOutput('', log_type);
+            loggingOutput('', log_type);
+            loggingOutput('AUTO MIGRATION STARTED ... ', log_type);
+            loggingOutput('', log_type);
 
             for (const classname of db_list) {
 
-                loggingOutput('Migrating ' + classname + '...', log_type);
+                loggingOutput('Migrating ' + (classname + 1) + '/' + db_list.length + ' ...', log_type);
 
-                await fetch('{!! $url !!}/base/automigrator-migrate?class=' + classname, {
+                await fetch('{!! $mybizna_base_url !!}/base/automigrator-migrate?class=' + classname, {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
@@ -145,19 +150,61 @@
                     });
 
             }
+
+            loggingOutput('', log_type);
+            loggingOutput('', log_type);
+
         })(db_list);
 
-        loggingOutput('', log_type);
-        loggingOutput('', log_type);
 
-        log_type = 'dataprocessor';
+
+        //Migration to create user
+        log_type = "create_user";
+        await (async () => {
+
+            loggingOutput('', log_type);
+            loggingOutput('', log_type);
+            loggingOutput('CREATING USERS FROM WORDPRESS LIST  ...', log_type);
+            loggingOutput('', log_type);
+
+
+            await fetch('{!! $mybizna_base_url !!}/base/create-user', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': form.elements['_token'].value
+                    },
+                })
+                .then(function(response) {
+                    if (!response.ok) {
+                        loggingOutput('Creating Users failed.', log_type);
+                    }
+
+                    return response.json();
+
+                }).then(data => {
+                    loggingOutput(data.message, log_type);
+                    loggingOutput('', log_type);
+                });
+
+            loggingOutput('', log_type);
+            loggingOutput('', log_type);
+        })();
+
 
         // Run the data processor
+        log_type = 'dataprocessor';
         await (async (data_list) => {
+            loggingOutput('', log_type);
+            loggingOutput('', log_type);
+            loggingOutput('DATA PROCESSOR STARTED ... ', log_type);
+            loggingOutput('', log_type);
 
             for (const classname of data_list) {
 
-                await fetch('{!! $url !!}/base/mybizna-dataprocessor?class=' + classname, {
+                loggingOutput('Migrating ' + (classname + 1) + '/' + data_list.length + ' ...', log_type);
+
+                await fetch('{!! $mybizna_base_url !!}/base/mybizna-dataprocessor?class=' + classname, {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
@@ -176,11 +223,16 @@
                     });
             }
 
+            loggingOutput('', log_type);
+            loggingOutput('', log_type);
+
+            location.reload();
+
         })(data_list);
 
     }
 
-    @if ($has_user)
+    @if ($has_uptodate)
         processList();
     @endif
 </script>

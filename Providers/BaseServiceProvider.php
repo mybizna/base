@@ -124,6 +124,8 @@ class BaseServiceProvider extends ServiceProvider
             $url = MYBIZNA_BASE_URL;
         }
 
+      
+
         view()->share([
             'version' => $version,
             'mybizna_base_url' => $url,

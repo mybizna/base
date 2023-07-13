@@ -126,7 +126,11 @@
 </head>
 
 <body>
-    @if ($has_setting)
+    @if (!$has_setting || $has_uptodate)
+        <div class="">
+            @include('base::setup.wizard')
+        </div>
+    @else
         <div id="app">
             <div id="loaderDiv" class="animate-bottom my-5">
                 <h2 class="my-3">Loading!....</h2>
@@ -135,10 +139,6 @@
             <div>
                 <div id="loader"></div>
             </div>
-        </div>
-    @else
-        <div class="">
-            @include('base::setup.wizard')
         </div>
     @endif
 </body>

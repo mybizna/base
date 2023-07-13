@@ -5,6 +5,7 @@ namespace Modules\Base\Classes;
 use Doctrine\DBAL\Schema\Comparator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
@@ -41,27 +42,56 @@ class Migration
         }
     }
 
+    public function hasUpToDate()
+    {
+        $versions = $this->getVersions();
+
+        if (empty($versions)) {
+            return true;
+        }
+
+        $groups = (is_file(base_path('../readme.txt'))) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
+       
+        foreach ($groups as $key => $group) {
+            $paths = glob(base_path($group));
+            
+            foreach ($paths as $key => $path) {
+                $path_arr = array_reverse(explode('/', $path));
+                $module_name = $path_arr[0];
+               
+                $composer = $this->getComposer($path);
+         
+                if ($versions[$module_name] !== $composer['version']) {
+                    
+                    return true;
+                }
+
+            }
+        }
+
+        return false;
+
+    }
+
     public function migrateModels($show_logs = true)
     {
         $this->$show_logs = $show_logs;
 
-        $path = is_dir(app_path('Models')) ? app_path('Models') : app_path();
-
-        $namespace = app()->getNamespace();
-
-        $paths = array();
-
-        array_push($paths, ['namespace' => $namespace . 'Models', 'file' => $path]);
+        $modules = [];
+        $versions = [];
 
         $groups = (is_file(base_path('../readme.txt'))) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
-
         foreach ($groups as $key => $group) {
             $paths = glob(base_path($group));
 
             foreach ($paths as $key => $path) {
                 $path_arr = array_reverse(explode('/', $path));
-
                 $module_name = $path_arr[0];
+
+                $composer = $this->getComposer($path);
+
+                $modules[$module_name] = true;
+                $versions[$module_name] = $composer['version'];
 
                 if ($module_name == 'Base') {
                     continue;
@@ -111,7 +141,7 @@ class Migration
             }
         }
 
-        $this->logOutput("Model Classes Discovered", 'title');
+        $this->saveVersions($modules, $versions);
 
         $this->updateOrder($this->models);
 
@@ -218,6 +248,36 @@ class Migration
         }
 
         $this->models[$table_name]['processed'] = true;
+    }
+
+    private function saveVersions($modules, $versions)
+    {
+        ksort($modules);
+        ksort($versions);
+
+        Cache::forget('mybizna_base_modules');
+        Cache::forget('mybizna_base_versions');
+
+        Cache::forever('mybizna_base_modules', $modules);
+        Cache::forever('mybizna_base_versions', $versions);
+    }
+
+    private function getVersions()
+    {
+        if (Cache::has('mybizna_base_versions')) {
+            return Cache::get('mybizna_base_versions');
+        }
+
+        return [];
+    }
+
+    private function getComposer($path)
+    {
+        $path = $path . DIRECTORY_SEPARATOR . 'composer.json';
+
+        $json = file_get_contents($path);
+
+        return json_decode($json, true);
     }
 
     private function logOutput($message, $type = 'info')

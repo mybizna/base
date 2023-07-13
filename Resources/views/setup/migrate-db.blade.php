@@ -86,10 +86,9 @@
             <div class="title">Migrate DB & Data</div>
         </div>
 
-        <pre id="terminal_logger" class="body  text-left m-0 text-xs overflow-x-hidden overflow-y-scroll h-32">
+        <pre id="terminal_logger" class="body  text-left m-0 text-xs overflow-x-hidden overflow-y-scroll h-36">
 DB Migration >$ Starting....
         </pre>
-        <p class="line4  text-left text-sm">DB Migration >$ <span class="cursor4">_</span></p>
     </div>
 
 

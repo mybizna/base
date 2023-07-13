@@ -23,7 +23,7 @@ Route::get('base/config-cache', [GeneralController::class, 'configCache']);
 Route::get('base/view-clear', [GeneralController::class, 'viewClear']);
 
 Route::get('base/automigrator-migrate', [GeneralController::class, 'automigratorMigrate']);
-Route::get('base/mybizna-dataprocessor', [GeneralController::class, 'dataProcessor']);
+Route::match (['get', 'post'], 'base/mybizna-dataprocessor', [GeneralController::class, 'dataProcessor']);
 Route::get('base/create-user', [GeneralController::class, 'createUser'])->name('create-user');
 Route::get('base/reset-all', [GeneralController::class, 'resetAll']);
 
