@@ -12,7 +12,7 @@
     <link href='https://fonts.googleapis.com/css?family=Quicksand:300,400,700' rel="stylesheet">
     <!--<![endif]-->
 
-    <title>{{  $theme_title }}</title>
+    <title>{{ $theme_title }}</title>
 
     <style type="text/css">
         body {
@@ -168,7 +168,7 @@
             <td>
                 <div
                     style="overflow:hidden;display:none;font-size:1px;color:#ffffff;line-height:1px;font-family:Arial;max-height:0px;max-width:0px;opacity:0;">
-                    {{  $theme_title }}
+                    {{ $theme_title }}
                 </div>
             </td>
         </tr>
@@ -179,7 +179,8 @@
 
         <tr>
             <td align="center">
-                <table border="0" align="center" width="590" cellpadding="0" cellspacing="0" class="container590">
+                <table border="0" align="center" width="590" cellpadding="0" cellspacing="0"
+                    class="container590">
 
                     <tr>
                         <td height="30" style="font-size: 30px; line-height: 30px;">&nbsp;</td>
@@ -196,7 +197,7 @@
                                         <a href=""
                                             style="display: block; border-style: none !important; border: 0 !important;">
                                             <img width="100" border="0" style="display: block; width: 100px;"
-                                                src="{{  $theme_logo }}" alt="" />
+                                                src="{{ $theme_logo }}" alt="" />
                                         </a>
                                     </td>
                                 </tr>
@@ -221,7 +222,8 @@
 
         <tr>
             <td align="center">
-                <table border="0" align="center" width="590" cellpadding="0" cellspacing="0" class="container590">
+                <table border="0" align="center" width="590" cellpadding="0" cellspacing="0"
+                    class="container590">
 
                     <tr>
                         <td align="center"
@@ -231,7 +233,7 @@
 
                             <div style="line-height: 35px">
 
-                                {{  $theme_title }}
+                                {{ $theme_title }}
 
                             </div>
                         </td>
@@ -303,7 +305,8 @@
 
                                 <tr>
                                     <td>
-                                        <table border="0" width="300" align="left" cellpadding="0" cellspacing="0"
+                                        <table border="0" width="300" align="left" cellpadding="0"
+                                            cellspacing="0"
                                             style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;width:100%;"
                                             class="container590">
 
@@ -311,14 +314,16 @@
                                                 <!-- logo -->
                                                 <td align="left">
                                                     <a href=""
-                                                        style="display: block; border-style: none !important; border: 0 !important;"><img
-                                                            width="80" border="0" style="display: block; width: 80px;"
+                                                        style="display: block; border-style: none !important; border: 0 !important;">
+                                                        <img width="80" border="0"
+                                                            style="display: block; width: 80px;"
                                                             src="{{ $theme_logo }}" alt="" /></a>
                                                 </td>
                                             </tr>
 
                                             <tr>
-                                                <td height="25" style="font-size: 25px; line-height: 25px;">&nbsp;</td>
+                                                <td height="25" style="font-size: 25px; line-height: 25px;">&nbsp;
+                                                </td>
                                             </tr>
 
                                             <tr>
@@ -333,24 +338,27 @@
 
                                                         <br />
                                                         <br />
-                                      
+
                                                     </div>
                                                 </td>
                                             </tr>
 
-                                       
+
                                         </table>
 
-                                        <table border="0" width="2" align="left" cellpadding="0" cellspacing="0"
+                                        <table border="0" width="2" align="left" cellpadding="0"
+                                            cellspacing="0"
                                             style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;"
                                             class="container590">
                                             <tr>
-                                                <td width="2" height="10" style="font-size: 10px; line-height: 10px;">
+                                                <td width="2" height="10"
+                                                    style="font-size: 10px; line-height: 10px;">
                                                 </td>
                                             </tr>
                                         </table>
 
-                                        <table border="0" width="200" align="right" cellpadding="0" cellspacing="0"
+                                        <table border="0" width="200" align="right" cellpadding="0"
+                                            cellspacing="0"
                                             style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;"
                                             class="container590">
 
@@ -362,29 +370,7 @@
 
 
                                             <tr>
-                                                <td height="15" style="font-size: 15px; line-height: 15px;">&nbsp;</td>
-                                            </tr>
-
-                                            <tr>
-                                                <td>
-                                                    <table border="0" align="right" cellpadding="0" cellspacing="0">
-                                                        <tr>
-                                                            <td>
-                                                                <a href="{{ $facebook_link }}"
-                                                                    style="display: block; border-style: none !important; border: 0 !important;"><img
-                                                                        width="24" border="0" style="display: block;"
-                                                                        src="http://i.imgur.com/Qc3zTxn.png" alt=""></a>
-                                                            </td>
-                                                            <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                                                            <td>
-                                                                <a href="{{ $twitter_link }}"
-                                                                    style="display: block; border-style: none !important; border: 0 !important;"><img
-                                                                        width="24" border="0" style="display: block;"
-                                                                        src="http://i.imgur.com/RBRORq1.png" alt=""></a>
-                                                            </td>
-                                                            <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                                                        </tr>
-                                                    </table>
+                                                <td height="15" style="font-size: 15px; line-height: 15px;">&nbsp;
                                                 </td>
                                             </tr>
 
@@ -415,7 +401,8 @@
         <tr>
             <td align="center">
 
-                <table border="0" align="center" width="590" cellpadding="0" cellspacing="0" class="container590">
+                <table border="0" align="center" width="590" cellpadding="0" cellspacing="0"
+                    class="container590">
 
                     <tr>
                         <td>
@@ -438,7 +425,8 @@
                                 style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;"
                                 class="container590">
                                 <tr>
-                                    <td height="20" width="5" style="font-size: 20px; line-height: 20px;">&nbsp;</td>
+                                    <td height="20" width="5" style="font-size: 20px; line-height: 20px;">
+                                        &nbsp;</td>
                                 </tr>
                             </table>
 

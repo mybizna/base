@@ -1,5 +1,5 @@
 <div form="account" id="migrate-db"
-    class=" @if (!$has_user) d-none @endif w-full min-w-0 break-words bg-white border-0 dark:bg-gray-950 dark:shadow-soft-dark-xl shadow-soft-xl rounded-2xl bg-clip-border">
+    class=" @if (!($has_user || $is_wordpress)) d-none @endif w-full min-w-0 break-words bg-white border-0 dark:bg-gray-950 dark:shadow-soft-dark-xl shadow-soft-xl rounded-2xl bg-clip-border">
 
     <div class="p-2 grid grid-cols-2 sm:grid-cols-5 lg:grid-cols-18  gap-2 overflow-hidden">
         <div class=" my-1">

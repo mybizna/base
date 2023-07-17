@@ -1,5 +1,5 @@
 <div active form="about" id="admin-account" 
-    class="flex flex-col visible w-full @if ($has_user) d-none @endif h-auto min-w-0 break-words bg-white border-0 opacity-100 dark:bg-gray-950 dark:shadow-soft-dark-xl shadow-soft-xl rounded-2xl bg-clip-border">
+    class="flex flex-col visible w-full @if ($has_user || $is_wordpress) d-none @endif h-auto min-w-0 break-words bg-white border-0 opacity-100 dark:bg-gray-950 dark:shadow-soft-dark-xl shadow-soft-xl rounded-2xl bg-clip-border">
 
     <div>
         <div class="flex flex-wrap">

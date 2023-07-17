@@ -10,16 +10,13 @@
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 
     <title>ISP Access</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"
-        integrity="sha512-+gShyB8GWoOiXNwOlBaYXdLTiZt10Iy6xjACGadpqMs20aJOoh+PJt3bwUVA6Cefe7yF7vblX6QwyXZiVwTWGg=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css"
-        integrity="sha512-gxWow8Mo6q6pLa1XH/CcH8JyiSDEtiwJV78E+D+QP0EVasFs8wKXq16G8CLD4CJ2SnonHr4Lm/yY2fSI2+cbmw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 
     <link href="{{ $assets_url }}/css/app.css?{{ $version }}" rel="stylesheet">
     <link href="{{ $assets_url }}/fontawesome/css/all.min.css" rel="stylesheet">
+    <link href="{{ $assets_url }}/common/intltelinput/intlTelInput.css" rel="stylesheet">
 
+    <script src="{{ $assets_url }}/common/intltelinput/intlTelInput.min.js"></script>
     <script src="{{ $assets_url }}/tailwind/tailwindcss.js?{{ $version }}"></script>
 
     <script>
