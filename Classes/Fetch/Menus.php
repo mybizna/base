@@ -1,8 +1,8 @@
 <?php
 
-namespace Modules\Base\Classes;
+namespace Modules\Base\Classes\Fetch;
 
-class FetchMenus
+class Menus
 {
 
     public $menus = [];

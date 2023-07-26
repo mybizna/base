@@ -1,13 +1,13 @@
 <?php
 
-namespace Modules\Base\Classes;
+namespace Modules\Base\Classes\Fetch;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
-class FetchRights
+class Rights
 {
 
     public $paths = [];

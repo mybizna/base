@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Base\Classes;
+namespace Modules\Base\Classes\Fetch;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
-class FetchRoutes
+class Routes
 {
 
     public $routes = [];

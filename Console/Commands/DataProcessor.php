@@ -41,7 +41,7 @@ class DataProcessor extends Command
     {
 
         $data_setter = new Datasetter();
-        $fetch_rights = new FetchRights();
+        $fetch_rights = new Rights();
 
         $data_setter->show_logs = true;
 

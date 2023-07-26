@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Base\Classes;
+namespace Modules\Base\Classes\Fetch;
 
 use Illuminate\Support\Str;
 use Modules\Core\Entities\Setting as DBSetting;
 
-class FetchSettings
+class Settings
 {
 
     public $settings = [];

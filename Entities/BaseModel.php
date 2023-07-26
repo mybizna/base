@@ -10,6 +10,10 @@ use Modules\Base\Events\ModelDeleted;
 use Modules\Base\Events\ModelUpdated;
 use Wildside\Userstamps\Userstamps;
 
+
+use Modules\Core\Classes\Views\ListTable;
+use Modules\Core\Classes\Views\FormBuilder;
+
 class BaseModel extends \Illuminate\Database\Eloquent\Model
 
 {
@@ -18,6 +22,51 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
     use Notifiable;
 
     public $alias = [];
+
+    public $listtable;
+    public $formbuilder;
+
+    /**
+     * Define constructor that initializes the listtable and formbuilder
+     *
+     */
+    public function __construct(){
+        $this->listtable = $this->listTable();
+        $this->formbuilder = $this->formBuilder();
+    }
+
+    /**
+     * Define the listtable for the model
+     *
+     */
+    public function listTable(){
+        // listing view fields
+        $fields = new ListTable();
+
+        foreach ($this->fillable as $key => $value) {
+            $fields->name($value)->type('text')->ordering(true);
+        }   
+
+
+        return $fields;
+
+    }
+
+    /**
+     * Define the formbuilder for the model
+     *
+     */
+    public function formBuilder(){
+        // listing view fields
+        $fields = new FormBuilder();
+
+        foreach ($this->fillable as $key => $value) {
+            $fields->name($value)->type('text')->group('w-1/2');
+        }   
+
+        return $fields;
+    }
+
 
     /**
      * Get the table associated with the model. Copies getTable() in Model

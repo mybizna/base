@@ -4,6 +4,13 @@ namespace Modules\Base\Classes;
 
 use Auth;
 use Illuminate\Support\Str;
+use Modules\Base\Classes\Fetch\Menus;
+use Modules\Base\Classes\Fetch\Positions;
+use Modules\Base\Classes\Fetch\Rights;
+use Modules\Base\Classes\Fetch\Routes;
+use Modules\Base\Classes\Fetch\Settings;
+use Modules\Base\Classes\Fetch\Vue;
+
 
 class Modularize
 {
@@ -175,7 +182,7 @@ class Modularize
     //Fetching Routes
     public function fetchRoutes()
     {
-        $fetchroutes = new FetchRoutes();
+        $fetchroutes = new Routes();
 
         return $fetchroutes->fetchRoutes();
     }
@@ -193,7 +200,7 @@ class Modularize
     //Fetching Vue
     public function fetchVue($current_uri)
     {
-        $fetchvue = new FetchVue();
+        $fetchvue = new Vue();
 
         return $fetchvue->fetchVue($current_uri);
     }
@@ -202,7 +209,7 @@ class Modularize
     //Fetching Rights
     public function fetchRights()
     {
-        $fetchrights = new FetchRights();
+        $fetchrights = new Rights();
 
         return $fetchrights->fetchRights();
     }
@@ -211,7 +218,7 @@ class Modularize
     //Fetching Menu
     public function fetchPositions()
     {
-        $fetchpositions = new FetchPositions();
+        $fetchpositions = new Positions();
 
         return $fetchpositions->fetchPositions();
     }
@@ -220,7 +227,7 @@ class Modularize
     //Fetching Menu
     public function fetchMenus()
     {
-        $fetchmenus = new FetchMenus();
+        $fetchmenus = new Menus();
 
         return $fetchmenus->fetchMenus();
     }
@@ -229,7 +236,7 @@ class Modularize
     //Fetching Setting
     public function fetchSettings()
     {
-        $fetchsettings = new FetchSettings();
+        $fetchsettings = new Settings();
 
         return $fetchsettings->fetchSettings();
     }

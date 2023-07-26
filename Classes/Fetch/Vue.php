@@ -1,10 +1,10 @@
 <?php
 
-namespace Modules\Base\Classes;
+namespace Modules\Base\Classes\Fetch;
 
 use Illuminate\Support\Facades\File;
 
-class FetchVue
+class Vue
 {
     public $paths = [];
 
