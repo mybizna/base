@@ -31,8 +31,8 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
      *
      */
     public function __construct(){
-        $this->listtable = $this->listTable();
-        $this->formbuilder = $this->formBuilder();
+        //$this->listtable = $this->listTable();
+        //$this->formbuilder = $this->formBuilder();
     }
 
     /**
