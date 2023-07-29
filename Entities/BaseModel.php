@@ -11,8 +11,8 @@ use Modules\Base\Events\ModelUpdated;
 use Wildside\Userstamps\Userstamps;
 
 
-use Modules\Core\Classes\Views\ListTable;
-use Modules\Core\Classes\Views\FormBuilder;
+use Modules\Base\Classes\Views\ListTable;
+use Modules\Base\Classes\Views\FormBuilder;
 
 class BaseModel extends \Illuminate\Database\Eloquent\Model
 
@@ -39,7 +39,8 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
      * Define the listtable for the model
      *
      */
-    public function listTable(){
+    public function  listTable(): ListTable
+    {
         // listing view fields
         $fields = new ListTable();
 
@@ -56,7 +57,8 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
      * Define the formbuilder for the model
      *
      */
-    public function formBuilder(){
+    public function formBuilder(): FormBuilder
+{
         // listing view fields
         $fields = new FormBuilder();
 
