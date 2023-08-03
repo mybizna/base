@@ -16,6 +16,7 @@ use Modules\Base\Http\Controllers\GeneralController;
 Route::get('/manage', [GeneralController::class, 'manage']);
 
 Route::get('fetch_vue/{section}', [GeneralController::class, 'fetchVue'])->where(['section' => '.*']);
+Route::get('fetch_layout/{module}/{model}/{action}', [GeneralController::class, 'fetchLayout'])->where(['module' => '.*', 'model' => '.*']);
 
 Route::get('base/clear-cache', [GeneralController::class, 'clearCache']);
 Route::get('base/route-cache', [GeneralController::class, 'routeCache']);

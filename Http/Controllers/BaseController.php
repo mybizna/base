@@ -43,7 +43,7 @@ class BaseController extends Controller
 
         $has_uptodate = $migration->hasUpToDate();
 
-       // print_r(url('/')); exit;
+        // print_r(url('/')); exit;
 
         $result = [
             'url' => url('/'),
@@ -152,6 +152,13 @@ class BaseController extends Controller
         return Response::json($result);
     }
 
+    /**
+     * Function for deleting a record.
+     *
+     * @param int $id
+     *
+     * @return array
+     */
     public function deleteRecord($module, $model, $id)
     {
         $modularize = new Modularize($module, $model);

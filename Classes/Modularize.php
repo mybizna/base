@@ -10,7 +10,7 @@ use Modules\Base\Classes\Fetch\Rights;
 use Modules\Base\Classes\Fetch\Routes;
 use Modules\Base\Classes\Fetch\Settings;
 use Modules\Base\Classes\Fetch\Vue;
-
+use Modules\Base\Classes\Fetch\Layout;
 
 class Modularize
 {
@@ -141,7 +141,7 @@ class Modularize
         }
 
         $classname = $this->getClassName($this->module, $this->model);
-        
+
         if ($classname) {
             if (method_exists($classname, 'updateRecord')) {
                 $classname->module = $this->module;
@@ -155,6 +155,13 @@ class Modularize
         return $result;
     }
 
+    /**
+     * Function for deleting a record.
+     *
+     * @param int $id
+     *
+     * @return array
+     */
     public function deleteRecord($id)
     {
         $can = $this->checkUserCan($this->module . "_" . $this->model . "_delete");
@@ -203,6 +210,16 @@ class Modularize
         $fetchvue = new Vue();
 
         return $fetchvue->fetchVue($current_uri);
+    }
+
+
+    //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    //Fetch Layout
+    public function fetchLayout($params)
+    {
+        $layout = new Layout();
+
+        return $layout->fetchLayout($params);
     }
 
     //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

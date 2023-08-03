@@ -97,6 +97,22 @@ class GeneralController extends Controller
 
     }
 
+    public function fetchLayout(Request $request, $module, $model, $action)
+    {
+        $params = $request->all();
+
+        $params['module'] = $module;
+        $params['model'] = $model;
+        $params['action'] = $action;
+
+        $modularize = new Modularize();
+
+        $result = $modularize->fetchLayout($params);
+
+        return Response::json($result);
+
+    }
+
     public function discoverModules(Request $request)
     {
         $modularize = new Modularize();

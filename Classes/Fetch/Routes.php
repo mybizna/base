@@ -19,6 +19,7 @@ class Routes
         foreach ($groups as $key => $group) {
             $this->paths = array_merge($this->paths, glob(base_path($group)));
         }
+
     }
 
     public function fetchRoutes()
@@ -59,7 +60,34 @@ class Routes
         $path_arr = array_reverse(explode('/', $path));
 
         $m_folder_path = $module_name = $path_arr[0];
-        $module_route = $this->addRouteToList('/' . $module_name, $m_folder_path, 'router_view');
+
+        $tmproutes = [];
+        $tmproutes['main'] = [];
+        $tmproutes['main']['admin'] = [];
+
+        $module_route = $this->addRouteToList('/' . $module_name, $module_name, 'router_view');
+
+        $model_dir = new \DirectoryIterator($path . '/Entities');
+        foreach ($model_dir as $fileinfo) {
+
+            if (!$fileinfo->isDot() && $fileinfo->isFile() && $fileinfo->getExtension() == 'php') {
+
+                $model_name = $fileinfo->getFilename();
+                $model_name = strtolower(str_replace('.php', '', $model_name));
+
+                $vue_name = $m_folder_path . '.admin.' . $model_name;
+
+                $vs_route = $this->addRouteToList($model_name, $vue_name, 'router_view');
+
+                $vs_route['children']['default'] = $this->addRouteToList('', $vue_name . '.list.default', 'router_list');
+                $vs_route['children']['list'] = $this->addRouteToList('list', $vue_name . '.list', 'router_list');
+                $vs_route['children']['create'] = $this->addRouteToList('create', $vue_name . '.create', 'router_create');
+                $vs_route['children']['edit'] = $this->addRouteToList('edit/:id', $vue_name . '.edit', 'router_edit');
+
+                $tmproutes['main']['admin'][$model_name] = $vs_route;
+
+            }
+        }
 
         foreach (['admin', 'web'] as $folder) {
             $vue_folders = $path . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . $folder;
@@ -75,6 +103,11 @@ class Routes
                         $vs_foldername = $fileinfo->getFilename();
                         $vs_folders = $vue_folders . DIRECTORY_SEPARATOR . $vs_foldername;
                         $v_folder_path = $f_folder_path . '/' . $vs_foldername;
+
+                        $tmp_route = [];
+                        if (isset($tmproutes['main'][$folder][$vs_foldername])) {
+                            $tmp_route = $tmproutes['main'][$folder][$vs_foldername]['children'];
+                        }
 
                         $vs_route = $this->addRouteToList($vs_foldername, $v_folder_path, 'router_view');
 
@@ -95,18 +128,24 @@ class Routes
                                     }
 
                                     if ($vs_sx_filename == 'list') {
-                                        $vs_route['children'][] = $this->addRouteToList($vs_sx_filename, $t_folder_path, $vs_path . '.vue', true, search_path:$search_path);
-                                        $vs_route['children'][] = $this->addRouteToList($vs_sx_filename, $t_folder_path, $vs_path . '.vue', search_path:$search_path);
+                                        $vs_route['children'][] = $this->addRouteToList($vs_sx_filename, $t_folder_path, $vs_path . '.vue', true, search_path: $search_path);
+                                        $vs_route['children'][] = $this->addRouteToList($vs_sx_filename, $t_folder_path, $vs_path . '.vue', search_path: $search_path);
+
+                                        unset($tmproutes['main'][$folder][$vs_foldername]['children']['list']);
+                                        unset($tmproutes['main'][$folder][$vs_foldername]['children']['default']);
                                     } else if ($vs_sx_filename == 'search') {
                                         continue;
                                     } else if ($vs_sx_filename == 'form') {
                                         if (!File::isFile($vs_folders . '/create.vue')) {
                                             $vs_route['children'][] = $this->addRouteToList('create', $v_folder_path . '/create', $vs_path . '.vue');
+                                            unset($tmproutes['main'][$folder][$vs_foldername]['children']['create']);
                                         }
 
                                         if (!File::isFile($vs_folders . '/edit.vue')) {
                                             $vs_route['children'][] = $this->addRouteToList('edit/:id', $v_folder_path . '/edit', $vs_path . '.vue');
+                                            unset($tmproutes['main'][$folder][$vs_foldername]['children']['edit']);
                                         }
+
                                     } else {
                                         if (in_array($vs_filename, ['edit.vue', 'modify.vue', 'detail.vue', 'update.vue'])) {
                                             $vs_sx_filename = $vs_sx_filename . '/:id';
@@ -116,7 +155,11 @@ class Routes
                                             $search_path = '';
                                         }
 
-                                        $vs_route['children'][] = $this->addRouteToList($vs_sx_filename, $t_folder_path, $vs_path . '.vue', search_path:$search_path);
+                                        $tmp_vs_filename = str_replace('.vue', '', $vs_filename);
+
+                                        unset($tmproutes['main'][$folder][$vs_foldername]['children'][$tmp_vs_filename]);
+
+                                        $vs_route['children'][] = $this->addRouteToList($vs_sx_filename, $t_folder_path, $vs_path . '.vue', search_path: $search_path);
                                     }
 
                                     if (!in_array($vs_filename, ['create.vue', 'edit.vue', 'modify.vue', 'new.vue', 'detail.vue', 'update.vue', 'form.vue'])) {
@@ -132,6 +175,21 @@ class Routes
                         }
                     }
                 }
+
+                foreach ($tmproutes['main'][$folder] as $key => $model) {
+
+                    if (empty($model['children'])) {
+                        continue;
+                    }
+
+                    $vs_route = $this->addRouteToList($key, $f_folder_path . '/' . $key, 'router_view');
+                    $vs_route['children'] = array_values($model['children']);
+
+                    $folder_route['children'][] = $vs_route;
+
+                }
+
+                //print_r($folder_route);exit;
             }
 
             if (!empty($folder_route['children'])) {

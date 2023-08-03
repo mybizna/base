@@ -90,6 +90,10 @@ class Menus
 
     public function add_menu($module, $key, $title, $path, $icon, $position)
     {
+        if(is_array($path)){
+            $path = 'default';
+        }
+        
         $this->menus[$module]['menus'][$key]['title'] = $title;
         $this->menus[$module]['menus'][$key]['key'] = $key;
         $this->menus[$module]['menus'][$key]['path'] = $path;

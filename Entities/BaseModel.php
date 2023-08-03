@@ -5,14 +5,12 @@ namespace Modules\Base\Entities;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Modules\Base\Classes\Views\FormBuilder;
+use Modules\Base\Classes\Views\ListTable;
 use Modules\Base\Events\ModelCreated;
 use Modules\Base\Events\ModelDeleted;
 use Modules\Base\Events\ModelUpdated;
 use Wildside\Userstamps\Userstamps;
-
-
-use Modules\Base\Classes\Views\ListTable;
-use Modules\Base\Classes\Views\FormBuilder;
 
 class BaseModel extends \Illuminate\Database\Eloquent\Model
 
@@ -30,7 +28,8 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
      * Define constructor that initializes the listtable and formbuilder
      *
      */
-    public function __construct(){
+    public function __construct()
+    {
         //$this->listtable = $this->listTable();
         //$this->formbuilder = $this->formBuilder();
     }
@@ -38,16 +37,17 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
     /**
      * Define the listtable for the model
      *
+     * @return ListTable
+     *
      */
-    public function  listTable(): ListTable
+    public function listTable(): ListTable
     {
         // listing view fields
         $fields = new ListTable();
 
         foreach ($this->fillable as $key => $value) {
             $fields->name($value)->type('text')->ordering(true);
-        }   
-
+        }
 
         return $fields;
 
@@ -56,19 +56,39 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
     /**
      * Define the formbuilder for the model
      *
+     * @return FormBuilder
      */
     public function formBuilder(): FormBuilder
-{
+    {
         // listing view fields
         $fields = new FormBuilder();
 
         foreach ($this->fillable as $key => $value) {
             $fields->name($value)->type('text')->group('w-1/2');
-        }   
+        }
 
         return $fields;
     }
+    
+    /**
+     * Function for defining list of fields in filter view.
+     *
+     * @return FormBuilder
+     */
+    public function filter(): FormBuilder
+    {
+        // listing view fields
+        $fields = new FormBuilder();
+        $names = ['name', 'title', 'slug', 'username', 'first_name', 'last_name'];
 
+        foreach ($this->fillable as $key => $value) {
+            if (in_array($value, $names)) {
+                $fields->name($value)->type('text')->group('w-1/6');
+            }
+        }
+
+        return $fields;
+    }
 
     /**
      * Get the table associated with the model. Copies getTable() in Model
@@ -358,6 +378,14 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
 
         return $result;
     }
+
+    /**
+     * Function for deleting a record.
+     *
+     * @param int $id
+     *
+     * @return array
+     */
     public function deleteRecord($id)
     {
         $result = [
