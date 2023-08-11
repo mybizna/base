@@ -33,8 +33,13 @@ class ListTable
      */
     public function name($name): ListTable
     {
+        $common = new Common();
+
+        $label = $common->getLabel($name);
+
         $this->fields[$name] = new \stdClass();
         $this->fields[$name]->name = $name;
+        $this->fields[$name]->label = $label;
 
         $this->name = $name;
         return $this;
@@ -75,6 +80,17 @@ class ListTable
         $this->fields[$this->name]->group = $group;
         return $this;
     }
+
+
+    /**
+     * Set the color of the field
+     */
+
+     public function color($color): ListTable
+     {
+         $this->fields[$this->name]->color = $color;
+         return $this;
+     }
 
     /**
      * Set the ordering of the field

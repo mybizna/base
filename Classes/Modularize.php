@@ -4,13 +4,13 @@ namespace Modules\Base\Classes;
 
 use Auth;
 use Illuminate\Support\Str;
+use Modules\Base\Classes\Fetch\Layout;
 use Modules\Base\Classes\Fetch\Menus;
 use Modules\Base\Classes\Fetch\Positions;
 use Modules\Base\Classes\Fetch\Rights;
 use Modules\Base\Classes\Fetch\Routes;
 use Modules\Base\Classes\Fetch\Settings;
 use Modules\Base\Classes\Fetch\Vue;
-use Modules\Base\Classes\Fetch\Layout;
 
 class Modularize
 {
@@ -195,15 +195,6 @@ class Modularize
     }
 
     //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    //Discover Modules
-    public function discoverModules()
-    {
-        $discover_modules = new DiscoverModules();
-
-        return $discover_modules->discoverModules();
-    }
-
-    //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     //Fetching Vue
     public function fetchVue($current_uri)
     {
@@ -211,7 +202,6 @@ class Modularize
 
         return $fetchvue->fetchVue($current_uri);
     }
-
 
     //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     //Fetch Layout

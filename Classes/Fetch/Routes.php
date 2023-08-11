@@ -79,10 +79,12 @@ class Routes
 
                 $vs_route = $this->addRouteToList($model_name, $vue_name, 'router_view');
 
-                $vs_route['children']['default'] = $this->addRouteToList('', $vue_name . '.list.default', 'router_list');
-                $vs_route['children']['list'] = $this->addRouteToList('list', $vue_name . '.list', 'router_list');
-                $vs_route['children']['create'] = $this->addRouteToList('create', $vue_name . '.create', 'router_create');
-                $vs_route['children']['edit'] = $this->addRouteToList('edit/:id', $vue_name . '.edit', 'router_edit');
+                $meta_path = [strtolower($module_name), strtolower($model_name)];
+
+                $vs_route['children']['default'] = $this->addRouteToList('', $vue_name . '.list.default', 'router_list', meta_path: $meta_path);
+                $vs_route['children']['list'] = $this->addRouteToList('list', $vue_name . '.list', 'router_list', meta_path: $meta_path);
+                $vs_route['children']['create'] = $this->addRouteToList('create', $vue_name . '.create', 'router_create', meta_path: $meta_path);
+                $vs_route['children']['edit'] = $this->addRouteToList('edit/:id', $vue_name . '.edit', 'router_edit', meta_path: $meta_path);
 
                 $tmproutes['main']['admin'][$model_name] = $vs_route;
 
@@ -204,13 +206,17 @@ class Routes
         return $routes;
     }
 
-    public function addRouteToList($path, $name, $component, $no_path = false, $search_path = '')
+    public function addRouteToList($path, $name, $component, $no_path = false, $search_path = '', $meta_path = [])
     {
 
         $meta = ['breadcrumb' => true, 'middlewareAuth' => true];
 
         if ($search_path != '') {
             $meta = ['breadcrumb' => true, 'middlewareAuth' => true, 'search_path' => Str::lower($search_path)];
+        }
+
+        if (!empty($meta_path)) {
+            $meta['path'] = $meta_path;
         }
 
         return [

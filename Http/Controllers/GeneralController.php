@@ -113,15 +113,6 @@ class GeneralController extends Controller
 
     }
 
-    public function discoverModules(Request $request)
-    {
-        $modularize = new Modularize();
-
-        $result = $modularize->discoverModules();
-
-        return Response::json($result);
-    }
-
     public function fetchRoutes(Request $request)
     {
         $modularize = new Modularize();

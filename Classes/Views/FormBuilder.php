@@ -33,8 +33,13 @@ class FormBuilder
      */
     public function name($name): FormBuilder
     {
+        $common = new Common();
+
+        $label = $common->getLabel($name);
+
         $this->fields[$name] = new \stdClass();
         $this->fields[$name]->name = $name;
+        $this->fields[$name]->label = $label;
 
         $this->name = $name;
         return $this;
@@ -46,7 +51,6 @@ class FormBuilder
 
     public function type($type): FormBuilder
     {
-        $this->fields[$this->name]->type = $type;
         $this->fields[$this->name]->type = $type;
         return $this;
     }
