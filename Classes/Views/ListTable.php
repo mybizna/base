@@ -89,6 +89,7 @@ class ListTable
      public function color($color): ListTable
      {
          $this->fields[$this->name]->color = $color;
+         
          return $this;
      }
 
