@@ -28,6 +28,13 @@ class Layout
                 case 'list':
                     $listTable = $class_name->listTable($params);
                     $fields = $listTable->fields;
+                    foreach ($fields as $key => $field) {
+                        if (isset($field['table'])) {
+                            
+                            $fields[$key]['table'] = $field['table']->getRelated()->getTable();
+                        }
+                    }
+                    print_r($fields); exit;
                     break;
                 case 'create':
                 case 'edit':

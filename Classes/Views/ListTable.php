@@ -81,17 +81,16 @@ class ListTable
         return $this;
     }
 
-
     /**
      * Set the color of the field
      */
 
-     public function color($color): ListTable
-     {
-         $this->fields[$this->name]->color = $color;
-         
-         return $this;
-     }
+    public function color($color): ListTable
+    {
+        $this->fields[$this->name]->color = $color;
+
+        return $this;
+    }
 
     /**
      * Set the ordering of the field
@@ -118,6 +117,16 @@ class ListTable
     }
 
     /**
+     * Set the recnames of the field
+     */
+
+    public function recnames($recnames): ListTable
+    {
+        $this->fields[$this->name]->recnames = $recnames;
+        return $this;
+    }
+
+    /**
      * Set the options of the field
      *
      * @param array<string|int, string> $options
@@ -135,7 +144,7 @@ class ListTable
      * @param string $default
      *
      * */
-    function default($default): ListTable{
+    function default($default): ListTable {
         $this->fields[$this->name]->default = $default;
         return $this;
     }
