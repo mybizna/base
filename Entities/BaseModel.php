@@ -6,6 +6,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Modules\Base\Classes\Migration;
 use Modules\Base\Classes\Views\Fields;
 use Modules\Base\Events\ModelCreated;
 use Modules\Base\Events\ModelDeleted;
@@ -60,6 +61,27 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
     public function migration(Blueprint $table)
     {
         $fields = $this->fields($table);
+
+    }
+    /**
+     * Handle post migration processes for adding foreign keys.
+     *
+     * @param Blueprint $table
+     *
+     * @return void
+     */
+    public function post_migration(Blueprint $table): void
+    {
+        $columns = $table->getColumns();
+
+        $arr_columns = [];
+        foreach ($columns as $column) {
+            $arr_column = $column->toArray();
+            if ($arr_column['html'] == 'recordpicker' && isset($arr_column['relation'])) {
+                $table_name = implode('_', $arr_column['relation']);
+                Migration::addForeign($table, $table_name, $arr_column['name']);
+            }
+        }
 
     }
 
