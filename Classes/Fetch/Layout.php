@@ -26,15 +26,18 @@ class Layout
 
             switch ($action) {
                 case 'list':
-                    $listTable = $class_name->listTable($params);
-                    $fields = $listTable->fields;
-                    foreach ($fields as $key => $field) {
-                        if (isset($field['table'])) {
-                            
-                            $fields[$key]['table'] = $field['table']->getRelated()->getTable();
-                        }
+
+                    $schema = $class_name->getStructureAndFields(true);
+
+                    $list_fields = [];
+                    foreach ($schema['structure']['table'] as $key => $table) {
+                        $field = $schema['fields'][$table];
+                        $field['label'] = $this->getLabel($table);
+                        $list_fields[$table] = $field;
                     }
-                    print_r($fields); exit;
+
+                    $fields = $this->addForeignFields($list_fields);
+
                     break;
                 case 'create':
                 case 'edit':
@@ -57,6 +60,44 @@ class Layout
         return $result;
     }
 
+    /**
+     * Function for adding foreign key to the table listing
+     *
+     * @param Array $fields
+     *
+     * @return Array
+     */
+
+    public function addForeignFields($fields): array
+    {
+        foreach ($fields as $field_name => $field) {
+
+            $name_prefix = $field['name'] . '__';
+
+            if (isset($field['relation'])) {
+                $module = $field['relation'][0];
+                $model = $field['relation'][1] ?? $module;
+
+                $name_prefix .= implode('_', $field['relation']) . '__';
+
+                $relation = $this->getClassName($module, $model);
+
+                $rec_names = $relation->getRecNames();
+
+                $foreign_fields = [];
+                foreach ($rec_names as $key => $rec_name) {
+                    $foreign_fields[] = $name_prefix . $rec_name;
+
+                }
+
+                $fields[$field_name]['foreign_fields'] = $foreign_fields;
+
+            }
+            # code...
+        }
+        return $fields;
+    }
+
     public function prepareResult($message, $error = false, $data = [])
     {
         return [
@@ -64,6 +105,24 @@ class Layout
             'message' => $message,
             'layout' => $data,
         ];
+    }
+
+    /**
+     * Set the name of the field
+     *
+     * @param string $name
+     */
+    public function getLabel($name)
+    {
+        if ($name == 'id') {
+            return 'ID';
+        } else {
+            $name = str_replace('_id', '', $name);
+            $name = str_replace('_', ' ', $name);
+            $name = ucwords($name);
+        }
+
+        return $name;
     }
 
     /**

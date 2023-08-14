@@ -38,7 +38,7 @@ class Migration
         $table_name = $table->getTable();
 
         if (self::checkKeyExist($table_name, $field_name)) {
-            $table->foreign($field_name)->references('id')->on($foreign_name)->nullOnDelete();
+            $this->fields->foreign($field_name)->references('id')->on($foreign_name)->nullOnDelete();
         }
     }
 
@@ -161,14 +161,14 @@ class Migration
         Schema::create($tempTable, function (Blueprint $table) use ($model) {
             $model->migration($table);
 
-            $table->boolean('is_modified')->default(false);
+            $this->fields->boolean('is_modified')->default(false);
 
-            $table->unsignedBigInteger('created_by')->nullable();
-            $table->unsignedBigInteger('updated_by')->nullable();
-            $table->unsignedBigInteger('delete_by')->nullable();
+            $this->fields->unsignedBigInteger('created_by')->nullable();
+            $this->fields->unsignedBigInteger('updated_by')->nullable();
+            $this->fields->unsignedBigInteger('delete_by')->nullable();
 
-            $table->timestamps();
-            $table->softDeletes();
+            $this->fields->timestamps();
+            $this->fields->softDeletes();
         });
 
         if (Schema::hasTable($modelTable)) {

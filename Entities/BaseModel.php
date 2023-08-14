@@ -2,11 +2,11 @@
 
 namespace Modules\Base\Entities;
 
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use Modules\Base\Classes\Views\FormBuilder;
-use Modules\Base\Classes\Views\ListTable;
+use Modules\Base\Classes\Views\Fields;
 use Modules\Base\Events\ModelCreated;
 use Modules\Base\Events\ModelDeleted;
 use Modules\Base\Events\ModelUpdated;
@@ -25,69 +25,140 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
     public $formbuilder;
 
     /**
-     * Define constructor that initializes the listtable and formbuilder
-     *
+     * Intialize fields for display and migration purpose.
      */
-    public function __construct()
+    public $fields = [];
+
+    /**
+     * Set structure for displays ie table, form, filter, etc.
+     */
+    public $structure = [];
+
+    /**
+     * Function for defining fields
+     */
+    public function fields(Blueprint $table = null): void
     {
-        //$this->listtable = $this->listTable();
-        //$this->formbuilder = $this->formBuilder();
+        //Your actions here
     }
 
     /**
-     * Define the listtable for the model
+     * Function for defining structure
+     */
+    public function structure($structure): array
+    {
+        //Your actions here
+        return $structure;
+    }
+
+    /**
+     * List of fields to be migrated to the datebase when creating or updating model during migration.
      *
-     * @return ListTable
+     * @param Blueprint $table
+     * @return void
+     */
+    public function migration(Blueprint $table)
+    {
+        $fields = $this->fields($table);
+
+    }
+
+    /**
+     * Get both structure and fields
+     */
+    public function getStructureAndFields($as_array): array
+    {
+        $fields = $this->getFields($as_array);
+        $structure = $this->getStructure($fields);
+
+        return [
+            'structure' => $structure,
+            'fields' => $fields,
+        ];
+    }
+
+    /**
+     * Array of system structure for all pages
+     *
+     * @return Array
      *
      */
-    public function listTable(): ListTable
+    public function getStructure($fields = null): array
     {
-        // listing view fields
-        $fields = new ListTable();
-
-        foreach ($this->fillable as $key => $value) {
-            $fields->name($value)->type('text')->ordering(true);
+        if ($fields) {
+            $fields = $this->getFields(true);
         }
 
-        return $fields;
+        $structure = $this->structure([
+            'table' => $fields,
+            'form' => [
+                'w-1/2' => $fields,
+            ],
+            'filter' => ['w-1/6' => $fields],
+        ]);
 
-    }
+        if (empty($structure)) {
 
-    /**
-     * Define the formbuilder for the model
-     *
-     * @return FormBuilder
-     */
-    public function formBuilder(): FormBuilder
-    {
-        // listing view fields
-        $fields = new FormBuilder();
-
-        foreach ($this->fillable as $key => $value) {
-            $fields->name($value)->type('text')->group('w-1/2');
-        }
-
-        return $fields;
-    }
-    
-    /**
-     * Function for defining list of fields in filter view.
-     *
-     * @return FormBuilder
-     */
-    public function filter(): FormBuilder
-    {
-        // listing view fields
-        $fields = new FormBuilder();
-        $names = ['name', 'title', 'slug', 'username', 'first_name', 'last_name'];
-
-        foreach ($this->fillable as $key => $value) {
-            if (in_array($value, $names)) {
-                $fields->name($value)->type('text')->group('w-1/6');
+            $fields_names = [];
+            foreach ($fields as $key => $field) {
+                if ($key != 'id') {
+                    $field_names[] = $key;
+                }
             }
+
+            $len = (int) count($fields_names);
+
+            $firsthalf = array_slice($fields_names, 0, $len / 2);
+            $secondhalf = array_slice($fields_names, $len / 2);
+
+            $this->structure = [
+                'table' => $fields_names,
+                'form' => [
+                    'w-1/2' => $firsthalf,
+                    'w-1/2' => $secondhalf,
+                ],
+                'filter' => ['w-1/6' => $firsthalf],
+            ];
         }
 
-        return $fields;
+        return $structure;
+    }
+
+    /**
+     * Array of system fields for all pages
+     *
+     * @param boolean $as_array
+     *
+     * @return Blueprint|Array
+     */
+    public function getFields($as_array = false): Blueprint | array
+    {
+
+        if (empty($this->fields)) {
+            $this->fields();
+        }
+
+        if ($as_array) {
+            $columns = $this->fields->getColumns();
+
+            $arr_columns = [];
+            foreach ($columns as $column) {
+                $arr_columns[$column->get('name')] = $column->toArray();
+            }
+
+            return $arr_columns;
+        }
+
+        return $this->fields;
+    }
+
+    /**
+     * Get rec name
+     */
+    public function getRecNames()
+    {
+        $rec_names = $this->rec_names ?? ['id'];
+        return $rec_names;
     }
 
     /**
@@ -101,6 +172,9 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
         return $table ?? Str::snake(Str::pluralStudly(class_basename(static::class)));
     }
 
+    /**
+     * Generate slug from string passed
+     */
     public static function getSlug($slug)
     {
         $slug = preg_replace('/\s+/', ' ', $slug);
