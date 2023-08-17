@@ -73,7 +73,7 @@ class Routes
             if (!$fileinfo->isDot() && $fileinfo->isFile() && $fileinfo->getExtension() == 'php') {
 
                 $model_name = $fileinfo->getFilename();
-                $model_name = strtolower(str_replace('.php', '', $model_name));
+                $model_name = Str::snake(str_replace('.php', '', $model_name));
 
                 $vue_name = $m_folder_path . '.admin.' . $model_name;
 
@@ -192,6 +192,21 @@ class Routes
                 }
 
                 //print_r($folder_route);exit;
+            } else {
+
+                if (isset($tmproutes['main'][$folder])) {
+                    foreach ($tmproutes['main'][$folder] as $key => $model) {
+
+                        if (empty($model['children'])) {
+                            continue;
+                        }
+
+                        $vs_route = $this->addRouteToList($key, $f_folder_path . '/' . $key, 'router_view');
+                        $vs_route['children'] = array_values($model['children']);
+
+                        $folder_route['children'][] = $vs_route;
+                    }
+                }
             }
 
             if (!empty($folder_route['children'])) {

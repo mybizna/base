@@ -2,6 +2,8 @@
 
 namespace Modules\Base\Classes\Fetch;
 
+use Illuminate\Support\Str;
+
 class Layout
 {
     public $paths = [];
@@ -12,6 +14,7 @@ class Layout
         foreach ($groups as $key => $group) {
             $this->paths = array_merge($this->paths, glob(base_path($group)));
         }
+
 
     }
 
@@ -28,9 +31,10 @@ class Layout
                 case 'list':
 
                     $schema = $class_name->getStructureAndFields(true);
-
+                   
                     $list_fields = [];
                     foreach ($schema['structure']['table'] as $key => $table) {
+                        
                         $field = $schema['fields'][$table];
                         $field['label'] = $this->getLabel($table);
                         $list_fields[$table] = $field;
@@ -77,6 +81,10 @@ class Layout
             if (isset($field['relation'])) {
                 $module = $field['relation'][0];
                 $model = $field['relation'][1] ?? $module;
+
+                if($module =='users'){
+                    continue;
+                }
 
                 $name_prefix .= implode('_', $field['relation']) . '__';
 
@@ -135,7 +143,7 @@ class Layout
     private function getClassName($module, $model): mixed
     {
         $module = ucfirst(strtolower($module));
-        $model = ucfirst(strtolower($model));
+        $model = ucfirst(Str::camel($model));
 
         $classname = 'Modules\\' . $module . '\Entities\\' . $model;
 

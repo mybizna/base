@@ -50,7 +50,7 @@ class GeneralController extends Controller
 
             $userCount = User::count();
 
-            if ($userCount && defined('MYBIZNA_BASE_URL')) {
+            if ($userCount || defined('MYBIZNA_BASE_URL')) {
                 $result['has_user'] = true;
             }
 

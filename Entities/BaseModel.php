@@ -111,37 +111,25 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             $fields = $this->getFields(true);
         }
 
-        $structure = $this->structure([
-            'table' => $fields,
-            'form' => [
-                'w-1/2' => $fields,
-            ],
-            'filter' => ['w-1/6' => $fields],
-        ]);
+        $fields_names_arr = array_keys($fields);
 
-        if (empty($structure)) {
-
-            $fields_names = [];
-            foreach ($fields as $key => $field) {
-                if ($key != 'id') {
-                    $field_names[] = $key;
-                }
-            }
-
-            $len = (int) count($fields_names);
-
-            $firsthalf = array_slice($fields_names, 0, $len / 2);
-            $secondhalf = array_slice($fields_names, $len / 2);
-
-            $this->structure = [
-                'table' => $fields_names,
-                'form' => [
-                    'w-1/2' => $firsthalf,
-                    'w-1/2' => $secondhalf,
-                ],
-                'filter' => ['w-1/6' => $firsthalf],
-            ];
+        if (($key = array_search('id', $fields_names_arr)) !== false) {
+            unset($fields_names_arr[$key]);
         }
+
+        $len = (int) count($fields_names_arr);
+
+        $firsthalf = array_slice($fields_names_arr, 0, $len / 2);
+        $secondhalf = array_slice($fields_names_arr, $len / 2);
+
+        $structure = $this->structure([
+            'table' => $fields_names_arr,
+            'form' => [
+                ['label' => '', 'class' => 'w-1/2', 'fields' => $firsthalf],
+                ['label' => '', 'class' => 'w-1/2', 'fields' => $secondhalf],
+            ],
+            'filter' => ['w-1/6' => $fields_names_arr],
+        ]);
 
         return $structure;
     }
