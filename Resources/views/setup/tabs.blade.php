@@ -1,4 +1,4 @@
-<ol class="items-center w-full space-y-4 sm:flex sm:space-x-8 sm:space-y-0">
+<ol class="items-center col-span-full space-y-4 sm:flex sm:space-x-8 sm:space-y-0">
     
     @if (!($has_user || $is_wordpress))
         <li class="flex items-center text-blue-600 dark:text-blue-500 space-x-2.5">

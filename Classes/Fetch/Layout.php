@@ -15,12 +15,11 @@ class Layout
             $this->paths = array_merge($this->paths, glob(base_path($group)));
         }
 
-
     }
 
     public function fetchLayout($params)
     {
-        $fields = [];
+        $fields = $layout = [];
         $class_name = $this->getClassName($params['module'], $params['model']);
 
         $action = $params['action'];
@@ -31,31 +30,51 @@ class Layout
                 case 'list':
 
                     $schema = $class_name->getStructureAndFields(true);
-                   
-                    $list_fields = [];
-                    foreach ($schema['structure']['table'] as $key => $table) {
-                        
-                        $field = $schema['fields'][$table];
-                        $field['label'] = $this->getLabel($table);
-                        $list_fields[$table] = $field;
+
+                    foreach ($schema['structure']['table'] as $key => $field) {
+                        $fields[] = $field;
+
+                        $field_arr = $schema['fields'][$field];
+                        $field_arr['label'] = $this->getLabel($field);
+                        $layout[$field] = $field_arr;
                     }
 
-                    $fields = $this->addForeignFields($list_fields);
+                    $layout = $this->addForeignFields($layout);
 
                     break;
+
                 case 'create':
                 case 'edit':
                 case 'form':
-                    $listForm = $class_name->listForm($params);
-                    $fields = $listForm->fields;
+                    $schema = $class_name->getStructureAndFields(true);
+
+                    $layout = $schema['structure']['form'];
+                    foreach ($schema['structure']['form'] as $key => $row) {
+
+                        $layout[$key]['fields'] = [];
+                        foreach ($row['fields'] as $tmpkey => $field) {
+                            if (isset($schema['fields'][$field])) {
+                                $fields[] = $field;
+
+                                $field_arr = $schema['fields'][$field];
+                                $field_arr['label'] = $this->getLabel($field);
+
+                                $layout[$key]['fields'][] = $field_arr;
+                            }
+                        }
+
+                        $layout[$key]['fields'] = $this->addForeignFields($layout[$key]['fields']);
+                    }
+
                     break;
+
                 case 'filter':
                     $listFilter = $class_name->filter($params);
                     $fields = $listFilter->fields;
                     break;
             }
 
-            $result = $this->prepareResult('Layout Fetched Successfully', false, $fields);
+            $result = $this->prepareResult('Layout Fetched Successfully', false, $fields, $layout);
 
         } else {
             $result = $this->prepareResult('No Model Found with name ' . $params['module'] . '-' . $params['model'], true);
@@ -82,7 +101,7 @@ class Layout
                 $module = $field['relation'][0];
                 $model = $field['relation'][1] ?? $module;
 
-                if($module =='users'){
+                if ($module == 'users') {
                     continue;
                 }
 
@@ -106,12 +125,13 @@ class Layout
         return $fields;
     }
 
-    public function prepareResult($message, $error = false, $data = [])
+    public function prepareResult($message, $error = false, $fields = [], $layout = [])
     {
         return [
             'error' => $error,
             'message' => $message,
-            'layout' => $data,
+            'fields' => $fields,
+            'layout' => $layout,
         ];
     }
 

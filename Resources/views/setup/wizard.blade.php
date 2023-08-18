@@ -1,18 +1,18 @@
 <div>
 
-    <div class="w-full max-w-full px-3 text-center flex-0">
+    <div class="col-span-full max-col-span-full px-3 text-center flex-0">
         <h3 class="mt-12">Setup Wizard.</h3>
         <p class="font-normal dark:text-white text-slate-400">
             System not set yet. Please follow the steps below to set up the system.
         </p>
         <div multisteps-form class="mb-12">
 
-            <div class="w-full max-w-full px-3 m-auto flex-0 lg:w-8/12">
+            <div class="col-span-full max-col-span-full px-3 m-auto flex-0 lg:w-8/12">
                 @include('base::setup.tabs')
             </div>
 
             <div class="flex flex-wrap">
-                <div class="w-full max-w-full px-3 m-auto flex-0 lg:w-8/12">
+                <div class="col-span-full max-col-span-full px-3 m-auto flex-0 lg:w-8/12">
                     <form id="setup-wizard" class="relative">
                         @csrf
 

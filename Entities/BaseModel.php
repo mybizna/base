@@ -125,10 +125,10 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
         $structure = $this->structure([
             'table' => $fields_names_arr,
             'form' => [
-                ['label' => '', 'class' => 'w-1/2', 'fields' => $firsthalf],
-                ['label' => '', 'class' => 'w-1/2', 'fields' => $secondhalf],
+                ['label' => '', 'class' => 'col-span-6', 'fields' => $firsthalf],
+                ['label' => '', 'class' => 'col-span-6', 'fields' => $secondhalf],
             ],
-            'filter' => ['w-1/6' => $fields_names_arr],
+            'filter' => ['col-span-6' => $fields_names_arr],
         ]);
 
         return $structure;
