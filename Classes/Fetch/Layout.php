@@ -36,10 +36,17 @@ class Layout
 
                         $field_arr = $schema['fields'][$field];
                         $field_arr['label'] = $this->getLabel($field);
+
+                        if (isset($field_arr['relation'])) {
+                            $field_arr['foreign_fields'] = [];
+                            $relation = $this->getRelation($field_arr, $action);
+                            foreach ($relation['fields'] as $key => $rfield) {
+                                $field_arr['foreign_fields'][] = $field_arr['name'] . '__' . implode('_', $field_arr['relation']) . '__' . $rfield;
+                            }
+                        }
+
                         $layout[$field] = $field_arr;
                     }
-
-                    $layout = $this->addForeignFields($layout);
 
                     break;
 
@@ -59,11 +66,30 @@ class Layout
                                 $field_arr = $schema['fields'][$field];
                                 $field_arr['label'] = $this->getLabel($field);
 
+                                switch ($field_arr['html']) {
+                                    case 'recordpicker':
+                                        $relation = $this->getRelation($field_arr, $action);
+                                        $field_arr['picker'] = $relation;
+                                        break;
+                                    case 'amount':
+                                        $field_arr['html'] = 'text';
+                                        break;
+                                    case 'select':
+                                    case 'radio':
+                                    case 'checkbox':
+                                        if(!isset($field_arr['options'])){
+                                            $field_arr['options'] = (isset($field_arr['allowed'])) ? $field_arr['allowed'] : [];
+                                        }
+                                        break;
+
+                                    default:
+                                        break;
+                                }
+
                                 $layout[$key]['fields'][] = $field_arr;
                             }
                         }
 
-                        $layout[$key]['fields'] = $this->addForeignFields($layout[$key]['fields']);
                     }
 
                     break;
@@ -91,38 +117,37 @@ class Layout
      * @return Array
      */
 
-    public function addForeignFields($fields): array
+    public function getRelation($field, $action): array
     {
-        foreach ($fields as $field_name => $field) {
+        $module = $field['relation'][0];
+        $model = $field['relation'][1] ?? $module;
 
-            $name_prefix = $field['name'] . '__';
+        $relation = $this->getClassName($module, $model);
 
-            if (isset($field['relation'])) {
-                $module = $field['relation'][0];
-                $model = $field['relation'][1] ?? $module;
+        $rec_names = $relation->getRecNames();
 
-                if ($module == 'users') {
-                    continue;
-                }
+        $fields = $rec_names;
 
-                $name_prefix .= implode('_', $field['relation']) . '__';
+        $template = trim(vsprintf(str_repeat('[%s] ', count($rec_names)), $rec_names), ' ');
 
-                $relation = $this->getClassName($module, $model);
-
-                $rec_names = $relation->getRecNames();
-
-                $foreign_fields = [];
-                foreach ($rec_names as $key => $rec_name) {
-                    $foreign_fields[] = $name_prefix . $rec_name;
-
-                }
-
-                $fields[$field_name]['foreign_fields'] = $foreign_fields;
-
-            }
-            # code...
+        if ((count($rec_names) != count($rec_names, COUNT_RECURSIVE))) {
+            $fields = $rec_names['fields'];
+            $template = $rec_names['template'];
         }
-        return $fields;
+        $action_do = $action . 'ing';
+
+        if ($action == 'create') {
+            $action_do = 'creating';
+        }
+
+        $relation = [
+            'path_title' => $model . ' ' . $action_do,
+            'path_param' => [$module, $model],
+            'fields' => $fields,
+            'template' => $template,
+        ];
+
+        return $relation;
     }
 
     public function prepareResult($message, $error = false, $fields = [], $layout = [])

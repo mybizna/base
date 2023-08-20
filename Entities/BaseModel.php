@@ -153,7 +153,12 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
 
             $arr_columns = [];
             foreach ($columns as $column) {
-                $arr_columns[$column->get('name')] = $column->toArray();
+                $field = $column->toArray();
+
+                if (!isset($field['html']) || $field['html'] == '') {
+                    $field['html'] = 'text';
+                }
+                $arr_columns[$column->get('name')] = $field;
             }
 
             return $arr_columns;
