@@ -51,19 +51,21 @@ class Migration
         }
 
         $groups = (is_file(base_path('../readme.txt'))) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
-       
+
         foreach ($groups as $key => $group) {
             $paths = glob(base_path($group));
-            
+
             foreach ($paths as $key => $path) {
-                $path_arr = array_reverse(explode('/', $path));
-                $module_name = $path_arr[0];
-               
-                $composer = $this->getComposer($path);
-         
-                if ($versions[$module_name] !== $composer['version']) {
-                    
-                    return true;
+                if (is_dir($path)) {
+                    $path_arr = array_reverse(explode('/', $path));
+                    $module_name = $path_arr[0];
+
+                    $composer = $this->getComposer($path);
+
+                    if ($versions[$module_name] !== $composer['version']) {
+
+                        return true;
+                    }
                 }
 
             }
@@ -85,56 +87,58 @@ class Migration
             $paths = glob(base_path($group));
 
             foreach ($paths as $key => $path) {
-                $path_arr = array_reverse(explode('/', $path));
-                $module_name = $path_arr[0];
+                if (is_dir($path)) {
+                    $path_arr = array_reverse(explode('/', $path));
+                    $module_name = $path_arr[0];
 
-                $composer = $this->getComposer($path);
+                    $composer = $this->getComposer($path);
 
-                $modules[$module_name] = true;
-                $versions[$module_name] = $composer['version'];
+                    $modules[$module_name] = true;
+                    $versions[$module_name] = $composer['version'];
 
-                if ($module_name == 'Base') {
-                    continue;
-                }
+                    if ($module_name == 'Base') {
+                        continue;
+                    }
 
-                $namespace = 'Modules\\' . $module_name . '\\Entities';
-                $db_folder = $path . DIRECTORY_SEPARATOR . 'Entities';
+                    $namespace = 'Modules\\' . $module_name . '\\Entities';
+                    $db_folder = $path . DIRECTORY_SEPARATOR . 'Entities';
 
-                if (is_dir($db_folder)) {
-                    $db_dir = new \DirectoryIterator($db_folder);
+                    if (is_dir($db_folder)) {
+                        $db_dir = new \DirectoryIterator($db_folder);
 
-                    foreach ($db_dir as $fileinfo) {
-                        if ($fileinfo->isFile()) {
-                            $data_name = $fileinfo->getFilename();
+                        foreach ($db_dir as $fileinfo) {
+                            if ($fileinfo->isFile()) {
+                                $data_name = $fileinfo->getFilename();
 
-                            if (strpos($data_name, '.php') !== false) {
+                                if (strpos($data_name, '.php') !== false) {
 
-                                $model = $namespace . str_replace(
-                                    ['/', '.php'],
-                                    ['\\', ''],
-                                    '\\' . $data_name
-                                );
+                                    $model = $namespace . str_replace(
+                                        ['/', '.php'],
+                                        ['\\', ''],
+                                        '\\' . $data_name
+                                    );
 
-                                if (is_subclass_of($model, Model::class) && method_exists($model, 'migration')) {
+                                    if (is_subclass_of($model, Model::class) && method_exists($model, 'migration')) {
 
-                                    $object = app($model);
-                                    $table_name = $object->getTable();
+                                        $object = app($model);
+                                        $table_name = $object->getTable();
 
-                                    $this->logOutput("$table_name");
+                                        $this->logOutput("$table_name");
 
-                                    $this->models[$table_name] = [
-                                        //'object' => $object,
-                                        'table' => $table_name,
-                                        'class' => $model,
-                                        'dependencies' => $object->migrationDependancy ?? [],
-                                        'order' => $object->migrationOrder ?? 0,
-                                        'processed' => false,
-                                    ];
+                                        $this->models[$table_name] = [
+                                            //'object' => $object,
+                                            'table' => $table_name,
+                                            'class' => $model,
+                                            'dependencies' => $object->migrationDependancy ?? [],
+                                            'order' => $object->migrationOrder ?? 0,
+                                            'processed' => false,
+                                        ];
+
+                                    }
 
                                 }
 
                             }
-
                         }
                     }
                 }
@@ -156,19 +160,22 @@ class Migration
         $modelTable = $model->getTable();
         $tempTable = 'table_' . $modelTable;
 
+        //new Blueprint($this->table)
+
         Schema::dropIfExists($tempTable);
 
         Schema::create($tempTable, function (Blueprint $table) use ($model) {
             $model->migration($table);
 
-            $this->fields->boolean('is_modified')->default(false);
+            $table->boolean('is_modified')->default(false);
 
-            $this->fields->unsignedBigInteger('created_by')->nullable();
-            $this->fields->unsignedBigInteger('updated_by')->nullable();
-            $this->fields->unsignedBigInteger('delete_by')->nullable();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
+            $table->unsignedBigInteger('delete_by')->nullable();
 
-            $this->fields->timestamps();
-            $this->fields->softDeletes();
+            $table->timestamps();
+            $table->softDeletes();
+
         });
 
         if (Schema::hasTable($modelTable)) {
@@ -194,15 +201,15 @@ class Migration
         }
 
         if (method_exists($model, 'post_migration')) {
-
             try {
+                $this->logOutput(' -- Post Migration Successful.');
+
                 Schema::table($modelTable, function (Blueprint $table) use ($model) {
                     $model->post_migration($table);
                 });
-                $this->logOutput(' -- Post Migration Successful.');
             } catch (\Throwable $th) {
-                throw $th;
                 $this->logOutput(' -- Post Migration Failed.');
+                throw $th;
             }
         }
     }

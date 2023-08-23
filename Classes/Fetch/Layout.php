@@ -37,7 +37,7 @@ class Layout
                         $field_arr = $schema['fields'][$field];
                         $field_arr['label'] = $this->getLabel($field);
 
-                        if (isset($field_arr['relation'])) {
+                        if (isset($field_arr['relation']) && !$field_arr['relation'] == ['users']) {
                             $field_arr['foreign_fields'] = [];
                             $relation = $this->getRelation($field_arr, $action);
                             foreach ($relation['fields'] as $key => $rfield) {
@@ -77,7 +77,7 @@ class Layout
                                     case 'select':
                                     case 'radio':
                                     case 'checkbox':
-                                        if(!isset($field_arr['options'])){
+                                        if (!isset($field_arr['options'])) {
                                             $field_arr['options'] = (isset($field_arr['allowed'])) ? $field_arr['allowed'] : [];
                                         }
                                         break;
