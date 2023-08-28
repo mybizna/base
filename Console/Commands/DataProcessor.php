@@ -4,7 +4,7 @@ namespace Modules\Base\Console\Commands;
 
 use Illuminate\Console\Command;
 use Modules\Base\Classes\Datasetter;
-use Modules\Base\Classes\FetchRights;
+use Modules\Base\Classes\Fetch\Rights;
 
 class DataProcessor extends Command
 {
