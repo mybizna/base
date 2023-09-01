@@ -34,6 +34,10 @@ class Routes
 
             foreach ($this->paths as $key => $path) {
 
+                if(!is_dir($path . '/Entities')){
+                    continue;
+                }
+
                 $routes = $this->getModuleRoute($path, $routes);
 
                 $routes_file = $path . DIRECTORY_SEPARATOR . 'routes.json';

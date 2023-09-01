@@ -57,6 +57,10 @@ class Migration
 
             foreach ($paths as $key => $path) {
                 if (is_dir($path)) {
+                    if (!is_readable($path . DIRECTORY_SEPARATOR . 'composer.json')) {
+                        continue;
+                    }
+
                     $path_arr = array_reverse(explode('/', $path));
                     $module_name = $path_arr[0];
 
@@ -87,7 +91,12 @@ class Migration
             $paths = glob(base_path($group));
 
             foreach ($paths as $key => $path) {
+
                 if (is_dir($path)) {
+                    if (!is_readable($path . DIRECTORY_SEPARATOR . 'composer.json')) {
+                        continue;
+                    }
+
                     $path_arr = array_reverse(explode('/', $path));
                     $module_name = $path_arr[0];
 
