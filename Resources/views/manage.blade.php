@@ -126,8 +126,7 @@
 </head>
 
 <body class="bg-blue-50">
-{{ $has_setting }}
-{{ $has_uptodate }}
+
     @if (!$has_setting || $has_uptodate)
         <div class="">
             @include('base::setup.wizard')

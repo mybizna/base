@@ -67,27 +67,30 @@ class Routes
 
         $module_route = $this->addRouteToList('/' . $module_name, $module_name, 'router_view');
 
-        $model_dir = new \DirectoryIterator($path . '/Entities');
-        foreach ($model_dir as $fileinfo) {
+        if (is_dir($path . '/Entities')) {
 
-            if (!$fileinfo->isDot() && $fileinfo->isFile() && $fileinfo->getExtension() == 'php') {
+            $model_dir = new \DirectoryIterator($path . '/Entities');
+            foreach ($model_dir as $fileinfo) {
 
-                $model_name = $fileinfo->getFilename();
-                $model_name = Str::snake(str_replace('.php', '', $model_name));
+                if (!$fileinfo->isDot() && $fileinfo->isFile() && $fileinfo->getExtension() == 'php') {
 
-                $vue_name = $m_folder_path . '.admin.' . $model_name;
+                    $model_name = $fileinfo->getFilename();
+                    $model_name = Str::snake(str_replace('.php', '', $model_name));
 
-                $vs_route = $this->addRouteToList($model_name, $vue_name, 'router_view');
+                    $vue_name = $m_folder_path . '.admin.' . $model_name;
 
-                $meta_path = [strtolower($module_name), strtolower($model_name)];
+                    $vs_route = $this->addRouteToList($model_name, $vue_name, 'router_view');
 
-                $vs_route['children']['default'] = $this->addRouteToList('', $vue_name . '.list.default', 'router_list', meta_path: $meta_path);
-                $vs_route['children']['list'] = $this->addRouteToList('list', $vue_name . '.list', 'router_list', meta_path: $meta_path);
-                $vs_route['children']['create'] = $this->addRouteToList('create', $vue_name . '.create', 'router_create', meta_path: $meta_path);
-                $vs_route['children']['edit'] = $this->addRouteToList('edit/:id', $vue_name . '.edit', 'router_edit', meta_path: $meta_path);
+                    $meta_path = [strtolower($module_name), strtolower($model_name)];
 
-                $tmproutes['main']['admin'][$model_name] = $vs_route;
+                    $vs_route['children']['default'] = $this->addRouteToList('', $vue_name . '.list.default', 'router_list', meta_path: $meta_path);
+                    $vs_route['children']['list'] = $this->addRouteToList('list', $vue_name . '.list', 'router_list', meta_path: $meta_path);
+                    $vs_route['children']['create'] = $this->addRouteToList('create', $vue_name . '.create', 'router_create', meta_path: $meta_path);
+                    $vs_route['children']['edit'] = $this->addRouteToList('edit/:id', $vue_name . '.edit', 'router_edit', meta_path: $meta_path);
 
+                    $tmproutes['main']['admin'][$model_name] = $vs_route;
+
+                }
             }
         }
 
