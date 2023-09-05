@@ -125,7 +125,7 @@
     </style>
 </head>
 
-<body class="bg-blue-50">
+<body class="bg-slate-50 dark:bg-navy-900">
 
     @if (!$has_setting || $has_uptodate)
         <div class="">
