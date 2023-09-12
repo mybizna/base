@@ -36,7 +36,7 @@ class Vue
             $module_name = $path_arr[0];
 
             if (strtoupper($module_name) == strtoupper($module)) {
-                $vue_file = $path . $DS . 'views' . $DS . implode($DS, $current_uri);
+                $vue_file = $path . $DS . 'Resources' . $DS . 'vue' . $DS . implode($DS, $current_uri);
 
                 if ($vue_file != '' && File::isFile($vue_file)) {
                     $contents = file_get_contents($vue_file);
