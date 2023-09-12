@@ -6,7 +6,7 @@
                 class="rounded-full mx-auto absolute -top-6 w-12 h-12 shadow-md border-4 border-white transition duration-200 transform hover:scale-110">
         </div>
 
-        <div class="mt-6">
+        <div class="mt-6 pb-2">
             <h1 class="font-bold text-center text-3xl text-gray-900">{{ $store.state.auth.user.name }}</h1>
             <p class="text-center text-sm text-gray-400 font-medium">{{ $store.state.auth.user.email }}</p>
             <div class="my-5 px-6">
