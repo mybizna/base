@@ -13,6 +13,7 @@
 use Modules\Base\Http\Controllers\GeneralController;
 
 //manage new user
+Route::get('/front', [GeneralController::class, 'front']);
 Route::get('/manage', [GeneralController::class, 'manage']);
 
 Route::get('fetch_vue/{section}', [GeneralController::class, 'fetchVue'])->where(['section' => '.*']);
