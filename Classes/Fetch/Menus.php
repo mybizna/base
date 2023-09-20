@@ -7,16 +7,34 @@ class Menus
 
     public $menus = [];
     public $paths = [];
+    public $viewside = 'backend';
+    public $dviewside = 'backend';
 
-    public function __construct()
+    public function __construct($viewside = 'backend')
     {
+        $this->viewside = $viewside;
+
         $groups = (is_file(base_path('../readme.txt'))) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
+
         foreach ($groups as $key => $group) {
             $this->paths = array_merge($this->paths, glob(base_path($group)));
         }
     }
 
-    public function fetchMenus()
+    public function group($viewside, $group)
+    {
+        if ($this->viewside != $viewside) {
+            return;
+        }
+
+        $this->dviewside = $viewside;
+
+        $group();
+
+        $this->dviewside = 'backend';
+    }
+
+    public function fetchMenus($viewside = 'backend')
     {
         $column = 'position';
 
@@ -33,7 +51,7 @@ class Menus
         }
 
         // Reorder Menu
-        usort($this->menus, function ($a, $b) use ($column) {
+        uasort($this->menus, function ($a, $b) use ($column) {
             if (isset($a[$column]) && isset($b[$column])) {
                 return $a[$column] <=> $b[$column];
             }
@@ -42,10 +60,9 @@ class Menus
 
         // Reorder SubMenu
         foreach ($this->menus as $module => $menu) {
-
             $tmp_menus = $this->menus[$module]['menus'];
 
-            usort($tmp_menus, function ($a, $b) use ($column) {
+            uasort($tmp_menus, function ($a, $b) use ($column) {
                 if (isset($a[$column]) && isset($b[$column])) {
                     return $a[$column] <=> $b[$column];
                 }
@@ -69,8 +86,13 @@ class Menus
                 $tmp_menus[$tmp_submenu['key']]['list'] = $tmp_submenu_list;
             }
 
-            $this->menus[$module]['menus'] = [];
-            $this->menus[$module]['menus'] = $tmp_menus;
+            if (empty($tmp_menus)) {
+                unset($this->menus[$module]);
+            } else {
+                $this->menus[$module]['menus'] = [];
+                $this->menus[$module]['menus'] = $tmp_menus;
+            }
+
         }
 
         return $this->menus;
@@ -90,10 +112,15 @@ class Menus
 
     public function add_menu($module, $key, $title, $path, $icon, $position)
     {
-        if(is_array($path)){
+
+        if ($this->viewside != $this->dviewside) {
+            return;
+        }
+
+        if (is_array($path)) {
             $path = 'default';
         }
-        
+
         $this->menus[$module]['menus'][$key]['title'] = $title;
         $this->menus[$module]['menus'][$key]['key'] = $key;
         $this->menus[$module]['menus'][$key]['path'] = $path;
@@ -107,6 +134,11 @@ class Menus
 
     public function add_submenu($module, $key, $title, $path, $position)
     {
+
+        if ($this->viewside != $this->dviewside) {
+            return;
+        }
+
         $this->menus[$module]['menus'][$key]['list'][] = [
             'title' => $title,
             'key' => $key,
@@ -117,7 +149,6 @@ class Menus
 
     private function loadDefaultMenus($base_path)
     {
-
         $file_names = ['menu', 'menus'];
 
         foreach ($file_names as $key => $file_name) {

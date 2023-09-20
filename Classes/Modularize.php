@@ -232,9 +232,9 @@ class Modularize
 
     //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     //Fetching Menu
-    public function fetchMenus()
+    public function fetchMenus($viewside = 'backend')
     {
-        $fetchmenus = new Menus();
+        $fetchmenus = new Menus($viewside);
 
         return $fetchmenus->fetchMenus();
     }

@@ -17,7 +17,7 @@ use Modules\Base\Classes\Modularize;
 
 class GeneralController extends Controller
 {
-       /**
+    /**
      * Show the application dashboard.
      *
      * @return \Illuminate\Contracts\Support\Renderable
@@ -78,7 +78,7 @@ class GeneralController extends Controller
 
         }
 
-        return view('base::manage', $result);
+        return view('base::front', $result);
     }
 
     /**
@@ -95,8 +95,6 @@ class GeneralController extends Controller
         define('MYBIZNA_MIGRATION', true);
 
         $has_uptodate = $migration->hasUpToDate();
-
-        // print_r(url('/')); exit;
 
         $result = [
             'url' => url('/'),
@@ -207,7 +205,9 @@ class GeneralController extends Controller
     {
         $modularize = new Modularize();
 
-        $result = $modularize->fetchMenus();
+        $viewside = $request->get('viewside', 'backend');
+
+        $result = $modularize->fetchMenus($viewside);
 
         return Response::json($result);
     }
