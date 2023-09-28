@@ -94,7 +94,7 @@
                                                 </svg>
                                                 <input type="text"
                                                     class="form-input ps-12 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 dark:text-slate-200 rounded outline-none border border-gray-200 focus:border-indigo-600 dark:border-gray-800 dark:focus:border-indigo-600 focus:ring-0"
-                                                    placeholder="Name" name="name" required="">
+                                                    placeholder="Name" name="name">
                                             </div>
                                         </div>
 
@@ -113,7 +113,7 @@
                                                 </svg>
                                                 <input type="email"
                                                     class="form-input ps-12 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 dark:text-slate-200 rounded outline-none border border-gray-200 focus:border-indigo-600 dark:border-gray-800 dark:focus:border-indigo-600 focus:ring-0"
-                                                    placeholder="Email" name="email" required="">
+                                                    placeholder="Email" name="email">
                                                 <div data-lastpass-icon-root="true"
                                                     style="position: relative !important; height: 0px !important; width: 0px !important; float: left !important;">
                                                 </div>
@@ -134,7 +134,7 @@
                                                 </svg>
                                                 <input type="password"
                                                     class="form-input ps-12 w-full py-2 px-3 h-10 bg-transparent dark:bg-slate-900 dark:text-slate-200 rounded outline-none border border-gray-200 focus:border-indigo-600 dark:border-gray-800 dark:focus:border-indigo-600 focus:ring-0"
-                                                    placeholder="Password" required="">
+                                                    placeholder="Password">
                                                 <div data-lastpass-icon-root="true"
                                                     style="position: relative !important; height: 0px !important; width: 0px !important; float: left !important;">
                                                 </div>
