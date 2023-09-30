@@ -33,7 +33,6 @@ class BaseController extends Controller
     public function getAllRecords(Request $request, $module, $model)
     {
         $modularize = new Modularize($module, $model);
-        // logic to get all records goes here
 
         $args = $request->query();
 

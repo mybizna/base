@@ -29,6 +29,10 @@ class Modularize
     {
         $user = Auth::user();
 
+        if(!$user){
+            return false;
+        }
+
         $roles = $user->getRoleNames();
 
         if (empty($roles)) {

@@ -25,58 +25,25 @@ class GeneralController extends Controller
     public function front(Request $request)
     {
 
-        $migration = new Migration();
-        $datasetter = new Datasetter();
-
-        define('MYBIZNA_MIGRATION', true);
-
-        $has_uptodate = $migration->hasUpToDate();
-
-        // print_r(url('/')); exit;
-
         $result = [
             'url' => url('/'),
             'data_list' => [],
             'db_list' => [],
             'has_user' => false,
-            'has_uptodate' => $has_uptodate,
+            'has_uptodate' => false,
             'has_setting' => Schema::hasTable('core_setting'),
         ];
 
-        if ($has_uptodate) {
+        $uniqid = md5(rand());
 
-            $db_list = [];
-            $data_list = [];
-
-            $userCount = User::count();
-
-            if ($userCount || defined('MYBIZNA_BASE_URL')) {
-                $result['has_user'] = true;
-            }
-
-            $dbmodels = $migration->migrateModels(true);
-            foreach ($dbmodels as $item) {
-                $db_list[] = $item['class'];
-            }
-
-            $datamodels = $datasetter->migrateModels();
-            foreach ($datamodels as $item) {
-                $data_list[] = $item['class'];
-            }
-
-            if (defined('MYBIZNA_BASE_URL')) {
-                $url = MYBIZNA_BASE_URL;
-            }
-
-            //print_r($db_list); exit;
-
-            $request->session()->put('migration_db_list', $db_list);
-            $request->session()->put('migration_data_list', $data_list);
-
-            $result['data_list'] = array_keys($data_list);
-            $result['db_list'] = array_keys($db_list);
-
+        if ($request->session()->has('mybizna_uniqid')) {
+            $uniqid = $request->session()->put('mybizna_uniqid');
+        } else {
+            $request->session()->put('mybizna_uniqid', $uniqid);
+            $request->session()->put($uniqid, ['viewside' => 'frontend']);
         }
+
+        $result['mybizna_uniqid'] = $uniqid;
 
         return view('base::front', $result);
     }
@@ -130,8 +97,6 @@ class GeneralController extends Controller
                 $url = MYBIZNA_BASE_URL;
             }
 
-            //print_r($db_list); exit;
-
             $request->session()->put('migration_db_list', $db_list);
             $request->session()->put('migration_data_list', $data_list);
 
@@ -139,6 +104,18 @@ class GeneralController extends Controller
             $result['db_list'] = array_keys($db_list);
 
         }
+
+        $uniqid = md5(rand());
+
+        if ($request->session()->has('mybizna_uniqid')) {
+            $uniqid = $request->session()->put('mybizna_uniqid');
+        } else {
+            $request->session()->put('mybizna_uniqid', $uniqid);
+            $request->session()->put($uniqid, ['viewside' => 'frontend']);
+        }
+
+        $result['mybizna_uniqid'] = $uniqid;
+
 
         return view('base::manage', $result);
     }

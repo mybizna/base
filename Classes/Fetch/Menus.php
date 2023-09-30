@@ -115,6 +115,8 @@ class Menus
 
         if ($this->viewside != $this->dviewside) {
             return;
+        } elseif ($this->dviewside == 'frontend' && !strpos($path, '/front/')) {
+            return;
         }
 
         if (is_array($path)) {

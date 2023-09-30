@@ -49,3 +49,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post($prefix . '/{id}', [BaseController::class, 'updateRecord'])->where(['id' => '[0-9]+']);
     Route::delete($prefix . '/{id}', [BaseController::class, 'deleteRecord'])->where(['id' => '[0-9]+']);
 });
+
+Route::middleware('auth:sanctum')->group(function () {
+    $prefix = '{module}/front/{model}';
+
+    Route::get($prefix, [BaseController::class, 'getAllRecords']);
+    Route::get($prefix . '/{id}', [BaseController::class, 'getRecord'])->where(['id' => '[0-9]+']);
+    Route::get($prefix . '/recordselect', [BaseController::class, 'getRecordSelect']);
+    Route::post($prefix, [BaseController::class, 'createRecord']);
+    Route::post($prefix . '/{id}', [BaseController::class, 'updateRecord'])->where(['id' => '[0-9]+']);
+    Route::delete($prefix . '/{id}', [BaseController::class, 'deleteRecord'])->where(['id' => '[0-9]+']);
+});
