@@ -7,6 +7,7 @@ use Artisan;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Schema;
@@ -36,11 +37,11 @@ class GeneralController extends Controller
 
         $uniqid = md5(rand());
 
-        if ($request->session()->has('mybizna_uniqid')) {
-            $uniqid = $request->session()->put('mybizna_uniqid');
+        if (Cache::has('mybizna_uniqid')) {
+            $uniqid = Cache::get('mybizna_uniqid');
         } else {
-            $request->session()->put('mybizna_uniqid', $uniqid);
-            $request->session()->put($uniqid, ['viewside' => 'frontend']);
+            Cache::put('mybizna_uniqid', $uniqid);
+            Cache::put($uniqid, ['viewside' => 'frontend']);
         }
 
         $result['mybizna_uniqid'] = $uniqid;
@@ -107,15 +108,14 @@ class GeneralController extends Controller
 
         $uniqid = md5(rand());
 
-        if ($request->session()->has('mybizna_uniqid')) {
-            $uniqid = $request->session()->put('mybizna_uniqid');
+        if (Cache::has('mybizna_uniqid')) {
+            $uniqid = Cache::get('mybizna_uniqid');
         } else {
-            $request->session()->put('mybizna_uniqid', $uniqid);
-            $request->session()->put($uniqid, ['viewside' => 'frontend']);
+            Cache::put('mybizna_uniqid', $uniqid);
+            Cache::put($uniqid, ['viewside' => 'frontend']);
         }
 
         $result['mybizna_uniqid'] = $uniqid;
-
 
         return view('base::manage', $result);
     }
@@ -182,8 +182,15 @@ class GeneralController extends Controller
     {
         $modularize = new Modularize();
 
-        $viewside = $request->get('viewside', 'backend');
+        $u = $request->get('u');
 
+        $setting = [];
+        if (Cache::has('mybizna_uniqid')) {
+            $setting = Cache::get($u);
+        }
+        
+        $viewside = (isset($setting['viewside'])) ? $setting['viewside'] : 'backend';
+        
         $result = $modularize->fetchMenus($viewside);
 
         return Response::json($result);
