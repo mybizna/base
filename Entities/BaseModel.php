@@ -36,6 +36,13 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
     public $structure = [];
 
     /**
+     * Set if model is visible from frontend.
+     *
+     * @var bool
+     */
+    protected bool $show_frontend = false;
+
+    /**
      * Function for defining fields
      */
     public function fields(Blueprint $table = null): void
