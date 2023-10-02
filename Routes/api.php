@@ -51,7 +51,7 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-    $prefix = '{module}/front/{model}';
+    $prefix = '{module}/{model}';
 
     Route::get($prefix, [BaseController::class, 'getAllRecords']);
     Route::get($prefix . '/{id}', [BaseController::class, 'getRecord'])->where(['id' => '[0-9]+']);

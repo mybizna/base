@@ -94,8 +94,8 @@ class Routes
             }
         }
 
-        foreach (['admin', 'web'] as $folder) {
-            $vue_folders = $path . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . $folder;
+        foreach (['admin', 'web', 'front'] as $folder) {
+            $vue_folders = $path . DIRECTORY_SEPARATOR . 'Resources' . DIRECTORY_SEPARATOR . 'vue' . DIRECTORY_SEPARATOR . $folder;
 
             $f_folder_path = $m_folder_path . '/' . $folder;
             $folder_route = $this->addRouteToList($folder, $f_folder_path, 'router_view');
@@ -181,17 +181,20 @@ class Routes
                     }
                 }
 
-                foreach ($tmproutes['main'][$folder] as $key => $model) {
+                if (isset($tmproutes['main'][$folder])) {
 
-                    if (empty($model['children'])) {
-                        continue;
+                    foreach ($tmproutes['main'][$folder] as $key => $model) {
+
+                        if (empty($model['children'])) {
+                            continue;
+                        }
+
+                        $vs_route = $this->addRouteToList($key, $f_folder_path . '/' . $key, 'router_view');
+                        $vs_route['children'] = array_values($model['children']);
+
+                        $folder_route['children'][] = $vs_route;
+
                     }
-
-                    $vs_route = $this->addRouteToList($key, $f_folder_path . '/' . $key, 'router_view');
-                    $vs_route['children'] = array_values($model['children']);
-
-                    $folder_route['children'][] = $vs_route;
-
                 }
 
                 //print_r($folder_route);exit;
