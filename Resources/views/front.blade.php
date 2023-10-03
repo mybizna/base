@@ -14,6 +14,7 @@
     <script>
         PUBLIC_PATH = '{!! $assets_url !!}';
         var base_url = '{!! $mybizna_base_url !!}';
+        var root_url = '{!! $url !!}';
         var assets_url = '{!! $assets_url !!}';
         var autologin = '{!! $autologin !!}';
         var responsive_point = {!! $responsive_point !!};

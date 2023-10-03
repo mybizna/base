@@ -35,6 +35,8 @@ class GeneralController extends Controller
             'has_setting' => Schema::hasTable('core_setting'),
         ];
 
+        //print_r($result); exit;
+
         $uniqid = md5(rand());
 
         if (Cache::has('mybizna_uniqid')) {
