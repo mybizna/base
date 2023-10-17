@@ -73,7 +73,7 @@ class Rights
         return $result;
     }
 
-    public function add_right($module, $model, $role_name, $view = false, $add = false, $edit = false, $delete = false)
+    public function add_right($module, $model, $role_name, $view = false, $add = false, $edit = false, $delete = false, $view_own = false, $edit_own = false, $delete_own = false)
     {
         $give_permission = [];
         $revoke_permission = [];
@@ -85,19 +85,20 @@ class Rights
         $edit_permission_name = $module . "_" . $model . "_edit";
         $delete_permission_name = $module . "_" . $model . "_delete";
 
-        print_r($view_permission_name);
-        print_r("\n");
-        print_r($add_permission_name);
-        print_r("\n");
-        print_r($edit_permission_name);
-        print_r("\n");
-        print_r($delete_permission_name);
-        print_r("\n");
+        $view_own_permission_name = $module . "_" . $model . "_view_own";
+        $edit_own_permission_name = $module . "_" . $model . "_edit_own";
+        $delete_own_permission_name = $module . "_" . $model . "_delete_own";
+
+     
 
         $this->getPermission($view_permission_name);
         $this->getPermission($add_permission_name);
         $this->getPermission($edit_permission_name);
         $this->getPermission($delete_permission_name);
+
+        $this->getPermission($view_own_permission_name);
+        $this->getPermission($edit_own_permission_name);
+        $this->getPermission($delete_own_permission_name);
 
         if ($view) {
             $give_permission[] = $view_permission_name;
@@ -123,6 +124,27 @@ class Rights
             $give_permission[] = $delete_permission_name;
         } else {
             $revoke_permission[] = $delete_permission_name;
+
+        }
+
+        if ($view_own) {
+            $give_permission[] = $view_own_permission_name;
+        } else {
+            $revoke_permission[] = $view_own_permission_name;
+        }
+
+
+        if ($edit_own) {
+            $give_permission[] = $edit_own_permission_name;
+        } else {
+            $revoke_permission[] = $edit_own_permission_name;
+
+        }
+
+        if ($delete_own) {
+            $give_permission[] = $delete_own_permission_name;
+        } else {
+            $revoke_permission[] = $delete_own_permission_name;
 
         }
 
