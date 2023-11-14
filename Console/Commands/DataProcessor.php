@@ -40,6 +40,8 @@ class DataProcessor extends Command
     public function handle()
     {
 
+        define('MYBIZNA_MIGRATION', true);
+
         $data_setter = new Datasetter();
         $fetch_rights = new Rights();
 
