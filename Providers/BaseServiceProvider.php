@@ -102,6 +102,11 @@ class BaseServiceProvider extends ServiceProvider
         $responsive_point = 768;
         $floating_top = true;
         $margin_top = true;
+        $force_https = false;
+
+        if (strpos($url, "https://") === 0) {
+            $force_https = true;
+        }
 
         if (defined('MYBIZNA_FLOATING_TOP')) {
             $floating_top = MYBIZNA_FLOATING_TOP;
@@ -124,14 +129,13 @@ class BaseServiceProvider extends ServiceProvider
             $url = MYBIZNA_BASE_URL;
         }
 
-      
-
         view()->share([
             'version' => $version,
             'mybizna_base_url' => $url,
             'assets_url' => $assets_url,
+            'force_https' => $force_https,
             'autologin' => $autologin,
-            'is_wordpress' => (defined('WP_PLUGIN_URL'))?true:false,
+            'is_wordpress' => (defined('WP_PLUGIN_URL')) ? true : false,
             'floating_top' => $floating_top,
             'margin_top' => $margin_top,
             'responsive_point' => $responsive_point,
