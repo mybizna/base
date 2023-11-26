@@ -37,15 +37,20 @@ class Layout
                         $field_arr = $schema['fields'][$field];
                         $field_arr['label'] = $this->getLabel($field);
 
-                        if (isset($field_arr['relation']) && !$field_arr['relation'] == ['users']) {
-                            $field_arr['foreign_fields'] = [];
+                        if (array_key_exists("relation", $field_arr) && $field_arr['relation'][0] != ['users']) {
+
+                            $foreign_fields = [];
                             $relation = $this->getRelation($field_arr, $action);
                             foreach ($relation['fields'] as $key => $rfield) {
-                                $field_arr['foreign_fields'][] = $field_arr['name'] . '__' . implode('_', $field_arr['relation']) . '__' . $rfield;
+                                $foreign_fields[] = $field_arr['name'] . '__' . implode('_', $field_arr['relation']) . '__' . $rfield;
                             }
+                            $schema['fields'][$field]['foreign_fields'] = $foreign_fields;
                         }
 
-                        $layout[$field] = $field_arr;
+                        $schema['fields'][$field]['label'] = ucwords(str_replace('_', ' ', $schema['fields'][$field]['name'] ));
+
+                        $layout[$field] = $schema['fields'][$field];
+
                     }
 
                     break;
