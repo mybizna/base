@@ -97,7 +97,7 @@ class Settings
             $params['value'] = $setting['value'];
         }
 
-        $this->settings[$module]['settings'][$key]['list'][] = [
+        $this->settings[$module]['settings'][$key]['list'][$name] = [
             'name' => $name,
             'position' => $position,
             'params' => $params,

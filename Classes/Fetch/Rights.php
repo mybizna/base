@@ -85,15 +85,6 @@ class Rights
         $edit_permission_name = $module . "_" . $model . "_edit";
         $delete_permission_name = $module . "_" . $model . "_delete";
 
-        print_r($view_permission_name);
-        print_r("\n");
-        print_r($add_permission_name);
-        print_r("\n");
-        print_r($edit_permission_name);
-        print_r("\n");
-        print_r($delete_permission_name);
-        print_r("\n");
-
         $this->getPermission($view_permission_name);
         $this->getPermission($add_permission_name);
         $this->getPermission($edit_permission_name);
