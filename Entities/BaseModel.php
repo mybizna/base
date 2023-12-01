@@ -312,14 +312,17 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
 
         ];
 
+
         $params = array_merge($defaults, $args);
 
         $query = $this->generateQuery($params);
+        
 
         if ($params['count']) {
+            $query = $this->generateQuery($params);
             $result['total'] = $query->count();
         }
-
+        
         if (isset($params['offset']) && $params['offset'] > 1) {
             $query->offset($params['offset']);
         }
@@ -333,6 +336,8 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             $result['status'] = 1;
             $result['records'] = $query->get();
             $result['message'] = 'Records Found Successfully.';
+
+            
         } catch (\Throwable $th) {
             throw $th;
         }
