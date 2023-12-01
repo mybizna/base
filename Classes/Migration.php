@@ -66,8 +66,7 @@ class Migration
 
                     $composer = $this->getComposer($path);
 
-                    if ($versions[$module_name] !== $composer['version']) {
-
+                    if (!array_key_exists($module_name, $versions) && $versions[$module_name] !== $composer['version']) {
                         return true;
                     }
                 }
