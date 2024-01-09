@@ -71,7 +71,14 @@ if (!function_exists('getRealQuery')) {
         $params = array_map(function ($item) {
             return "'{$item}'";
         }, $query->getBindings());
-        $result = str_replace_array('\?', $params, $query->toSql());
+
+
+        $result = $query->toSql();
+        
+        foreach ($params as $key => $param) {
+            $result = preg_replace('/\?/',  $param, $sql,1);
+        }
+
         if ($dumpIt) {
             dd($result);
         }
