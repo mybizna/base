@@ -19,11 +19,11 @@
     "composer/installers": "~1.0",
     "mybizna/automigrator": ">=24.01.001",
     "mybizna/assets": ">=24.01.001",
-    "nwidart/laravel-modules": "^8.3",
-    "wildside/userstamps": "^2.2",
-    "laravel/sanctum": "^3.1",
-    "laravel/ui": "^3.4",
-    "spatie/laravel-permission": "^5.10"
+    "nwidart/laravel-modules": "^9.0",
+    "wildside/userstamps": "^2.3",
+    "laravel/sanctum": "^3.3",
+    "laravel/ui": "^4.4",
+    "spatie/laravel-permission": "^6.0"
   },
   "extra": {
     "laravel": {
