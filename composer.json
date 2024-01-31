@@ -19,7 +19,7 @@
     "composer/installers": "~1.0",
     "mybizna/automigrator": ">=24.01.001",
     "mybizna/assets": ">=24.01.001",
-    "nwidart/laravel-modules": "^9.0",
+    "nwidart/laravel-modules": "^10.0",
     "wildside/userstamps": "^2.3",
     "laravel/sanctum": "^3.3",
     "laravel/ui": "^4.4",
