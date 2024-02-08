@@ -47,7 +47,7 @@ class Layout
                             $schema['fields'][$field]['foreign_fields'] = $foreign_fields;
                         }
 
-                        $schema['fields'][$field]['label'] = ucwords(str_replace('_', ' ', $schema['fields'][$field]['name'] ));
+                        $schema['fields'][$field]['label'] = ucwords(str_replace('_', ' ', $schema['fields'][$field]['name']));
 
                         $layout[$field] = $schema['fields'][$field];
 
@@ -194,6 +194,10 @@ class Layout
     {
         $module = ucfirst(strtolower($module));
         $model = ucfirst(Str::camel($model));
+
+        if ($module == 'Users') {
+            return false;
+        }
 
         $classname = 'Modules\\' . $module . '\Entities\\' . $model;
 
