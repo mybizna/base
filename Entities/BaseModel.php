@@ -40,7 +40,15 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
      *
      * @var bool
      */
-    protected bool $show_frontend = false;
+    public bool $show_frontend = false;
+
+    /**
+     * Set views is visible from frontend.
+     *
+     * @var array
+     */
+
+     public array $show_views = ["list"=>true, "create"=>false, "edit"=>false, "detail"=>true, "form"=>false, "search"=>true, "modify"=>false, "update"=>false, "new"=>false, "delete"=>false, "print"=>false, "export"=>false, "import"=>false, "report"=>false, "chart"=>false, "calendar"=>false, "timeline"=>false, "kanban"=>false, "gantt"=>false, "map"=>false, "tree"=>false, "grid"=>false, "table"=>false, "card"=>false];
 
     /**
      * Function for defining fields

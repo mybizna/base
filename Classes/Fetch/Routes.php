@@ -2,6 +2,7 @@
 
 namespace Modules\Base\Classes\Fetch;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
@@ -88,6 +89,31 @@ class Routes
                     $this->routes[$vue_name . '.create'] = $this->addRouteToList($vue_name_path . '/create', $vue_name . '.create', 'router_create', meta_path: $meta_path);
                     $this->routes[$vue_name . '.edit'] = $this->addRouteToList($vue_name_path . '/edit/:id', $vue_name . '.edit', 'router_edit', meta_path: $meta_path);
 
+                    $class_name = basename(dirname($path)) . '/' . basename($path) . '/Entities/' . Str::ucfirst(Str::camel($model_name));
+                    $class_name = str_replace('/', '\\', $class_name);
+
+                    
+                    
+                    if (is_subclass_of($class_name, Model::class)) {
+                        $object = app($class_name);
+                        
+                        if ($object->show_frontend) {
+                            $vue_name = strtolower($m_folder_path . '.front.' . $model_name);
+
+                            if ($object->show_views['list']) {
+                                $this->routes[$vue_name . '.list.default'] = $this->addRouteToList($vue_name_path . '', $vue_name . '.list.default', 'router_list', meta_path: $meta_path);
+                                $this->routes[$vue_name . '.list'] = $this->addRouteToList($vue_name_path . '/list', $vue_name . '.list', 'router_list', meta_path: $meta_path);
+                            }
+                            if ($object->show_views['create']){
+                                $this->routes[$vue_name . '.create'] = $this->addRouteToList($vue_name_path . '/create', $vue_name . '.create', 'router_create', meta_path: $meta_path);
+                            }
+                            if ($object->show_views['create']) {
+                                $this->routes[$vue_name . '.edit'] = $this->addRouteToList($vue_name_path . '/edit/:id', $vue_name . '.edit', 'router_edit', meta_path: $meta_path);
+
+                            }
+                        }
+                    }
+
                 }
             }
         }
@@ -126,8 +152,9 @@ class Routes
                                     }
 
                                     if ($vs_sx_filename == 'list') {
+                                        $vs_path_low_default = str_replace('/list', '', $vs_path_low);
                                         $this->routes[$vs_path_name] = $this->addRouteToList('/' . $vs_path_low, $t_folder_path, $vs_path . '.vue', search_path: $search_path);
-
+                                        $this->routes[$vs_path_name . '.default'] = $this->addRouteToList('/' . $vs_path_low_default, $t_folder_path, $vs_path . '.vue', search_path: $search_path);
                                     } else if ($vs_sx_filename == 'search') {
                                         continue;
                                     } else if ($vs_sx_filename == 'form') {
