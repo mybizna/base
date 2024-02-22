@@ -99,6 +99,9 @@ class Routes
                         
                         if ($object->show_frontend) {
                             $vue_name = strtolower($m_folder_path . '.front.' . $model_name);
+                            $vue_name_path = '/' . str_replace('.', '/', $vue_name);
+        
+                            $vue_name = strtolower($m_folder_path . '.front.' . $model_name);
 
                             if ($object->show_views['list']) {
                                 $this->routes[$vue_name . '.list.default'] = $this->addRouteToList($vue_name_path . '', $vue_name . '.list.default', 'router_list', meta_path: $meta_path);
