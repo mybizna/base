@@ -191,9 +191,7 @@ class GeneralController extends Controller
             $setting = Cache::get($u);
         }
         
-        $viewside = (isset($setting['viewside'])) ? $setting['viewside'] : 'backend';
-        
-        $result = $modularize->fetchMenus($viewside);
+        $result = $modularize->fetchMenus();
 
         return Response::json($result);
     }

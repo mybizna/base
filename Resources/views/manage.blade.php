@@ -23,6 +23,7 @@
         var floating_top = {{ $floating_top ? 'true' : 'false' }};
         var margin_top = {{ $margin_top ? 'true' : 'false' }};
         var viewside = 'backend';
+        var mybizna_uniqid = '{!! $mybizna_uniqid !!}';
 
         function __(title, select) {
             return title;
