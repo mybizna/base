@@ -129,6 +129,23 @@ class Layout
 
         $relation = $this->getClassName($module, $model);
 
+        $action_do = $action . 'ing';
+
+        if ($action == 'create') {
+            $action_do = 'creating';
+        }
+
+        if($module == 'users'){
+            $relation = [
+                'path_title' =>  'User ' . $action_do,
+                'path_param' => ["Users", "Users"],
+                'fields' => ['name', 'email', 'username', 'phone'],
+                'template' => '[name] [email] [username] [phone]',
+            ];
+            return $relation;
+        }
+
+
         $rec_names = $relation->getRecNames();
 
         $fields = $rec_names;
@@ -139,11 +156,7 @@ class Layout
             $fields = $rec_names['fields'];
             $template = $rec_names['template'];
         }
-        $action_do = $action . 'ing';
-
-        if ($action == 'create') {
-            $action_do = 'creating';
-        }
+        
 
         $relation = [
             'path_title' => $model . ' ' . $action_do,

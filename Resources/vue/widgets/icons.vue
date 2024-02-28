@@ -1,7 +1,7 @@
 <template>
     <h4 class="font-semibold text-sm">Regular APPs</h4>
     <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-18 gap-2 overflow-hidden">
-        <div v-for="(item, index) in $store.state.system.menu" :key="index">
+        <div v-for="(item, index) in $store.state.system.backendmenu" :key="index">
             
             <a :href="'#' + item.path" :title="title" class="text-center text-decoration-none"
                 @click="loadModule(item.path, index)">
