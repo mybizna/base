@@ -36,6 +36,7 @@ class Layout
 
                         $field_arr = $schema['fields'][$field];
                         $field_arr['label'] = $this->getLabel($field);
+                        $field_arr['placeholder'] = $field_arr['label'];
 
                         if (array_key_exists("relation", $field_arr) && $field_arr['relation'][0] != ['users']) {
 
@@ -70,6 +71,8 @@ class Layout
 
                                 $field_arr = $schema['fields'][$field];
                                 $field_arr['label'] = $this->getLabel($field);
+                                $field_arr['placeholder'] = 'Enter '.$field_arr['label'];
+                                $field_arr['label'] = $field_arr['label'] . ': ';
 
                                 switch ($field_arr['html']) {
                                     case 'recordpicker':
@@ -135,16 +138,15 @@ class Layout
             $action_do = 'creating';
         }
 
-        if($module == 'users'){
+        if ($module == 'users') {
             $relation = [
-                'path_title' =>  'User ' . $action_do,
+                'path_title' => 'User ' . $action_do,
                 'path_param' => ["Users", "Users"],
                 'fields' => ['name', 'email', 'username', 'phone'],
                 'template' => '[name] [email] [username] [phone]',
             ];
             return $relation;
         }
-
 
         $rec_names = $relation->getRecNames();
 
@@ -156,7 +158,6 @@ class Layout
             $fields = $rec_names['fields'];
             $template = $rec_names['template'];
         }
-        
 
         $relation = [
             'path_title' => $model . ' ' . $action_do,
