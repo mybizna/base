@@ -19,7 +19,7 @@ class Layout
 
     public function fetchLayout($params)
     {
-        $fields = $layout = [];
+        $fields = $layout = $filter = [];
         $class_name = $this->getClassName($params['module'], $params['model']);
 
         $action = $params['action'];
@@ -54,6 +54,17 @@ class Layout
 
                     }
 
+                    foreach ($schema['structure']['filter'] as $key => $field) {
+
+                        if (isset($schema['fields'][$field]) && !in_array($field, ['id']) && !in_array($schema['fields'][$field]['html'], ['recordpicker'])) {
+
+                            $field_arr = $this->prepareFormField($schema, $field, $action);
+
+                            $filter[] = $field_arr;
+                        }
+
+                    }
+
                     break;
 
                 case 'create':
@@ -69,30 +80,7 @@ class Layout
                             if (isset($schema['fields'][$field])) {
                                 $fields[] = $field;
 
-                                $field_arr = $schema['fields'][$field];
-                                $field_arr['label'] = $this->getLabel($field);
-                                $field_arr['placeholder'] = 'Enter '.$field_arr['label'];
-                                $field_arr['label'] = $field_arr['label'] . ': ';
-
-                                switch ($field_arr['html']) {
-                                    case 'recordpicker':
-                                        $relation = $this->getRelation($field_arr, $action);
-                                        $field_arr['picker'] = $relation;
-                                        break;
-                                    case 'amount':
-                                        $field_arr['html'] = 'text';
-                                        break;
-                                    case 'select':
-                                    case 'radio':
-                                    case 'checkbox':
-                                        if (!isset($field_arr['options'])) {
-                                            $field_arr['options'] = (isset($field_arr['allowed'])) ? $field_arr['allowed'] : [];
-                                        }
-                                        break;
-
-                                    default:
-                                        break;
-                                }
+                                $field_arr = $this->prepareFormField($schema, $field, $action);
 
                                 $layout[$key]['fields'][] = $field_arr;
                             }
@@ -102,13 +90,9 @@ class Layout
 
                     break;
 
-                case 'filter':
-                    $listFilter = $class_name->filter($params);
-                    $fields = $listFilter->fields;
-                    break;
             }
 
-            $result = $this->prepareResult('Layout Fetched Successfully', false, $fields, $layout);
+            $result = $this->prepareResult('Layout Fetched Successfully', false, $fields, $layout, $filter);
 
         } else {
             $result = $this->prepareResult('No Model Found with name ' . $params['module'] . '-' . $params['model'], true);
@@ -169,12 +153,44 @@ class Layout
         return $relation;
     }
 
-    public function prepareResult($message, $error = false, $fields = [], $layout = [])
+    public function prepareFormField($schema, $field, $action)
+    {
+
+        $field_arr = $schema['fields'][$field];
+        $field_arr['label'] = $this->getLabel($field);
+        $field_arr['placeholder'] = 'Enter ' . $field_arr['label'];
+        $field_arr['label'] = $field_arr['label'] . ': ';
+
+        switch ($field_arr['html']) {
+            case 'recordpicker':
+                $relation = $this->getRelation($field_arr, $action);
+                $field_arr['picker'] = $relation;
+                break;
+            case 'amount':
+                $field_arr['html'] = 'text';
+                break;
+            case 'select':
+            case 'radio':
+            case 'checkbox':
+                if (!isset($field_arr['options'])) {
+                    $field_arr['options'] = (isset($field_arr['allowed'])) ? $field_arr['allowed'] : [];
+                }
+                break;
+
+            default:
+                break;
+        }
+
+        return $field_arr;
+    }
+
+    public function prepareResult($message, $error = false, $fields = [], $layout = [], $filter = [])
     {
         return [
             'error' => $error,
             'message' => $message,
             'fields' => $fields,
+            'filter' => $filter,
             'layout' => $layout,
         ];
     }
