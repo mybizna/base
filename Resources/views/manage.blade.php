@@ -17,12 +17,14 @@
     <script>
         PUBLIC_PATH = '{!! $assets_url !!}';
         var base_url = '{!! $mybizna_base_url !!}';
+        var root_url = '{!! $url !!}';
         var assets_url = '{!! $assets_url !!}';
         var autologin = '{!! $autologin !!}';
         var responsive_point = {!! $responsive_point !!};
         var floating_top = {{ $floating_top ? 'true' : 'false' }};
         var margin_top = {{ $margin_top ? 'true' : 'false' }};
         var viewside = 'backend';
+        var template = "{{ $template ?? 'admin' }}";
         var mybizna_uniqid = '{!! $mybizna_uniqid !!}';
 
         function __(title, select) {

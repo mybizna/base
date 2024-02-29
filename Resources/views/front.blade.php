@@ -24,6 +24,7 @@
         var floating_top = {{ $floating_top ? 'true' : 'false' }};
         var margin_top = {{ $margin_top ? 'true' : 'false' }};
         var viewside = 'frontend';
+        var template = '{{ $template ?? "front" }}';
         var mybizna_uniqid = '{!! $mybizna_uniqid !!}';
 
         function __(title, select) {
