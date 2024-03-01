@@ -101,6 +101,24 @@ class Menus
 
         }
 
+        $this->menus['backend']['dashboard']['menus']=[];
+
+        foreach ($this->menus['backend'] as $key => $value) {
+
+            if($key == 'dashboard') continue;
+            
+            $menu = $this->menus['backend'][$key];
+
+            $menu['list'] =[];
+
+            $this->menus['backend']['dashboard']['menus'][$key] = $menu;
+
+        }
+
+
+
+        //print_r($this->menus['backend']['dashboard']['menus']); exit;
+
         return $this->menus;
     }
 

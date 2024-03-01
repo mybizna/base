@@ -1,6 +1,7 @@
 <template>
     <div class="bg-white relative shadow rounded-lg ">
 
+
         <div class="flex justify-center">
             <img :src="$assets_url + 'images/avatars/1.png'" alt=""
                 class="rounded-full mx-auto absolute -top-6 w-12 h-12 shadow-md border-4 border-white transition duration-200 transform hover:scale-110">
@@ -17,6 +18,8 @@
             </div>
         </div>
     </div>
+
+    
 </template>
   
 <style >
