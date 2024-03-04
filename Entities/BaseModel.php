@@ -48,7 +48,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
      * @var array
      */
 
-     public array $show_views = ["list"=>true, "create"=>false, "edit"=>false, "detail"=>true, "form"=>false, "search"=>true, "modify"=>false, "update"=>false, "new"=>false, "delete"=>false, "print"=>false, "export"=>false, "import"=>false, "report"=>false, "chart"=>false, "calendar"=>false, "timeline"=>false, "kanban"=>false, "gantt"=>false, "map"=>false, "tree"=>false, "grid"=>false, "table"=>false, "card"=>false];
+    public array $show_views = ["list" => true, "create" => false, "edit" => false, "detail" => true, "form" => false, "search" => true, "modify" => false, "update" => false, "new" => false, "delete" => false, "print" => false, "export" => false, "import" => false, "report" => false, "chart" => false, "calendar" => false, "timeline" => false, "kanban" => false, "gantt" => false, "map" => false, "tree" => false, "grid" => false, "table" => false, "card" => false];
 
     /**
      * Function for defining fields
@@ -143,7 +143,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
                 ['label' => '', 'class' => 'col-span-full  md:col-span-6 md:pr-2', 'fields' => $firsthalf],
                 ['label' => '', 'class' => 'col-span-full  md:col-span-6 md:pr-2', 'fields' => $secondhalf],
             ],
-            'filter' => ['col-span-full  md:col-span-6 md:pr-2' => $fields_names_arr],
+            'filter' => $fields_names_arr,
         ]);
 
         return $structure;
@@ -320,17 +320,15 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
 
         ];
 
-
         $params = array_merge($defaults, $args);
 
         $query = $this->generateQuery($params);
-        
 
         if ($params['count']) {
             $query = $this->generateQuery($params);
             $result['total'] = $query->count();
         }
-        
+
         if (isset($params['offset']) && $params['offset'] > 1) {
             $query->offset($params['offset']);
         }
@@ -345,7 +343,6 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
             $result['records'] = $query->get();
             $result['message'] = 'Records Found Successfully.';
 
-            
         } catch (\Throwable $th) {
             throw $th;
         }
