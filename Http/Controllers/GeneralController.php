@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Schema;
 use Modules\Base\Classes\Autocomplete;
 use Modules\Base\Classes\Datasetter;
 use Modules\Base\Classes\General;
@@ -30,6 +29,21 @@ class GeneralController extends Controller
         $general = new General();
 
         $result = $general->getFrontViewSetting();
+
+        return view('base::front', $result);
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function user(Request $request)
+    {
+
+        $general = new General();
+
+        $result = $general->getUserViewSetting();
 
         return view('base::front', $result);
     }

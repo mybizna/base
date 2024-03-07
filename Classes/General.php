@@ -3,12 +3,10 @@
 namespace Modules\Base\Classes;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Schema;
 use Modules\Base\Classes\Datasetter;
 use Modules\Base\Classes\Migration;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Response;
 
 class General
 {
@@ -19,8 +17,33 @@ class General
     public function __construct()
     {
     }
-
     public function getFrontViewSetting($template = 'front')
+    {
+        $result = [
+            'url' => url('/'),
+            'data_list' => [],
+            'db_list' => [],
+            'template' => $template,
+            'has_user' => false,
+            'has_uptodate' => false,
+            'has_setting' => Schema::hasTable('core_setting'),
+        ];
+
+        $uniqid = md5(rand());
+
+        if (Cache::has('mybizna_uniqid')) {
+            $uniqid = Cache::get('mybizna_uniqid');
+        } else {
+            Cache::put('mybizna_uniqid', $uniqid);
+            Cache::put($uniqid, ['viewside' => 'frontend']);
+        }
+
+        $result['mybizna_uniqid'] = $uniqid;
+
+        return $result;
+    }
+
+    public function getUserViewSetting($template = 'user')
     {
         $result = [
             'url' => url('/'),
