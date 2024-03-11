@@ -7,19 +7,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    @if($force_https)
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    @if ($force_https)
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     @endif
-    
+
     <title>ISP Access</title>
 
-
-    <link href="{{ $assets_url }}/css/app.css?{{ $version }}" rel="stylesheet">
-    <link href="{{ $assets_url }}/fontawesome/css/all.min.css" rel="stylesheet">
-    <link href="{{ $assets_url }}/common/intltelinput/intlTelInput.css" rel="stylesheet">
-
-    <script src="{{ $assets_url }}/common/intltelinput/intlTelInput.min.js"></script>
-    <script src="{{ $assets_url }}/tailwind/tailwindcss.js?{{ $version }}"></script>
+    @if (!$is_wordpress)
+        {!! rendercss($assets) !!}
+        {!! renderjs($assets) !!}
+    @endif
 
     <script>
         tailwind.config = {

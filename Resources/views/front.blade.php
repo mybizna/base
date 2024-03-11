@@ -4,9 +4,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
-    @if($force_https)
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+
+    @if ($force_https)
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     @endif
 
     <!-- CSRF Token -->
@@ -24,7 +24,7 @@
         var floating_top = {{ $floating_top ? 'true' : 'false' }};
         var margin_top = {{ $margin_top ? 'true' : 'false' }};
         var viewside = 'frontend';
-        var template = '{{ $template ?? "front" }}';
+        var template = '{{ $template ?? 'front' }}';
         var mybizna_uniqid = '{!! $mybizna_uniqid !!}';
 
         function __(title, select) {
@@ -32,11 +32,10 @@
         }
     </script>
 
-    <script src="{{ $assets_url }}/tinymce/tinymce.min.js?{{ $version }}"></script>
-    <script src="{{ $assets_url }}/vue3-sfc-loader/vue3-sfc-loader.js?{{ $version }}"></script>
-    <script defer="defer" src="{{ $assets_url }}/js/app.js?{{ $version }}"></script>
-    <link href="{{ $assets_url }}/css/app.css?{{ $version }}" rel="stylesheet">
-    <script src="{{ $assets_url }}/tailwind/tailwindcss.js?{{ $version }}"></script>
+    @if (!$is_wordpress)
+        {!! rendercss($assets) !!}
+        {!! renderjs($assets) !!}
+    @endif
 
     <script>
         window.addEventListener('load', function() {
@@ -53,11 +52,6 @@
         });
     </script>
 
-
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
-    <link href="{{ $assets_url }}/fontawesome/css/all.min.css" rel="stylesheet">
 
 
     <style>

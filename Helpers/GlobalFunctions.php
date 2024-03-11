@@ -16,8 +16,6 @@ if (!function_exists('___')) {
         $default_language = $language->getDefaultLanguage();
         $language_id = $default_language->id;
 
-
-     
         if (Cache::has("core_language_translation_" . $language_id . '_' . $slug)) {
             $translation = Cache::get("core_language_translation_" . $language_id . '_' . $slug);
             return $translation;
@@ -57,8 +55,72 @@ if (!function_exists('console_log')) {
     function console_log($message)
     {
         try {
-            $output = new \Symfony\Component\Console\Output\ConsoleOutput ();
+            $output = new \Symfony\Component\Console\Output\ConsoleOutput();
             $output->writeln("<info>my " . $message . "</info>");
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+}
+
+if (!function_exists('rendercss')) {
+
+    function rendercss($assets)
+    {
+        try {
+            $css = '';
+
+            if (isset($assets['css'])) {
+                foreach ($assets['css'] as $asset) {
+
+                    $tmp_css = ($css == '') ? '<' : '    <';
+                    array_unshift($asset, "link");
+                    // Merge all array values into a string
+                    foreach ($asset as $key => $value) {
+                        if ($key == 0) {
+                            $tmp_css .= $value . ' ';
+                        } else {
+                            $tmp_css .= $key . '="' . $value . '" ';
+                        }
+                    }
+                    $css .= $tmp_css .= "> \n";
+
+                }
+            }
+
+            return $css;
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+}
+
+if (!function_exists('renderjs')) {
+
+    function renderjs($assets)
+    {
+        try {
+            $js = '';
+
+            if (isset($assets['js'])) {
+                foreach ($assets['js'] as $asset) {
+
+                    $tmp_js = ($js == '') ? '<' : '    <';
+                    array_unshift($asset, "script");
+                    // Merge all array values into a string
+                    foreach ($asset as $key => $value) {
+                        if ($key == 0) {
+                            $tmp_js .= $value . ' ';
+                        } else {
+                            $tmp_js .= $key . '="' . $value . '" ';
+                        }
+                    }
+                    $js .= $tmp_js .= "></script> \n";
+
+                }
+            }
+
+            return $js;
         } catch (\Exception $e) {
             throw $e;
         }
@@ -72,11 +134,10 @@ if (!function_exists('getRealQuery')) {
             return "'{$item}'";
         }, $query->getBindings());
 
-
         $result = $query->toSql();
-        
+
         foreach ($params as $key => $param) {
-            $result = preg_replace('/\?/',  $param, $sql,1);
+            $result = preg_replace('/\?/', $param, $sql, 1);
         }
 
         if ($dumpIt) {

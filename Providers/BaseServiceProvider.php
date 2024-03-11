@@ -129,6 +129,21 @@ class BaseServiceProvider extends ServiceProvider
             $url = MYBIZNA_BASE_URL;
         }
 
+        $assets = [
+            'css' => [
+                ["href" => $assets_url . '/css/app.css?' . $version, 'rel' => 'stylesheet'],
+                ["href" => $assets_url . '/fontawesome/css/all.min.css?' . $version, 'rel' => 'stylesheet'],
+                ["href" => $assets_url . '/common/intltelinput/intlTelInput.css?' . $version, 'rel' => 'stylesheet'],
+            ],
+            'js' => [
+                ["src" => $assets_url . '/vue3-sfc-loader/vue3-sfc-loader.js?' . $version],
+                ["src" => $assets_url . '/tinymce/tinymce.min.js?' . $version],
+                ["src" => $assets_url . '/tailwind/tailwindcss.js?' . $version],
+                ["src" => $assets_url . '/js/app.js?' . $version, 'defer' => 'defer'],
+                ["src" => $assets_url . '/common/intltelinput/intlTelInput.min.js?' . $version],
+            ],
+        ];
+
         view()->share([
             'version' => $version,
             'mybizna_base_url' => $url,
@@ -139,6 +154,7 @@ class BaseServiceProvider extends ServiceProvider
             'floating_top' => $floating_top,
             'margin_top' => $margin_top,
             'responsive_point' => $responsive_point,
+            'assets' => $assets,
         ]);
 
     }
