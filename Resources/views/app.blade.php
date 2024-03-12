@@ -16,13 +16,13 @@
     @if (!$is_wordpress)
         {!! rendercss($assets) !!}
         {!! renderjs($assets) !!}
-    @endif
 
-    <script>
-        tailwind.config = {
-            important: true,
-        }
-    </script>
+        <script>
+            tailwind.config = {
+                important: true,
+            }
+        </script>
+    @endif
 </head>
 
 <body class="bg-slate-50 dark:bg-navy-900">

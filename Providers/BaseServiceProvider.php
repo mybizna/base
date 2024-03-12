@@ -144,6 +144,19 @@ class BaseServiceProvider extends ServiceProvider
             ],
         ];
 
+        session(['context' => [
+            'version' => $version,
+            'mybizna_base_url' => $url,
+            'assets_url' => $assets_url,
+            'force_https' => $force_https,
+            'autologin' => $autologin,
+            'is_wordpress' => (defined('WP_PLUGIN_URL')) ? true : false,
+            'floating_top' => $floating_top,
+            'margin_top' => $margin_top,
+            'responsive_point' => $responsive_point,
+            'assets' => $assets,
+        ]]);
+
         view()->share([
             'version' => $version,
             'mybizna_base_url' => $url,

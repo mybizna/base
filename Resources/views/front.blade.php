@@ -33,25 +33,26 @@
     </script>
 
     @if (!$is_wordpress)
+
         {!! rendercss($assets) !!}
         {!! renderjs($assets) !!}
-    @endif
 
-    <script>
-        window.addEventListener('load', function() {
-            tailwind.config = {
-                important: true,
-                theme: {
-                    extend: {
-                        backdropBlur: {
-                            xs: '2px',
+        <script>
+            window.addEventListener('load', function() {
+                tailwind.config = {
+                    important: true,
+                    theme: {
+                        extend: {
+                            backdropBlur: {
+                                xs: '2px',
+                            }
                         }
                     }
                 }
-            }
-        });
-    </script>
-
+            });
+        </script>
+        
+    @endif   
 
 
     <style>
