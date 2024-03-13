@@ -49,7 +49,11 @@ class Migration
         if (empty($versions)) {
             return true;
         }
-
+        
+        if (Cache::has('mybizna_base_migrating')) {
+            return true;
+        }
+        
         $groups = (is_file(base_path('../readme.txt'))) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
 
         foreach ($groups as $key => $group) {
@@ -271,9 +275,11 @@ class Migration
 
         Cache::forget('mybizna_base_modules');
         Cache::forget('mybizna_base_versions');
+        Cache::forget('mybizna_base_migrating');
 
         Cache::forever('mybizna_base_modules', $modules);
         Cache::forever('mybizna_base_versions', $versions);
+        Cache::forever('mybizna_base_migrating', true);
     }
 
     private function getVersions()

@@ -278,6 +278,8 @@ class GeneralController extends Controller
 
         define('MYBIZNA_MIGRATION', true);
 
+        Cache::forget('mybizna_base_migrating');
+
         $postData = $request->all();
 
         $message = 'Dont know what happened';
