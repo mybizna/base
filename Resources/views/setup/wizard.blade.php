@@ -162,6 +162,7 @@
         log_type = "create_user";
         await (async () => {
 
+            alert('Creating Users');
             loggingOutput('', log_type);
             loggingOutput('', log_type);
             loggingOutput('CREATING USERS FROM WORDPRESS LIST  ...', log_type);
@@ -232,7 +233,7 @@
 
     }
 
-    @if ($has_uptodate)
+    @if (!$has_setting || $has_uptodate)
         processList();
     @endif
 </script>
