@@ -37,11 +37,17 @@ class BaseServiceProvider extends ServiceProvider
     {
 
         if (defined('DB_NAME')) {
+            Config::set('app.url', MYBIZNA_URL);
             Config::set('app.key', MYBIZNA_APPKEY);
             Config::set('database.connections.mysql.database', DB_NAME);
             Config::set('database.connections.mysql.username', DB_USER);
             Config::set('database.connections.mysql.password', DB_PASSWORD);
             Config::set('database.connections.mysql.host', DB_HOST);
+
+            Config::set('cache.default', "database");
+            Config::set('session.driver', "database");
+            //Config::set('session.domain', MYBIZNA_URL);
+            //Config::set('santum.stateful', MYBIZNA_URL);
         }
 
         $this->commands([
@@ -354,6 +360,8 @@ class BaseServiceProvider extends ServiceProvider
         if (!Schema::hasTable('cache') || !Schema::hasTable('sessions')) {
             Artisan::call('migrate');
         }
+        
+        $this->initiateUser();
 
     }
 
