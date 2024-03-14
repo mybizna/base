@@ -114,8 +114,8 @@ class General
                 $url = MYBIZNA_BASE_URL;
             }
 
-            session()->put('migration_db_list', $db_list);
-            session()->put('migration_data_list', $data_list);
+            Cache::put('migration_db_list', $db_list);
+            Cache::put('migration_data_list', $data_list);
 
             $result['data_list'] = array_keys($data_list);
             $result['db_list'] = array_keys($db_list);

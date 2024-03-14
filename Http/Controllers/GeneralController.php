@@ -249,9 +249,11 @@ class GeneralController extends Controller
         $status = false;
         $message = 'Dont know what happened';
 
-        if (isset($postData['class']) && $request->session()->has('migration_db_list')) {
+        if (isset($postData['class']) && Cache::has('migration_db_list')) {
+
             $class = $postData['class'];
-            $db_list = $request->session()->get('migration_db_list');
+
+            $db_list = Cache::get('migration_db_list');
 
             if (in_array($class, array_keys($db_list))) {
                 $classname = $db_list[$class];
@@ -284,9 +286,11 @@ class GeneralController extends Controller
 
         $message = 'Dont know what happened';
 
-        if (isset($postData['class']) && $request->session()->has('migration_data_list')) {
+        if (isset($postData['class']) && Cache::has('migration_data_list')) {
+
             $class = $postData['class'];
-            $data_list = $request->session()->get('migration_data_list');
+
+            $data_list = Cache::get('migration_data_list');
 
             if (in_array($class, array_keys($data_list))) {
                 $classname = $data_list[$class];

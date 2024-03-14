@@ -231,7 +231,7 @@
 
         })(data_list);
 
-    }
+    } 
 
     @if (!$has_setting || $has_uptodate)
         processList();
