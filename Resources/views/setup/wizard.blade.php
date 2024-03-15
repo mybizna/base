@@ -162,7 +162,6 @@
         log_type = "create_user";
         await (async () => {
 
-            alert('Creating Users');
             loggingOutput('', log_type);
             loggingOutput('', log_type);
             loggingOutput('CREATING USERS FROM WORDPRESS LIST  ...', log_type);
