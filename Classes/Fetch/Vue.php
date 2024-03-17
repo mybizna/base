@@ -31,11 +31,47 @@ class Vue
 
             unset($current_uri[0]);
 
-            $vue_file = base_path() . '/' . implode($DS, $current_uri);
-            //print_r($vue_file);exit;
+            $suffix_url = implode($DS, $current_uri);
 
+            $vue_file = base_path() . $DS . $suffix_url;
+
+            // check if vue_file exists
             if ($vue_file != '' && File::isFile($vue_file)) {
                 $vue_file_status = true;
+
+                $contents = file_get_contents($vue_file);
+                $status = 200;
+            } else {
+
+                
+
+                // get all directories on the path base_path('templates')
+                $dirs = glob(base_path('templates') . '/*', GLOB_ONLYDIR);
+
+                foreach ($dirs as $key => $dir) {
+                    $dir_arr = explode($DS, $dir);
+                    $dir_name = end($dir_arr);
+
+                    // continue if dir name is default
+                    if ($dir_name == 'default') {
+                        continue;
+                    }
+
+                    $suffix_url = str_replace('default', $dir_name, $suffix_url);
+
+                    $vue_file = base_path() . $DS . $suffix_url;
+
+                    // check if vue_file exists
+                    if ($vue_file != '' && File::isFile($vue_file)) {
+                        $vue_file_status = true;
+
+                        $contents = file_get_contents($vue_file);
+                        $status = 200;
+                        break;
+                    }
+
+
+                }
             }
         } else {
 
