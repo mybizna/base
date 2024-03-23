@@ -13,7 +13,7 @@
 use Modules\Base\Http\Controllers\GeneralController;
 
 //manage new user
-Route::get('/front', [GeneralController::class, 'front']);
+Route::get('/guest', [GeneralController::class, 'guest']);
 Route::get('/user', [GeneralController::class, 'user']);
 Route::get('/member', [GeneralController::class, 'user']);
 Route::get('/manage', [GeneralController::class, 'manage']);

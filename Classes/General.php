@@ -17,7 +17,7 @@ class General
     public function __construct()
     {
     }
-    public function getFrontViewSetting($template = 'front')
+    public function getGuestViewSetting($template = 'guest')
     {
         $result = [
             'url' => url('/'),
@@ -69,7 +69,7 @@ class General
         return $result;
     }
 
-    public function getBackViewSetting($template = 'admin')
+    public function getBackViewSetting($template = 'manage')
     {
 
         $migration = new Migration();

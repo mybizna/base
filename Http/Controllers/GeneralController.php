@@ -23,14 +23,14 @@ class GeneralController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function front(Request $request)
+    public function guest(Request $request)
     {
 
         $general = new General();
 
-        $result = $general->getFrontViewSetting();
+        $result = $general->getGuestViewSetting();
 
-        return view('base::front', $result);
+        return view('base::guest', $result);
     }
 
     /**
@@ -45,7 +45,7 @@ class GeneralController extends Controller
 
         $result = $general->getUserViewSetting();
 
-        return view('base::front', $result);
+        return view('base::user', $result);
     }
 
     /**

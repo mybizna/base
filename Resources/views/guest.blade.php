@@ -4,9 +4,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
-    @if($force_https)
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+
+    @if ($force_https)
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     @endif
 
     <!-- CSRF Token -->
@@ -23,8 +23,8 @@
         var responsive_point = {!! $responsive_point !!};
         var floating_top = {{ $floating_top ? 'true' : 'false' }};
         var margin_top = {{ $margin_top ? 'true' : 'false' }};
-        var viewside = 'backend';
-        var template = "{{ $template ?? 'manage' }}";
+        var viewside = 'frontend';
+        var template = '{{ $template ?? 'guest' }}';
         var mybizna_uniqid = '{!! $mybizna_uniqid !!}';
 
         function __(title, select) {
@@ -32,7 +32,8 @@
         }
     </script>
 
-    @if(!$is_wordpress)
+    @if (!$is_wordpress)
+
         {!! rendercss($assets) !!}
         {!! renderjs($assets) !!}
 
@@ -50,7 +51,8 @@
                 }
             });
         </script>
-    @endif
+        
+    @endif   
 
 
     <style>
