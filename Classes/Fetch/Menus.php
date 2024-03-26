@@ -100,7 +100,7 @@ class Menus
             }
 
         }
-
+        /*
         $this->menus['backend']['dashboard']['menus']=[];
 
         foreach ($this->menus['backend'] as $key => $value) {
@@ -113,7 +113,7 @@ class Menus
 
             $this->menus['backend']['dashboard']['menus'][$key] = $menu;
 
-        }
+        }*/
 
 
 
@@ -145,6 +145,7 @@ class Menus
         $this->menus[$this->viewside][$module]['menus'][$key]['path'] = $path;
         $this->menus[$this->viewside][$module]['menus'][$key]['position'] = $position;
         $this->menus[$this->viewside][$module]['menus'][$key]['icon'] = $icon;
+        $this->menus[$this->viewside][$module]['menus'][$key]['opened'] = false;
 
         if (!isset($this->menus[$this->viewside][$module]['menus'][$key]['list'])) {
             $this->menus[$this->viewside][$module]['menus'][$key]['list'] = [];
@@ -159,6 +160,7 @@ class Menus
             'key' => $key,
             'path' => $path,
             'position' => $position,
+            'opened' => false,
         ];
     }
 
