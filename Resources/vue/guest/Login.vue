@@ -5,7 +5,7 @@
         <div class="m-3">
           <div class="auth-form">
             <div class="text-center mb-3">
-              <img :src="this.$assets_url + 'images/logos/logo.png'" alt="" style="margin: 0 auto; max-width:120px;" />
+              <img :src="$assets_url + 'images/logos/logo.png'" alt="" style="margin: 0 auto; max-width:120px;" />
             </div>
             <h4 class="text-center my-4">Login to your account</h4>
             <div>

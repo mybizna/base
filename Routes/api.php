@@ -30,6 +30,8 @@ Route::get('fetch_positions', [GeneralController::class, 'fetchPositions']);
 Route::get('fetch_rights', [GeneralController::class, 'fetchRights']);
 Route::get('fetch_settings', [GeneralController::class, 'fetchSettings']);
 Route::get('fetch_layout/{module}/{model}/{action}', [GeneralController::class, 'fetchLayout']);
+Route::post('checkuser', [GeneralController::class, 'checkUser']);
+Route::post('registeruser', [GeneralController::class, 'registerUser']);
 
 
 Route::middleware('auth:sanctum')->group(function () {

@@ -145,6 +145,60 @@ class GeneralController extends Controller
         return Response::json($result);
     }
 
+    public function checkUser(Request $request)
+    {
+        $result = [
+            "module"=> "base",
+            "status"=>0,
+            "error"=> 1,
+            "message"=> "Checking User",
+        ];
+
+        $data = $request->all();
+
+        $user = User::where($data['name'], $data['value'])->first();
+
+        if ($user) {
+            $result['status'] = 1;
+            $result['error'] = 0;
+            $result['message'] = "User Found";
+        } else {
+            $result['status'] = 0;
+            $result['error'] = 1;
+            $result['message'] = "User Not Found";
+        }
+
+        return Response::json($result);
+    }
+
+    public function registerUser(Request $request){
+        $result = [
+            "module"=> "base",
+            "status"=>0,
+            "error"=> 1,
+            "message"=> "Registering User",
+        ];
+
+        $data = $request->all();
+
+        // merge first_name and last_name to name
+        $data['name'] = $data['first_name'] . ' ' . $data['last_name'];
+
+        $user = User::create($data);
+
+        if ($user) {
+            $result['status'] = 1;
+            $result['error'] = 0;
+            $result['message'] = "User Registered";
+        } else {
+            $result['status'] = 0;
+            $result['error'] = 1;
+            $result['message'] = "User Not Registered";
+        }
+
+        return Response::json($result);
+    }
+
     public function currentUser(Request $request)
     {
         $this->user = Auth::user();
