@@ -1446,7 +1446,7 @@ export default {
   },
 };
 </script>
-<style scoped lang="css">
+<style scoped>
 #main-wrapper {
   overflow: scroll;
   overflow-x: hidden;
