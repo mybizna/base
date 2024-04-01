@@ -519,7 +519,6 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
 
     public function generateQuery($params)
     {
-        print_r($params); exit;
         $this->alias = collect([]);
         $query = $this::query();
 
