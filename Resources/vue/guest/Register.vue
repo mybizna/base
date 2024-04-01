@@ -9,7 +9,7 @@
               style="max-width:160px;" />
           </div>
 
-          <Vueform :model-value="user" :sync="true" @submit="register()">
+          <Vueform :model-value="model" :sync="true" @submit="register()">
 
             <div class="alert alert-primary" role="alert">
               Account Registration
@@ -64,15 +64,6 @@ export default {
     loading: false,
     reg_form: null,
     model: {
-      id: "",
-      first_name: "",
-      last_name: "",
-      username: "",
-      password: "",
-      email: "",
-      phone: "",
-    },
-    error: {
       id: "",
       first_name: "",
       last_name: "",

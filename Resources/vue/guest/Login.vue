@@ -4,44 +4,58 @@
       <div class="authincation-content border rounded shadow bg-white">
         <div class="m-3">
           <div class="auth-form">
-            <div class="text-center mb-3">
-              <img :src="$assets_url + 'images/logos/logo.png'" alt="" style="margin: 0 auto; max-width:120px;" />
+            <div class="text-center my-4">
+              <img :src="$assets_url + 'images/logos/logo.png'" alt="" style="margin: 0 auto; max-width:160px;" />
             </div>
-            <h4 class="text-center my-4">Login to your account</h4>
-            <div>
-              <div class="form-group mt-2 w-96 max-w-full" style="margin: 0 auto;">
-                <label class="mb-1"><strong>Email</strong></label>
-                <input type="text" class="form-control" v-model="model.username" />
+
+            <h4 class="font-semibold text-lg text-center my-6">Login to your account</h4>
+
+            <Vueform :model-value="model" :sync="true" @submit="login()">
+
+              <div class="py-1">
+                <TextElement name="username" label="Username" id="username"
+                  info="Your username should be smallcase alphabet and unique." :debounce="500"
+                  rules="required"
+                  :messages="{ regex: 'Your username should be smallcase alphabet' }"
+                  
+                  :add-class="{  input: 'h-12 bg-blue-50'}"/>
+
               </div>
-              <div class="form-group mt-2 w-96 max-w-full" style="margin: 0 auto;">
-                <label class="mb-1"><strong>Password</strong></label>
-                <input type="password" class="form-control" v-model="model.password" />
+
+              <div class="py-1">
+                <TextElement name="password" label="Password" id="password" 
+                  info="Enter Password with; <br>Character: a-z <br> One Character: A-Z <br>Numbers: 0-9 and <br> Special Character: #$%&-_@"
+                  input-type="password" :debounce="500" rules="required|regex:/^[a-zA-Z0-9#$%&\-_@]+$/" :add-class="{  input: 'h-12  bg-blue-50'}"/>
               </div>
-              <div class="form-row d-flex justify-content-between mt-4 mb-2 w-96 max-w-full" style="margin: 0 auto;">
-                <div class="form-group">
-                  <div class="custom-control custom-checkbox ml-1">
-                    <input type="checkbox" class="custom-control-input" id="basic_checkbox_1" />
-                    <label class="custom-control-label" for="basic_checkbox_1">Remember my preference</label>
-                  </div>
+
+
+              <div class="flex mt-4" style="margin: 0 auto;">
+
+                <div class="flex-auto">
+                  <CheckboxElement name="remember" id="remember">
+                    Remember Me
+                  </CheckboxElement>
                 </div>
-                <div class="form-group">
-                  <router-link to="/forgotpassword">Forgot Password?</router-link>
+                <div class="flex-auto text-right">
+                  <ButtonElement name="login" :button-class="['font-semibold', 'btn', 'bg-green-400', 'px-8']"
+                    @click="login" :loading="loading">
+                    LOGIN
+                  </ButtonElement>
+
                 </div>
               </div>
-              <div class="text-center mt-2">
-                <button type="submit" class="btn  text-white bg-blue-600" @click="login" :loading="loading">
-                  LOGIN
-                </button>
+
+              <div class="margin-top: -10px;">
+                <router-link to="/forgotpassword">Forgot Password?</router-link>
               </div>
-            </div>
-            <div class="new-account mt-5" v-if="has_register">
-              <p>
-                Don't have an account? <br />
-                <b-button variant="success">
-                  <router-link to="/register" class="text-white">CREATE ACCOUNT</router-link>
-                </b-button>
-              </p>
-            </div>
+
+              <div class="new-account mt-3">
+                <router-link to="/register" class="btn bg-orange-400 text-white w-full">CREATE ACCOUNT</router-link>
+              </div>
+
+            </Vueform>
+
+
           </div>
         </div>
       </div>
@@ -79,6 +93,7 @@ export default {
     model: {
       username: "",
       password: "",
+      remember: false,
     },
   }),
 
@@ -95,19 +110,14 @@ export default {
   },
 };
 </script>
-<style scoped>
-#main-wrapper {
-  overflow: scroll;
-  overflow-x: hidden;
-}
 
-#login {
-  height: 50%;
-  width: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  content: "";
-  z-index: 0;
+<style>
+.vf-errors{
+  display:none;
+}
+.vf-element-error,
+.vf-errors div {
+  color: red !important;
+  font-size: 12px !important;
 }
 </style>
