@@ -8,15 +8,57 @@ use Illuminate\Support\Facades\Schema;
 use Modules\Base\Classes\Datasetter;
 use Modules\Base\Classes\Migration;
 
+/**
+ * General class
+ *
+ * This class is used to get the view settings for the guest, user and back views
+ *
+ * @package Modules\Base\Classes
+
+ */
 class General
 {
+    /**
+     * Paths
+     *
+     * @var array
+     */
     public $paths = [];
+
+    /**
+     * Show logs
+     *
+     * @var boolean
+     */
     public $show_logs = false;
+
+    /**
+     * File logging
+     *
+     * @var boolean
+     */
     public $file_logging = false;
 
+    /**
+     * Constructor
+     *
+     * This is the constructor of the General class
+     *
+     * @return void
+     */
     public function __construct()
     {
     }
+
+    /**
+     * Get guest view setting
+     *
+     * This function is used to get the view settings for the guest
+     *
+     * @param string $template
+     *
+     * @return array
+     */
     public function getGuestViewSetting($template = 'guest')
     {
         $result = [
@@ -43,6 +85,15 @@ class General
         return $result;
     }
 
+    /**
+     * Get user view setting
+     *
+     * This function is used to get the view settings for the user
+     *
+     * @param string $template
+     *
+     * @return array
+     */
     public function getUserViewSetting($template = 'user')
     {
         $result = [
@@ -69,6 +120,15 @@ class General
         return $result;
     }
 
+    /**
+     * Get back view setting
+     *
+     * This function is used to get the view settings for the back
+     *
+     * @param string $template
+     *
+     * @return array
+     */
     public function getBackViewSetting($template = 'manage')
     {
 

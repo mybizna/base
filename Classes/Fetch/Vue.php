@@ -4,10 +4,27 @@ namespace Modules\Base\Classes\Fetch;
 
 use Illuminate\Support\Facades\File;
 
+/**
+ * Vue class
+ *
+ * This class is used to fetch the vue files
+ *
+ * @package Modules\Base\Classes\Fetch
+ */
 class Vue
 {
+    /**
+     * Paths
+     *
+     * @var array
+     */
     public $paths = [];
 
+    /**
+     * Vue constructor.
+     *
+     * The constructor is used to fetch the paths
+     */
     public function __construct()
     {
         $groups = (is_file(base_path('../readme.txt'))) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
@@ -18,6 +35,15 @@ class Vue
 
     }
 
+    /**
+     * Fetch Vue
+     *
+     * The function is used to fetch the vue file
+     * 
+     * @param array $current_uri
+     * 
+     * @return array
+     */
     public function fetchVue($current_uri)
     {
         $DS = DIRECTORY_SEPARATOR;
@@ -29,6 +55,7 @@ class Vue
 
         unset($current_uri[0]);
 
+        // Loop through the paths
         foreach ($this->paths as $file) {
             // Check if the file is a directory
             if (is_dir($file)) {
@@ -51,7 +78,7 @@ class Vue
         }
 
     
-
+        // Check if vue file is not found
         if (!$vue_file_status) {
             if ($current_uri[1] == 'templates') {
                 $suffix_url = implode($DS, $current_uri);

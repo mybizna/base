@@ -8,12 +8,41 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Modules\Core\Entities\DataMigrated;
 
+/**
+ * Class Datasetter
+ *
+ * The class is used to set the data for the modules
+ *
+ * @package Modules\Base\Classes
+ */
 class Datasetter
 {
+    /**
+     * Paths
+     *
+     * @var array
+     */
     public $paths = [];
+
+    /**
+     * Show logs
+     *
+     * @var boolean
+     */
     public $show_logs = false;
+
+    /**
+     * File logging
+     *
+     * @var boolean
+     */
     public $file_logging = false;
 
+    /**
+     * Datasetter constructor.
+     *
+     * The constructor is used to fetch the paths
+     */
     public function __construct()
     {
         $groups = (is_file(base_path('../readme.txt'))) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
@@ -23,8 +52,13 @@ class Datasetter
 
     }
 
-    //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    //Data Modules
+    /**
+     * Data Process
+     *
+     * The function is used to process the data
+     * 
+     * @return void
+     */
     public function dataProcess()
     {
         $models = $this->migrateModels();
@@ -34,6 +68,13 @@ class Datasetter
         }
     }
 
+    /**
+     * Migrate Models
+     *
+     * The function is used to migrate the models
+     * 
+     * @return Collection
+     */
     public function migrateModels()
     {
         $models = collect();
@@ -76,6 +117,15 @@ class Datasetter
 
     }
 
+    /**
+     * Migrate Model
+     *
+     * The function is used to migrate the model
+     * 
+     * @param $model
+     * 
+     * @return void
+     */
     public function migrateModel($model)
     {
         $this->logOutput('Model: ' . get_class($model), 'title');
@@ -85,6 +135,18 @@ class Datasetter
         }
     }
 
+    /**
+     * Add Data
+     *
+     * The function is used to add the data
+     * 
+     * @param $module
+     * @param $model
+     * @param $main_field
+     * @param $data
+     * 
+     * @return void
+     */
     public function add_data($module, $model, $main_field, $data)
     {
         $main_fields = (is_array($main_field)) ? $main_field : [$main_field];
@@ -134,6 +196,18 @@ class Datasetter
         }
     }
 
+    /**
+     * Add Data
+     *
+     * The function is used to add the data
+     * 
+     * @param $module
+     * @param $model
+     * @param $main_field
+     * @param $data
+     * 
+     * @return void
+     */
     public function initiateUser($user = [])
     {
         //Create Admin User
@@ -171,6 +245,16 @@ class Datasetter
 
     }
 
+    /**
+     * Log Output
+     *
+     * The function is used to log the output
+     * 
+     * @param $message
+     * @param $type
+     * 
+     * @return void
+     */
     private function logOutput($message, $type = 'info')
     {
         $output = new \Symfony\Component\Console\Output\ConsoleOutput();
@@ -199,6 +283,16 @@ class Datasetter
 
     }
 
+    /**
+     * Get Class Name
+     *
+     * The function is used to get the class name
+     * 
+     * @param $module
+     * @param $model
+     * 
+     * @return void
+     */
     private function getClassName($module, $model)
     {
         $classname = 'Modules\\' . ucfirst($module) . '\Entities\\' . ucfirst(Str::camel($model));

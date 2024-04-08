@@ -7,13 +7,42 @@ use Illuminate\Support\Facades\Cache;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
+/**
+ * Class Rights
+ *
+ * The class is used to fetch the rights
+ *
+ * @package Modules\Base\Classes\Fetch
+ */
 class Rights
 {
 
+    /**
+     * Paths
+     *
+     * @var array
+     */
     public $paths = [];
+
+    /**
+     * Show logs
+     *
+     * @var boolean
+     */
     public $show_logs = false;
+
+    /**
+     * File logging
+     *
+     * @var boolean
+     */
     public $file_logging = false;
 
+    /**
+     * Rights constructor.
+     *
+     * The constructor is used to fetch the paths
+     */
     public function __construct()
     {
         $groups = (is_file(base_path('../readme.txt'))) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
@@ -22,6 +51,15 @@ class Rights
         }
     }
 
+    /**
+     * Fetch Rights
+     *
+     * The function is used to fetch the rights
+     *
+     * @param int $limit
+     *
+     * @return array
+     */
     public function fetchRights($limit = 2)
     {
         $started_processing = false;
@@ -33,6 +71,7 @@ class Rights
             $last_path = Cache::get("fetch_right_last_path", '');
         }
 
+        // Loop through the paths
         foreach ($this->paths as $key => $path) {
             if ($counter == $limit) {
                 $result['completed'] = false;
@@ -73,6 +112,21 @@ class Rights
         return $result;
     }
 
+    /**
+     * Add Right
+     *
+     * The function is used to add the right
+     *
+     * @param string $module
+     * @param string $model
+     * @param string $role_name
+     * @param bool $view
+     * @param bool $add
+     * @param bool $edit
+     * @param bool $delete
+     *
+     * @return void
+     */
     public function add_right($module, $model, $role_name, $view = false, $add = false, $edit = false, $delete = false)
     {
         $give_permission = [];
@@ -124,7 +178,15 @@ class Rights
             $role->revokePermissionTo($revoke_permission);
         }
     }
-
+    /**
+     * Get Role
+     *
+     * The function is used to get the role
+     *
+     * @param string $name
+     *
+     * @return void
+     */
     protected function getRole($name)
     {
         $role = Role::where(['name' => $name])->first();
@@ -136,7 +198,15 @@ class Rights
         return $role;
 
     }
-
+    /**
+     * Get Permission
+     *
+     * The function is used to get the permission
+     *
+     * @param string $name
+     *
+     * @return void
+     */
     protected function getPermission($name)
     {
         $permission = Permission::where(['name' => $name])->first();
@@ -148,9 +218,19 @@ class Rights
         return $permission;
     }
 
+    /**
+     * Log Output
+     *
+     * The function is used to log the output
+     *
+     * @param string $message
+     * @param string $type
+     *
+     * @return void
+     */
     private function logOutput($message, $type = 'info')
     {
-        $output = new \Symfony\Component\Console\Output\ConsoleOutput ();
+        $output = new \Symfony\Component\Console\Output\ConsoleOutput();
 
         if ($this->show_logs) {
             if ($type == 'title') {

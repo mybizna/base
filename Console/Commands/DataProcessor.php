@@ -6,6 +6,11 @@ use Illuminate\Console\Command;
 use Modules\Base\Classes\Datasetter;
 use Modules\Base\Classes\Fetch\Rights;
 
+/**
+ * Class DataProcessor
+ *
+ * @package Modules\Base\Console\Commands
+ */
 class DataProcessor extends Command
 {
     /**

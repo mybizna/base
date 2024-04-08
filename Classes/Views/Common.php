@@ -2,6 +2,13 @@
 
 namespace Modules\Base\Classes\Views;
 
+/**
+ * Class Common
+ *
+ * The class is used to get the common fields
+ *
+ * @package Modules\Base\Classes\Views
+ */
 class Common
 {
 
@@ -9,6 +16,8 @@ class Common
      * Set the name of the field
      *
      * @param string $name
+     * 
+     * @return string
      */
     public function getLabel($name)
     {

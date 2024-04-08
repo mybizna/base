@@ -5,14 +5,24 @@ namespace Modules\Base\Classes\Views;
 class FormBuilder
 {
 
-    //intialize fields as an object
+    /**
+     * intialize fields as an object
+     *
+     * @var object
+     */
     public $fields = [];
 
-    //initialize name as an empty string
+    /**
+     * initialize name as an empty string
+     *
+     * @var string
+     */
     public $name = '';
 
     /**
      * Create a new Form instance.
+     * 
+     * @param array $fields
      *
      * @return void
      */
@@ -30,6 +40,8 @@ class FormBuilder
      * Set the name of the field
      *
      * @param string $name
+     * 
+     * @return string
      */
     public function name($name): FormBuilder
     {
@@ -47,6 +59,10 @@ class FormBuilder
 
     /**
      * Set the type of the field
+     * 
+     * @param string $type
+     * 
+     * @return string
      */
 
     public function type($type): FormBuilder
@@ -59,7 +75,8 @@ class FormBuilder
      * Set the label of the field
      *
      * @param string $label
-     *
+     * 
+     * @return string
      */
     public function label($label): FormBuilder
     {
@@ -71,6 +88,8 @@ class FormBuilder
      * Set the group of the field
      *
      * @param string $group
+     * 
+     * @return string
      *
      */
     public function group($group): FormBuilder
@@ -83,6 +102,8 @@ class FormBuilder
      * Set the ordering of the field
      *
      * @param bool $ordering
+     * 
+     * @return bool
      *
      */
     public function ordering($ordering): FormBuilder
@@ -95,6 +116,8 @@ class FormBuilder
      * Set the table of the field
      *
      * @param string $table
+     * 
+     * @return string
      *
      * */
     public function table($table): FormBuilder
@@ -107,6 +130,8 @@ class FormBuilder
      * Set the options of the field
      *
      * @param array<string|int, string> $options
+     * 
+     * @return string
      */
     public function options($options): FormBuilder
     {
@@ -118,6 +143,8 @@ class FormBuilder
      * Set the default value of the field
      *
      * @param string $default
+     * 
+     * @return string
      */
     function default($default): FormBuilder{
         $this->fields[$this->name]->default = $default;
@@ -127,6 +154,8 @@ class FormBuilder
      * Remove or disable the field
      *
      * @param string $name
+     * 
+     * @return string
      *
      */
     public function remove($name): FormBuilder

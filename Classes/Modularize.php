@@ -12,24 +12,63 @@ use Modules\Base\Classes\Fetch\Routes;
 use Modules\Base\Classes\Fetch\Settings;
 use Modules\Base\Classes\Fetch\Vue;
 
+/**
+ * Class Modularize
+ *
+ * The class is used to modularize the modules
+ *
+ * @package Modules\Base\Classes
+ */
 class Modularize
 {
+    /**
+     * Module
+     *
+     * @var string
+     */
     public $module;
+    /**
+     * Model
+     *
+     * @var string
+     */
     public $model;
+    /**
+     * Routes
+     *
+     * @var array
+     */
     public $menus = [];
+    /**
+     * Layouts
+     *
+     * @var array
+     */
     public $layouts = [];
 
+    /**
+     * Modularize constructor.
+     *
+     * @param string $module
+     * @param string $model
+     */
     public function __construct($module = '', $model = '')
     {
         $this->module = $module;
         $this->model = $model;
     }
-
+    /**
+     * Check User Can
+     *
+     * @param $user
+     *
+     * @return bool
+     */
     public function checkUserCan($user)
     {
         $user = Auth::user();
 
-        if(!$user){
+        if (!$user) {
             return false;
         }
 
@@ -42,7 +81,13 @@ class Modularize
         return $user->can($this->module . "_" . $this->model . "_view");
 
     }
-
+    /**
+     * Get All Records
+     *
+     * @param $args
+     *
+     * @return array
+     */
     public function getAllRecords($args)
     {
         $can = $this->checkUserCan($this->module . "_" . $this->model . "_view");
@@ -67,6 +112,14 @@ class Modularize
         return $result;
     }
 
+    /**
+     * Get Record
+     *
+     * @param $id
+     * @param array $args
+     *
+     * @return array
+     */
     public function getRecord($id, $args = [])
     {
         $can = $this->checkUserCan($this->module . "_" . $this->model . "_view");
@@ -90,6 +143,13 @@ class Modularize
         return $result;
     }
 
+    /**
+     * Get Record Select
+     *
+     * @param $args
+     *
+     * @return array
+     */
     public function getRecordSelect($args)
     {
         $can = $this->checkUserCan($this->module . "_" . $this->model . "_view");
@@ -113,6 +173,13 @@ class Modularize
         return $result;
     }
 
+    /**
+     * Create Record
+     *
+     * @param array $args
+     *
+     * @return array
+     */
     public function createRecord($args = [])
     {
         $can = $this->checkUserCan($this->module . "_" . $this->model . "_add");
@@ -136,6 +203,14 @@ class Modularize
         return $result;
     }
 
+    /**
+     * Update Record
+     *
+     * @param $id
+     * @param array $args
+     *
+     * @return array
+     */
     public function updateRecord($id, $args = [])
     {
         $can = $this->checkUserCan($this->module . "_" . $this->model . "_edit");
@@ -189,8 +264,11 @@ class Modularize
         return $result;
     }
 
-    //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    //Fetching Routes
+    /**
+     * Fetch Routes
+     *
+     * @return array
+     */
     public function fetchRoutes()
     {
         $fetchroutes = new Routes();
@@ -198,8 +276,13 @@ class Modularize
         return $fetchroutes->fetchRoutes();
     }
 
-    //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    //Fetching Vue
+    /**
+     * Fetch Vue
+     *
+     * @param $current_uri
+     *
+     * @return array
+     */
     public function fetchVue($current_uri)
     {
         $fetchvue = new Vue();
@@ -207,8 +290,13 @@ class Modularize
         return $fetchvue->fetchVue($current_uri);
     }
 
-    //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    //Fetch Layout
+    /**
+     * Fetch Layout
+     *
+     * @param $params
+     *
+     * @return array
+     */
     public function fetchLayout($params)
     {
         $layout = new Layout();
@@ -216,8 +304,11 @@ class Modularize
         return $layout->fetchLayout($params);
     }
 
-    //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    //Fetching Rights
+    /**
+     * Fetch Rights
+     *
+     * @return array
+     */
     public function fetchRights()
     {
         $fetchrights = new Rights();
@@ -225,8 +316,11 @@ class Modularize
         return $fetchrights->fetchRights();
     }
 
-    //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    //Fetching Menu
+    /**
+     * Fetch Menus
+     *
+     * @return array
+     */
     public function fetchPositions()
     {
         $fetchpositions = new Positions();
@@ -234,8 +328,11 @@ class Modularize
         return $fetchpositions->fetchPositions();
     }
 
-    //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    //Fetching Menu
+    /**
+     * Fetch Menus
+     *
+     * @return array
+     */
     public function fetchMenus()
     {
         $fetchmenus = new Menus();
@@ -243,8 +340,11 @@ class Modularize
         return $fetchmenus->fetchMenus();
     }
 
-    //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    //Fetching Setting
+    /**
+     * Fetch Settings
+     *
+     * @return array
+     */
     public function fetchSettings()
     {
         $fetchsettings = new Settings();
@@ -252,6 +352,14 @@ class Modularize
         return $fetchsettings->fetchSettings();
     }
 
+    /**
+     * Prepare Result
+     *
+     * @param $message
+     * @param bool $is_many
+     *
+     * @return array
+     */
     public function prepareResult($message, $is_many = false)
     {
         $result = [
@@ -272,8 +380,11 @@ class Modularize
 
     }
 
-    //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    //General Classes
+    /**
+     * Get Class Name
+     *
+     * @return bool|mixed
+     */
     private function getClassName()
     {
         $classname = 'Modules\\' . ucfirst($this->module) . '\Entities\\' . ucfirst(Str::camel($this->model));

@@ -5,10 +5,18 @@ namespace Modules\Base\Classes\Views;
 class ListTable
 {
 
-    //intialize fields as an object
+    /**
+     * intialize fields as an object
+     *
+     * @var object
+     */
     public $fields = [];
 
-    //initialize name as an empty string
+    /**
+     * initialize name as an empty string
+     *
+     * @var string
+     */
     public $name = '';
 
     /**
@@ -30,6 +38,8 @@ class ListTable
      * Set the name of the field
      *
      * @param string $name
+     *
+     * @return string
      */
     public function name($name): ListTable
     {
@@ -47,6 +57,10 @@ class ListTable
 
     /**
      * Set the type of the field
+     *
+     * @param string $type
+     *
+     * @return string
      */
 
     public function type($type): ListTable
@@ -62,6 +76,7 @@ class ListTable
      * @param
      * @param string $label
      *
+     * @return string
      */
     public function label($label): ListTable
     {
@@ -74,6 +89,8 @@ class ListTable
      *
      * @param string $group
      *
+     * @return string
+     *
      */
     public function group($group): ListTable
     {
@@ -83,6 +100,10 @@ class ListTable
 
     /**
      * Set the color of the field
+     *
+     * @param string $color
+     *
+     * @return string
      */
 
     public function color($color): ListTable
@@ -97,6 +118,8 @@ class ListTable
      *
      * @param bool $ordering
      *
+     * @return string
+     *
      */
     public function ordering($ordering): ListTable
     {
@@ -109,6 +132,8 @@ class ListTable
      *
      * @param string $table
      *
+     * @return string
+     *
      * */
     public function table($table): ListTable
     {
@@ -118,6 +143,10 @@ class ListTable
 
     /**
      * Set the recnames of the field
+     *
+     * @param string $recnames
+     *
+     * @return string
      */
 
     public function recnames($recnames): ListTable
@@ -131,6 +160,8 @@ class ListTable
      *
      * @param array<string|int, string> $options
      *
+     * @return string
+     *
      * */
     public function options($options): ListTable
     {
@@ -143,14 +174,20 @@ class ListTable
      *
      * @param string $default
      *
+     * @return string
+     *
      * */
-    function default($default): ListTable {
+    function default($default): ListTable
+    {
         $this->fields[$this->name]->default = $default;
         return $this;
     }
 
     /**
      * Remove or disable the field
+     *
+     * @return string
+     *
      */
 
     public function remove(): ListTable

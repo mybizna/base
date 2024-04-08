@@ -10,15 +10,41 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
+/**
+ * Class Migration
+ *
+ * @package Modules\Base\Classes
+ */
 class Migration
 {
-
+    /**
+     * Models
+     *
+     * @var array
+     */
     public $models = [];
+    /**
+     * Paths
+     *
+     * @var array
+     */
     public $show_logs = true;
+    /**
+     * File Logging
+     *
+     * @var bool
+     */
     public $file_logging = false;
 
-    //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    //Data Modules
+    /**
+     * Function for checking if a key exists
+     *
+     * @param $table
+     * @param $field
+     * @param string $type
+     *
+     * @return bool
+     */
     public static function checkKeyExist($table, $field, $type = 'foreign')
     {
         $keys = DB::select(DB::raw("SHOW KEYS from $table"));
@@ -33,6 +59,16 @@ class Migration
         return false;
     }
 
+    /**
+     * Add Foreign
+     *
+     * @param $table
+     * @param $foreign_name
+     * @param $field_name
+     * @param string $type
+     *
+     * @return void
+     */
     public static function addForeign($table, $foreign_name, $field_name, $type = 'foreign')
     {
         $table_name = $table->getTable();
@@ -42,6 +78,13 @@ class Migration
         }
     }
 
+    /**
+     * Migrate Models
+     *
+     * @param $show_logs
+     *
+     * @return void
+     */
     public function hasUpToDate()
     {
         $versions = $this->getVersions();
@@ -49,11 +92,11 @@ class Migration
         if (empty($versions)) {
             return true;
         }
-        
+
         if (Cache::has('mybizna_base_migrating')) {
             return true;
         }
-        
+
         $groups = (is_file(base_path('../readme.txt'))) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
 
         foreach ($groups as $key => $group) {
@@ -82,6 +125,13 @@ class Migration
 
     }
 
+    /**
+     * Migrate Models
+     *
+     * @param $show_logs
+     *
+     * @return void
+     */
     public function migrateModels($show_logs = true)
     {
         $this->$show_logs = $show_logs;
@@ -164,6 +214,13 @@ class Migration
 
     }
 
+    /**
+     * Migrate Models
+     *
+     * @param $models
+     *
+     * @return void
+     */
     public function migrateModel(Model $model)
     {
         $this->logOutput(get_class($model));
@@ -225,6 +282,11 @@ class Migration
         }
     }
 
+    /**
+     * Update Order
+     *
+     * @return void
+     */
     private function updateOrder()
     {
         foreach ($this->models as $table_name => $model) {
@@ -232,6 +294,14 @@ class Migration
         }
     }
 
+    /**
+     * Process Dependencies
+     *
+     * @param $table_name
+     * @param int $call_count
+     *
+     * @return void
+     */
     private function processDependencies($table_name, $call_count = 0)
     {
         $orders = [];
@@ -268,6 +338,14 @@ class Migration
         $this->models[$table_name]['processed'] = true;
     }
 
+    /**
+     * Save Versions
+     *
+     * @param $modules
+     * @param $versions
+     *
+     * @return void
+     */
     private function saveVersions($modules, $versions)
     {
         ksort($modules);
@@ -282,6 +360,11 @@ class Migration
         Cache::forever('mybizna_base_migrating', true);
     }
 
+    /**
+     * Get Versions
+     *
+     * @return array
+     */
     private function getVersions()
     {
         if (Cache::has('mybizna_base_versions')) {
@@ -291,6 +374,14 @@ class Migration
         return [];
     }
 
+    /**
+     * Get Composer
+     *
+     * @param $path
+     *
+     * @return array
+     */
+
     private function getComposer($path)
     {
         $path = $path . DIRECTORY_SEPARATOR . 'composer.json';
@@ -299,7 +390,14 @@ class Migration
 
         return json_decode($json, true);
     }
-
+    /**
+     * Log Output
+     *
+     * @param $message
+     * @param string $type
+     *
+     * @return void
+     */
     private function logOutput($message, $type = 'info')
     {
         $output = new \Symfony\Component\Console\Output\ConsoleOutput();

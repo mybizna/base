@@ -5,12 +5,34 @@ namespace Modules\Base\Classes\Fetch;
 use Illuminate\Support\Str;
 use Modules\Core\Entities\Setting as DBSetting;
 
+/**
+ * Class Settings
+ *
+ * The class is used to fetch the settings
+ *
+ * @package Modules\Base\Classes\Fetch
+ */
 class Settings
 {
-
+    /**
+     * Settings
+     *
+     * @var array
+     */
     public $settings = [];
+
+    /**
+     * Paths
+     *
+     * @var array
+     */
     public $paths = [];
 
+    /**
+     * Settings constructor.
+     *
+     * The constructor is used to fetch the paths
+     */
     public function __construct()
     {
         $groups = (is_file(base_path('../readme.txt'))) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
@@ -19,6 +41,14 @@ class Settings
         }
 
     }
+
+    /**
+     * Fetch Settings
+     *
+     * The function is used to fetch the settings
+     *
+     * @return array
+     */
     public function fetchSettings()
     {
 
@@ -68,6 +98,16 @@ class Settings
         return $this->settings;
     }
 
+    /**
+     * Add Module Info
+     *
+     * The function is used to add the module info
+     *
+     * @param $module
+     * @param $data
+     * 
+     * @return void
+     */
     public function add_module_info($module, $data)
     {
         if (!array_key_exists($module, $this->settings)) {
@@ -77,6 +117,19 @@ class Settings
         $this->settings[$module] = array_merge($this->settings[$module], $data);
     }
 
+    /**
+     * Add Setting Category
+     *
+     * The function is used to add the setting category
+     *
+     * @param $module
+     * @param $key
+     * @param $title
+     * @param $position
+     * @param array $params
+     * 
+     * @return void
+     */
     public function add_setting_category($module, $key, $title, $position, $params = [])
     {
         if (!array_key_exists($key, $this->settings[$module]['settings'])) {
@@ -89,6 +142,19 @@ class Settings
         }
     }
 
+    /**
+     * Add Setting
+     *
+     * The function is used to add the setting
+     *
+     * @param $module
+     * @param $key
+     * @param $name
+     * @param $position
+     * @param $params
+     * 
+     * @return void
+     */
     public function add_setting($module, $key, $name, $position, $params)
     {
         $setting = DBSetting::where('module', $module)->where('name', $name)->first();

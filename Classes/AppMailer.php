@@ -6,19 +6,64 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
+/**
+ * AppMailer class
+ *
+ * This class is used to send emails
+ *
+ * @package Modules\Base\Classes
+ */
 class AppMailer extends Mailable
 {
     use Queueable, SerializesModels;
 
+    /**
+     * Data
+     *
+     * @var array
+     */
     public $data;
+
+    /**
+     * Subject
+     *
+     * @var string
+     */
     public $subject;
+    /**
+     * From email
+     *
+     * @var string
+     */
     public $from_email;
+    /**
+     * From name
+     *
+     * @var string
+     */
     public $from_name;
+    /**
+     * Template
+     *
+     * @var string
+     */
     public $template;
+    /**
+     * Message
+     *
+     * @var array
+     */
     public $message;
+    /**
+     * Attachments
+     *
+     * @var array
+     */
     public $attachments;
     /**
      * Create a new message instance.
+     * 
+     * @param array $params
      *
      * @return void
      */
@@ -36,6 +81,7 @@ class AppMailer extends Mailable
 
     /**
      * Build the message.
+     * 
      *
      * @return $this
      */

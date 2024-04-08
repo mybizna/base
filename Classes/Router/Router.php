@@ -5,14 +5,49 @@ namespace Modules\Base\Classes\Router;
 use Modules\Base\Classes\Router\Route;
 use Symfony\Component\Routing\RouteCollection;
 
+/**
+ * Router class
+ *
+ * This class is used to create routes
+ *
+ * @package Modules\Base\Classes\Router
+ */
 class Router
 {
-
+    /**
+     * Routes
+     *
+     * @var RouteCollection
+     */
     public $routes;
+
+    /**
+     * Paths
+     *
+     * @var array
+     */
     public $paths = [];
+
+    /**
+     * Show logs
+     *
+     * @var boolean
+     */
     public $show_logs = false;
+
+    /**
+     * File logging
+     *
+     * @var boolean
+     */
     public $file_logging = false;
 
+
+    /**
+     * Router constructor.
+     *
+     * The constructor is used to fetch the paths
+     */
     public function __construct()
     {
         $this->routes = new RouteCollection();
@@ -24,6 +59,13 @@ class Router
 
     }
 
+    /**
+     * Fetch Routes
+     *
+     * The function is used to fetch the routes
+     * 
+     * @return RouteCollection
+     */
     public function fetchRoutes()
     {
 
@@ -60,6 +102,18 @@ class Router
         return $this->routes;
     }
 
+    /**
+     * Add Route
+     *
+     * The function is used to add a route
+     * 
+     * @param string $url
+     * @param string $controller
+     * @param string $name
+     * @param array $method
+     * 
+     * @return Route
+     */
     public function add_route($url, $controller = "", $name = "", $method = ['GET'], )
     {
         $route = new Route($url, ['_controller' => $controller]);
@@ -70,11 +124,33 @@ class Router
         return $route;
     }
 
+    /**
+     * Post
+     *
+     * The function is used to add a post route
+     * 
+     * @param string $url
+     * @param string $controller
+     * @param string $name
+     * 
+     * @return Route
+     */
     public function post($url, $controller = "", $name = "", )
     {
         return $this->add_route($url, $controller, $name, ['GET']);
     }
 
+    /**
+     * Get
+     *
+     * The function is used to add a get route
+     * 
+     * @param string $url
+     * @param string $controller
+     * @param string $name
+     * 
+     * @return Route
+     */
     public function get($url, $controller, $name = "", )
     {
         return $this->add_route($url, $controller, $name, ['POST']);

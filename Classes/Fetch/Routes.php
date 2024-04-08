@@ -7,13 +7,42 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
+/**
+ * Routes class
+ *
+ * This class is used to fetch the routes
+ *
+ * @package Modules\Base\Classes\Fetch
+ */
 class Routes
 {
 
+    /**
+     * Routes
+     *
+     * @var array
+     */
     public $routes = [];
+
+    /**
+     * Layouts
+     *
+     * @var array
+     */
     public $layouts = [];
+
+    /**
+     * Paths
+     *
+     * @var array
+     */
     public $paths = [];
 
+    /**
+     * Routes constructor.
+     *
+     * The constructor is used to fetch the paths
+     */
     public function __construct()
     {
         $groups = (is_file(base_path('../readme.txt'))) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
@@ -23,6 +52,13 @@ class Routes
 
     }
 
+    /**
+     * Fetch Routes
+     *
+     * The function is used to fetch the routes
+     *
+     * @return array
+     */
     public function fetchRoutes()
     {
         Cache::forget('fetch_routes');
@@ -58,6 +94,16 @@ class Routes
         return ['routes' => $this->routes, 'layouts' => $this->layouts];
     }
 
+    /**
+     * Get Module Route
+     *
+     * The function is used to get the module route
+     *
+     * @param string $path
+     * @param array $routes
+     *
+     * @return array
+     */
     public function getModuleRoute($path, $routes)
     {
 
@@ -67,6 +113,7 @@ class Routes
 
         $tmproutes = [];
 
+        // Loop through the entities
         if (is_dir($path . '/Entities')) {
 
             $model_dir = new \DirectoryIterator($path . '/Entities');
@@ -92,22 +139,20 @@ class Routes
                     $class_name = basename(dirname($path)) . '/' . basename($path) . '/Entities/' . Str::ucfirst(Str::camel($model_name));
                     $class_name = str_replace('/', '\\', $class_name);
 
-                    
-                    
                     if (is_subclass_of($class_name, Model::class)) {
                         $object = app($class_name);
-                        
+
                         if ($object->show_frontend) {
                             $vue_name = strtolower($m_folder_path . '.front.' . $model_name);
                             $vue_name_path = '/' . str_replace('.', '/', $vue_name);
-        
+
                             $vue_name = strtolower($m_folder_path . '.front.' . $model_name);
 
                             if ($object->show_views['list']) {
                                 $this->routes[$vue_name . '.list.default'] = $this->addRouteToList($vue_name_path . '', $vue_name . '.list.default', 'router_list', meta_path: $meta_path);
                                 $this->routes[$vue_name . '.list'] = $this->addRouteToList($vue_name_path . '/list', $vue_name . '.list', 'router_list', meta_path: $meta_path);
                             }
-                            if ($object->show_views['create']){
+                            if ($object->show_views['create']) {
                                 $this->routes[$vue_name . '.create'] = $this->addRouteToList($vue_name_path . '/create', $vue_name . '.create', 'router_create', meta_path: $meta_path);
                             }
                             if ($object->show_views['create']) {
@@ -121,6 +166,7 @@ class Routes
             }
         }
 
+        // Loop through the folders
         foreach (['admin', 'web', 'front'] as $folder) {
             $vue_folders = $path . DIRECTORY_SEPARATOR . 'Resources' . DIRECTORY_SEPARATOR . 'vue' . DIRECTORY_SEPARATOR . $folder;
 
@@ -201,6 +247,16 @@ class Routes
         return $this->routes;
     }
 
+    /**
+     * Get Module Route Old
+     *
+     * The function is used to get the module route
+     *
+     * @param string $path
+     * @param array $routes
+     *
+     * @return array
+     */
     public function getModuleRouteOld($path, $routes)
     {
 
@@ -373,6 +429,20 @@ class Routes
         return $routes;
     }
 
+    /**
+     * Add Route To List
+     *
+     * The function is used to add the route to the list
+     *
+     * @param string $path
+     * @param string $name
+     * @param string $component
+     * @param bool $no_path
+     * @param string $search_path
+     * @param array $meta_path
+     *
+     * @return array
+     */
     public function addRouteToList($path, $name, $component, $no_path = false, $search_path = '', $meta_path = [])
     {
 
