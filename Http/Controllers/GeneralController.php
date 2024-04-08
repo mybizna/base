@@ -21,9 +21,11 @@ class GeneralController extends Controller
     /**
      * Show the application dashboard.
      *
+     * @param Request $request
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function guest(Request $request)
+    public function guest(Request $request): \Illuminate\Contracts\Support\Renderable
     {
 
         $general = new General();
@@ -36,9 +38,11 @@ class GeneralController extends Controller
     /**
      * Show the application dashboard.
      *
+     * @param Request $request
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function user(Request $request)
+    public function user(Request $request): \Illuminate\Contracts\Support\Renderable
     {
 
         $general = new General();
@@ -51,9 +55,11 @@ class GeneralController extends Controller
     /**
      * Show the application dashboard.
      *
+     * @param Request $request
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function manage(Request $request)
+    public function manage(Request $request): \Illuminate\Contracts\Support\Renderable
     {
         $general = new General();
 
@@ -62,23 +68,49 @@ class GeneralController extends Controller
         return view('base::manage', $result);
     }
 
-    public function fetchVue(Request $request)
+    /**
+     * fetch the vue content
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\Response
+     *
+     */
+
+    public function fetchVue(Request $request): \Illuminate\Http\Response
     {
         $current_uri = $request->segments();
 
         $modularize = new Modularize();
 
+        // fetch the vue file
         [$contents, $status] = $modularize->fetchVue($current_uri);
 
+        // create a response
         $response = Response::make($contents, $status);
 
+        // set the content type
         $response->header('Content-Type', 'application/javascript');
+
+        // set the code
+        $response->setStatusCode($status);
 
         return $response;
 
     }
 
-    public function fetchLayout(Request $request, $module, $model, $action)
+    /**
+     * fetch the layout
+     *
+     * @param Request $request
+     * @param string $module
+     * @param string $model
+     * @param string $action
+     *
+     * @return \Illuminate\Http\JsonResponse
+     *
+     */
+    public function fetchLayout(Request $request, $module, $model, $action): \Illuminate\Http\JsonResponse
     {
         $params = $request->all();
 
@@ -94,7 +126,15 @@ class GeneralController extends Controller
 
     }
 
-    public function fetchRoutes(Request $request)
+    /**
+     * fetch the routes
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     *
+     */
+    public function fetchRoutes(Request $request): \Illuminate\Http\JsonResponse
     {
         $modularize = new Modularize();
 
@@ -103,7 +143,16 @@ class GeneralController extends Controller
         return Response::json($result);
     }
 
-    public function fetchRights(Request $request)
+    /**
+     * fetch the rights
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     *
+     */
+    public function fetchRights(Request $request): \Illuminate\Http\JsonResponse
+
     {
         $modularize = new Modularize();
 
@@ -111,7 +160,16 @@ class GeneralController extends Controller
 
         return Response::json($result);
     }
-    public function fetchPositions(Request $request)
+
+    /**
+     * fetch the positions
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     *
+     */
+    public function fetchPositions(Request $request): \Illuminate\Http\JsonResponse
     {
         $modularize = new Modularize();
 
@@ -120,7 +178,15 @@ class GeneralController extends Controller
         return Response::json($result);
     }
 
-    public function fetchMenus(Request $request)
+    /**
+     * fetch the menus
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     *
+     */
+    public function fetchMenus(Request $request): \Illuminate\Http\JsonResponse
     {
         $modularize = new Modularize();
 
@@ -136,7 +202,15 @@ class GeneralController extends Controller
         return Response::json($result);
     }
 
-    public function fetchSettings(Request $request)
+    /**
+     * fetch the settings
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     *
+     */
+    public function fetchSettings(Request $request): \Illuminate\Http\JsonResponse
     {
         $modularize = new Modularize();
 
@@ -145,13 +219,21 @@ class GeneralController extends Controller
         return Response::json($result);
     }
 
-    public function checkUser(Request $request)
+    /**
+     * fetch the settings
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     *
+     */
+    public function checkUser(Request $request): \Illuminate\Http\JsonResponse
     {
         $result = [
-            "module"=> "base",
-            "status"=>0,
-            "error"=> 1,
-            "message"=> "Checking User",
+            "module" => "base",
+            "status" => 0,
+            "error" => 1,
+            "message" => "Checking User",
         ];
 
         $data = $request->all();
@@ -171,12 +253,20 @@ class GeneralController extends Controller
         return Response::json($result);
     }
 
-    public function registerUser(Request $request){
+    /**
+     * Function to register a user
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function registerUser(Request $request): \Illuminate\Http\JsonResponse
+    {
         $result = [
-            "module"=> "base",
-            "status"=>0,
-            "error"=> 1,
-            "message"=> "Registering User",
+            "module" => "base",
+            "status" => 0,
+            "error" => 1,
+            "message" => "Registering User",
         ];
 
         $data = $request->all();
@@ -199,7 +289,14 @@ class GeneralController extends Controller
         return Response::json($result);
     }
 
-    public function currentUser(Request $request)
+    /**
+     * Function to login a user
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function currentUser(Request $request): \Illuminate\Http\JsonResponse
     {
         $this->user = Auth::user();
 
@@ -208,7 +305,14 @@ class GeneralController extends Controller
         return Response::json($user);
     }
 
-    public function profile(Request $request)
+    /**
+     * Function to logout a user
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function profile(Request $request): \Illuminate\Http\JsonResponse
     {
         $this->user = Auth::user();
 
@@ -217,7 +321,14 @@ class GeneralController extends Controller
         return Response::json($user);
     }
 
-    public function dashboardData(Request $request)
+    /**
+     * Function to get dashboard data
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function dashboardData(Request $request): \Illuminate\Http\JsonResponse
     {
 
         $result = [
@@ -254,7 +365,14 @@ class GeneralController extends Controller
         return Response::json($result);
     }
 
-    public function autocomplete(Request $request)
+    /**
+     * Function for autocomplete inputs
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function autocomplete(Request $request): \Illuminate\Http\JsonResponse
     {
         $search = $request->get('search');
         $table_name = $request->get('table_name');
@@ -268,32 +386,68 @@ class GeneralController extends Controller
         return $records;
     }
 
-    public function clearCache(Request $request)
+    /**
+     * Function to clear cache
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    public function clearCache(Request $request): array
     {
         Artisan::call('cache:clear');
         return ['message' => 'Application cache has been cleared', 'status' => true];
 
     }
 
-    public function routeCache(Request $request)
+    /**
+     * Function to clear route cache
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    public function routeCache(Request $request): array
     {
         Artisan::call('route:cache');
         return ['message' => 'Routes cache has been cleared', 'status' => true];
     }
 
-    public function configCache(Request $request)
+    /**
+     * Function to clear config cache
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    public function configCache(Request $request): array
     {
         Artisan::call('config:cache');
         return ['message' => 'Config cache has been cleared', 'status' => true];
     }
 
-    public function viewClear(Request $request)
+    /**
+     * Function to clear view cache
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    public function viewClear(Request $request): array
     {
         Artisan::call('view:clear');
         return ['message' => 'View cache has been cleared', 'status' => true];
     }
 
-    public function automigratorMigrate(Request $request)
+    /**
+     * Function for automigrator migration
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function automigratorMigrate(Request $request): \Illuminate\Http\JsonResponse
+
     {
 
         define('MYBIZNA_MIGRATION', true);
@@ -329,7 +483,14 @@ class GeneralController extends Controller
 
     }
 
-    public function dataProcessor(Request $request)
+    /**
+     * Function for data processor
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    public function dataProcessor(Request $request): array
     {
 
         define('MYBIZNA_MIGRATION', true);
@@ -365,7 +526,14 @@ class GeneralController extends Controller
         return ['message' => $message, 'status' => true];
     }
 
-    public function createUser(Request $request)
+    /**
+     * Function to create a user
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    public function createUser(Request $request): array
     {
         $status = false;
         $message = 'Dont know what happened';
@@ -395,7 +563,14 @@ class GeneralController extends Controller
         return ['message' => $message, 'status' => $status];
     }
 
-    public function resetAll(Request $request)
+    /**
+     * Function to reset all cache
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    public function resetAll(Request $request): array
     {
         Artisan::call('cache:clear');
         Artisan::call('route:cache');

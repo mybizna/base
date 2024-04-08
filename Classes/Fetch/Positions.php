@@ -2,12 +2,35 @@
 
 namespace Modules\Base\Classes\Fetch;
 
+/**
+ * Class Positions
+ *
+ * The class is used to fetch the positions of the module
+ *
+ * @package Modules\Base\Classes\Fetch
+ */
 class Positions
 {
 
+    /**
+     * Positions
+     *
+     * @var array
+     */
     public $positions = [];
+
+    /**
+     * Paths to search for modules
+     *
+     * @var array
+     */
     public $paths = [];
 
+    /**
+     * Positions Constructor
+     *
+     * The constructor is used to fetch the paths
+     */
     public function __construct()
     {
         $groups = (is_file(base_path('../readme.txt'))) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
@@ -16,8 +39,14 @@ class Positions
         }
     }
 
-    public function fetchPositions()
+    /**
+     * Fetch Positions
+     *
+     * @return Array
+     */
+    public function fetchPositions(): array
     {
+        // Fetch the widgets
         foreach ($this->paths as $key => $path) {
             $file_names = ['widget', 'widgets'];
 
@@ -30,6 +59,7 @@ class Positions
             }
         }
 
+        // Sort the positions
         $column = 'ordering';
         foreach ($this->positions as $key => $tmp_position) {
 
@@ -46,7 +76,19 @@ class Positions
         return $this->positions;
     }
 
-    public function add_widget($module, $position, $title, $path, $ordering, $has_wrapper = true)
+    /**
+     * Add Widget
+     *
+     * @param string $module
+     * @param string $position
+     * @param string $title
+     * @param string $path
+     * @param int $ordering
+     * @param bool $has_wrapper
+     *
+     * @return void
+     */
+    public function add_widget($module, $position, $title, $path, $ordering, $has_wrapper = true): void
     {
         $this->positions[$position][] = [
             'module' => $module,

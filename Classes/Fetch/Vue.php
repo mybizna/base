@@ -11,6 +11,7 @@ class Vue
     public function __construct()
     {
         $groups = (is_file(base_path('../readme.txt'))) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
+
         foreach ($groups as $key => $group) {
             $this->paths = array_merge($this->paths, glob(base_path($group)));
         }
@@ -19,7 +20,6 @@ class Vue
 
     public function fetchVue($current_uri)
     {
-
         $DS = DIRECTORY_SEPARATOR;
         $contents = 'Vue File not found.';
         $status = 404;
@@ -27,75 +27,84 @@ class Vue
         $vue_file = '';
         $vue_file_status = false;
 
-        if ($current_uri[1] == 'templates') {
+        unset($current_uri[0]);
 
-            unset($current_uri[0]);
+        foreach ($this->paths as $file) {
+            // Check if the file is a directory
+            if (is_dir($file)) {
+                $override_folders = ['override', 'overrides'];
 
-            $suffix_url = implode($DS, $current_uri);
+                foreach ($override_folders as $key => $folder) {
+                    $vue_file = $file . '/Resources/vue/' . $folder . '/' . implode('/', $current_uri);
 
-            $vue_file = base_path() . $DS . $suffix_url;
-
-            // check if vue_file exists
-            if ($vue_file != '' && File::isFile($vue_file)) {
-                $vue_file_status = true;
-
-                $contents = file_get_contents($vue_file);
-                $status = 200;
-            } else {
-
-                
-
-                // get all directories on the path base_path('templates')
-                $dirs = glob(base_path('templates') . '/*', GLOB_ONLYDIR);
-
-                foreach ($dirs as $key => $dir) {
-                    $dir_arr = explode($DS, $dir);
-                    $dir_name = end($dir_arr);
-
-                    // continue if dir name is default
-                    if ($dir_name == 'default') {
-                        continue;
-                    }
-
-                    $suffix_url = str_replace('default', $dir_name, $suffix_url);
-
-                    $vue_file = base_path() . $DS . $suffix_url;
-
-                    // check if vue_file exists
-                    if ($vue_file != '' && File::isFile($vue_file)) {
+                    // Check if the file is a vue file
+                    if (is_file($vue_file)) {
                         $vue_file_status = true;
-
-                        $contents = file_get_contents($vue_file);
-                        $status = 200;
                         break;
                     }
-
-
                 }
-            }
-        } else {
 
-            $module = $current_uri[1];
-
-            unset($current_uri[0]);
-            unset($current_uri[1]);
-
-            foreach ($this->paths as $key => $path) {
-
-                $path_arr = array_reverse(explode('/', $path));
-                $module_name = $path_arr[0];
-
-                if (strtoupper($module_name) == strtoupper($module)) {
-                    $vue_file = $path . $DS . 'Resources' . $DS . 'vue' . $DS . implode($DS, $current_uri);
-                    if ($vue_file != '' && File::isFile($vue_file)) {
-                        $vue_file_status = true;
-                    }
+                if ($vue_file_status) {
+                    break;
                 }
             }
         }
 
-        $contents = file_get_contents($vue_file);
-        $status = 200;
+    
+
+        if (!$vue_file_status) {
+            if ($current_uri[1] == 'templates') {
+                $suffix_url = implode($DS, $current_uri);
+                $vue_file = base_path() . $DS . $suffix_url;
+                
+                // check if vue_file exists
+                if ($vue_file != '' && File::isFile($vue_file)) {
+                    $vue_file_status = true;
+                } else {
+                    // get all directories on the path base_path('templates')
+                    $dirs = glob(base_path('templates') . '/*', GLOB_ONLYDIR);
+                    
+                    foreach ($dirs as $key => $dir) {
+                        $dir_arr = explode($DS, $dir);
+                        $dir_name = end($dir_arr);
+                        
+                        // continue if dir name is default
+                        if ($dir_name == 'default') {
+                            continue;
+                        }
+
+                        $suffix_url = str_replace('default', $dir_name, $suffix_url);
+                        $vue_file = base_path() . $DS . $suffix_url;
+                        
+                        // check if vue_file exists
+                        if ($vue_file != '' && File::isFile($vue_file)) {
+                            $vue_file_status = true;
+                            break;
+                        }
+                    }
+                }
+            } else {
+                $module = $current_uri[1];
+                unset($current_uri[1]);
+
+                $vue_file = base_path() . $DS . 'Modules' . $DS . $module . $DS . 'Resources' . $DS . 'vue' . $DS . implode($DS, $current_uri);
+               
+                if ($vue_file != '' && File::isFile($vue_file)) {
+                    $vue_file_status = true;
+                }
+
+            }
+        }
+
+
+
+        if($vue_file_status) {
+            $contents = file_get_contents($vue_file);
+            $status = 200;
+        }else{
+            $contents = 'Vue File not found.';
+            $status = 404;
+        }
 
         return [$contents, $status];
     }

@@ -2,15 +2,55 @@
 
 namespace Modules\Base\Classes\Fetch;
 
+/**
+ * Class Menus
+ *
+ * The class is used to fetch the menus of the module
+ *
+ * @package Modules\Base\Classes\Fetch
+ */
 class Menus
 {
 
+    /**
+     * Paths to search for modules
+     * 
+     * @var array
+     */
     public $modules = [];
+
+    /**
+     * Menus
+     * 
+     * @var array
+     */
     public $menus = [];
+
+    /**
+     * Paths to search for modules
+     * 
+     * @var array
+     */
     public $paths = [];
+
+    /**
+     * Viewside
+     * 
+     * @var string
+     */
     public $viewside = 'backend';
+
+    /**
+     * Default Viewside
+     * 
+     * @var string
+     */
     public $dviewside = 'backend';
 
+
+    /**
+     * Layout Constructor
+     */
     public function __construct()
     {
 
@@ -22,7 +62,14 @@ class Menus
 
     }
 
-    public function group($viewside, $group)
+    /**
+     * Fetch Layout
+     * 
+     * @param Array $params
+     * 
+     * @return Array
+     */
+    public function group($viewside, $group): void
     {
 
         $this->viewside = $viewside;
@@ -32,10 +79,18 @@ class Menus
         $this->viewside = 'backend';
     }
 
-    public function fetchMenus($viewside = 'backend')
+    /**
+     * Fetch Layout
+     * 
+     * @param Array $params
+     * 
+     * @return Array
+     */
+    public function fetchMenus($viewside = 'backend'): array
     {
         $column = 'position';
 
+        // Set Viewside
         foreach ($this->paths as $key => $path) {
             $file_names = ['menu', 'menus'];
 
@@ -48,6 +103,7 @@ class Menus
             }
         }
 
+        // Add Module Info
         foreach ($this->menus as $vs_key => $value) {
 
             foreach ($this->menus[$vs_key] as $module => $menu) {
@@ -122,6 +178,13 @@ class Menus
         return $this->menus;
     }
 
+    /**
+     * Add Module Info
+     * 
+     * @param String $module
+     * 
+     * @param Array $data
+     */
     public function add_module_info($module, $data)
     {
         if (!array_key_exists($module, $this->menus)) {
@@ -134,7 +197,24 @@ class Menus
         $this->modules[$module] = array_merge($this->modules[$module], $data);
     }
 
-    public function add_menu($module, $key, $title, $path, $icon, $position)
+    /**
+     * Add Menu
+     * 
+     * @param String $module
+     * 
+     * @param String $key
+     * 
+     * @param String $title
+     * 
+     * @param String $path
+     * 
+     * @param String $icon
+     * 
+     * @param Integer $position
+     * 
+     * @return void
+     */
+    public function add_menu($module, $key, $title, $path, $icon, $position): void
     {
         if (is_array($path)) {
             $path = 'default';
@@ -152,7 +232,22 @@ class Menus
         }
     }
 
-    public function add_submenu($module, $key, $title, $path, $position)
+    /**
+     * Add Submenu
+     * 
+     * @param String $module
+     * 
+     * @param String $key
+     * 
+     * @param String $title
+     * 
+     * @param String $path
+     * 
+     * @param Integer $position
+     * 
+     * @return void
+     */
+    public function add_submenu($module, $key, $title, $path, $position): void
     {
 
         $this->menus[$this->viewside][$module]['menus'][$key]['list'][] = [
@@ -164,7 +259,14 @@ class Menus
         ];
     }
 
-    private function loadDefaultMenus($base_path)
+    /**
+     * Load Default Menus
+     * 
+     * @param String $base_path
+     * 
+     * @return void
+     */
+    private function loadDefaultMenus($base_path): void
     {
         $file_names = ['menu', 'menus'];
 

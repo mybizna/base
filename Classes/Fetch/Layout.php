@@ -4,10 +4,25 @@ namespace Modules\Base\Classes\Fetch;
 
 use Illuminate\Support\Str;
 
+/**
+ * Class Layout
+ *
+ * The class is used to fetch the layout of the module
+ *
+ * @package Modules\Base\Classes\Fetch
+ */
 class Layout
 {
+    /**
+     * Paths to search for modules
+     *
+     * @var array
+     */
     public $paths = [];
 
+    /**
+     * Layout Constructor
+     */
     public function __construct()
     {
         $groups = (is_file(base_path('../readme.txt'))) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
@@ -17,6 +32,13 @@ class Layout
 
     }
 
+    /**
+     * Fetch Layout
+     *
+     * @param Array $params
+     *
+     * @return Array
+     */
     public function fetchLayout($params)
     {
         $fields = $layout = $filter = [];
@@ -29,8 +51,10 @@ class Layout
             switch ($action) {
                 case 'list':
 
+                    // Get the schema of the model
                     $schema = $class_name->getStructureAndFields(true);
 
+                    // Get the fields to be displayed in the table
                     foreach ($schema['structure']['table'] as $key => $field) {
                         $fields[] = $field;
 
@@ -38,6 +62,7 @@ class Layout
                         $field_arr['label'] = $this->getLabel($field);
                         $field_arr['placeholder'] = $field_arr['label'];
 
+                        // Check if the field is a relation
                         if (array_key_exists("relation", $field_arr) && $field_arr['relation'][0] != ['users']) {
 
                             $foreign_fields = [];
@@ -54,6 +79,7 @@ class Layout
 
                     }
 
+                    // Get the fields to be displayed in the filter
                     foreach ($schema['structure']['filter'] as $key => $field) {
 
                         if (isset($schema['fields'][$field]) && !in_array($field, ['id']) && !in_array($schema['fields'][$field]['html'], ['recordpicker'])) {
@@ -70,12 +96,17 @@ class Layout
                 case 'create':
                 case 'edit':
                 case 'form':
+                    // Get the schema of the model
                     $schema = $class_name->getStructureAndFields(true);
 
                     $layout = $schema['structure']['form'];
+
+                    // Get the fields to be displayed in the form
                     foreach ($schema['structure']['form'] as $key => $row) {
 
                         $layout[$key]['fields'] = [];
+
+                        // Get the fields to be displayed in the form
                         foreach ($row['fields'] as $tmpkey => $field) {
                             if (isset($schema['fields'][$field])) {
                                 $fields[] = $field;
@@ -153,7 +184,16 @@ class Layout
         return $relation;
     }
 
-    public function prepareFormField($schema, $field, $action)
+    /**
+     * Prepare Form Field
+     *
+     * @param Array $schema
+     * @param String $field
+     * @param String $action
+     *
+     * @return Array
+     */
+    public function prepareFormField($schema, $field, $action): array
     {
 
         $field_arr = $schema['fields'][$field];
@@ -184,7 +224,18 @@ class Layout
         return $field_arr;
     }
 
-    public function prepareResult($message, $error = false, $fields = [], $layout = [], $filter = [])
+    /**
+     * Prepare Result
+     *
+     * @param String $message
+     * @param Boolean $error
+     * @param Array $fields
+     * @param Array $layout
+     * @param Array $filter
+     *
+     * @return Array
+     */
+    public function prepareResult($message, $error = false, $fields = [], $layout = [], $filter = []): array
     {
         return [
             'error' => $error,
@@ -199,8 +250,10 @@ class Layout
      * Set the name of the field
      *
      * @param string $name
+     *
+     * @return string
      */
-    public function getLabel($name)
+    public function getLabel($name): string
     {
         if ($name == 'id') {
             return 'ID';
