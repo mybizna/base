@@ -60,15 +60,12 @@ class RouteServiceProvider extends ServiceProvider
             $path_arr = array_reverse(explode('/', $path));
             $module_name = $path_arr[0];
 
-            
             if (file_exists($path . $DS . 'Routes/web.php')) {
                 Route::middleware('web')
                     ->namespace('Modules\\' . $module_name . '\Http\Controllers')
                     ->group(module_path($module_name, '/Routes/web.php'));
             }
         }
-        
-        exit;
 
     }
 
