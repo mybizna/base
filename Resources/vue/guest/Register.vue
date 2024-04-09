@@ -15,11 +15,9 @@
               Account Registration
             </div>
 
-            <TextElement name="first_name" label="First Name" id="first_name" :debounce="500"
-              :description="error.first_name" rules="required" />
+            <TextElement name="first_name" label="First Name" id="first_name" :debounce="500" rules="required" />
 
-            <TextElement name="last_name" label="Last Name" id="last_name" :debounce="500"
-              :description="error.last_name" rules="required" />
+            <TextElement name="last_name" label="Last Name" id="last_name" :debounce="500" rules="required" />
 
             <TextElement name="username" label="Username" id="username"
               info="Your username should be smallcase alphabet and unique." :debounce="500"
@@ -38,7 +36,7 @@
 
 
             <div class="text-center reg-step-button">
-              <ButtonElement name="register" :button-class="['font-semibold','btn','btn-primary']" @click="register">
+              <ButtonElement name="register" :button-class="['font-semibold', 'btn', 'btn-primary']" @click="register">
                 Register
               </ButtonElement>
 
@@ -143,7 +141,8 @@ export default {
   overflow-x: hidden;
 }
 
-.vf-element-error, .vf-errors div {
+.vf-element-error,
+.vf-errors div {
   color: red !important;
   font-size: 12px !important;
 }
