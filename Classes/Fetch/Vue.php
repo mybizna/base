@@ -39,9 +39,9 @@ class Vue
      * Fetch Vue
      *
      * The function is used to fetch the vue file
-     * 
+     *
      * @param array $current_uri
-     * 
+     *
      * @return array
      */
     public function fetchVue($current_uri)
@@ -77,24 +77,23 @@ class Vue
             }
         }
 
-    
         // Check if vue file is not found
         if (!$vue_file_status) {
             if ($current_uri[1] == 'templates') {
                 $suffix_url = implode($DS, $current_uri);
                 $vue_file = base_path() . $DS . $suffix_url;
-                
+
                 // check if vue_file exists
                 if ($vue_file != '' && File::isFile($vue_file)) {
                     $vue_file_status = true;
                 } else {
                     // get all directories on the path base_path('templates')
                     $dirs = glob(base_path('templates') . '/*', GLOB_ONLYDIR);
-                    
+
                     foreach ($dirs as $key => $dir) {
                         $dir_arr = explode($DS, $dir);
                         $dir_name = end($dir_arr);
-                        
+
                         // continue if dir name is default
                         if ($dir_name == 'default') {
                             continue;
@@ -102,7 +101,7 @@ class Vue
 
                         $suffix_url = str_replace('default', $dir_name, $suffix_url);
                         $vue_file = base_path() . $DS . $suffix_url;
-                        
+
                         // check if vue_file exists
                         if ($vue_file != '' && File::isFile($vue_file)) {
                             $vue_file_status = true;
@@ -113,9 +112,9 @@ class Vue
             } else {
                 $module = $current_uri[1];
                 unset($current_uri[1]);
+                
+                $vue_file = base_path() . $DS . 'Modules' . $DS . ucfirst($module) . $DS . 'Resources' . $DS . 'vue' . $DS . implode($DS, $current_uri);
 
-                $vue_file = base_path() . $DS . 'Modules' . $DS . $module . $DS . 'Resources' . $DS . 'vue' . $DS . implode($DS, $current_uri);
-               
                 if ($vue_file != '' && File::isFile($vue_file)) {
                     $vue_file_status = true;
                 }
@@ -123,12 +122,10 @@ class Vue
             }
         }
 
-
-
-        if($vue_file_status) {
+        if ($vue_file_status) {
             $contents = file_get_contents($vue_file);
             $status = 200;
-        }else{
+        } else {
             $contents = 'Vue File not found.';
             $status = 404;
         }
