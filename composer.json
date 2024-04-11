@@ -17,8 +17,8 @@
   ],
   "require": {
     "composer/installers": "~2.0",
-    "mybizna/automigrator": ">=24.2.002",
-    "mybizna/assets": ">=24.5.007",
+    "mybizna/automigrator": "^24.2",
+    "mybizna/assets": "^24.5",
     "nwidart/laravel-modules": "^10.0",
     "wildside/userstamps": "^2.4",
     "laravel/sanctum": "^3.3",
