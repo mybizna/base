@@ -79,40 +79,48 @@ class Vue
 
         // Check if vue file is not found
         if (!$vue_file_status) {
+
             if ($current_uri[1] == 'templates') {
+
+                // Insert default after templates in $current_uri
+                array_splice($current_uri, 1, 0, 'default');
+
                 $suffix_url = implode($DS, $current_uri);
                 $vue_file = base_path() . $DS . $suffix_url;
 
-                // check if vue_file exists
-                if ($vue_file != '' && File::isFile($vue_file)) {
-                    $vue_file_status = true;
-                } else {
-                    // get all directories on the path base_path('templates')
-                    $dirs = glob(base_path('templates') . '/*', GLOB_ONLYDIR);
+                // get all directories on the path base_path('templates')
+                $dirs = glob(base_path('templates') . '/*', GLOB_ONLYDIR);
 
-                    foreach ($dirs as $key => $dir) {
-                        $dir_arr = explode($DS, $dir);
-                        $dir_name = end($dir_arr);
+                foreach ($dirs as $key => $dir) {
+                    $dir_arr = explode($DS, $dir);
+                    $dir_name = end($dir_arr);
 
-                        // continue if dir name is default
-                        if ($dir_name == 'default') {
-                            continue;
-                        }
+                    // continue if dir name is default
+                    if ($dir_name == 'default') {
+                        continue;
+                    }
 
-                        $suffix_url = str_replace('default', $dir_name, $suffix_url);
-                        $vue_file = base_path() . $DS . $suffix_url;
+                    $suffix_url = str_replace('/default/', '/' . $dir_name . '/', $suffix_url);
+                    $tmp_vue_file = base_path() . $DS . $suffix_url;
 
-                        // check if vue_file exists
-                        if ($vue_file != '' && File::isFile($vue_file)) {
-                            $vue_file_status = true;
-                            break;
-                        }
+                    // check if vue_file exists
+                    if ($tmp_vue_file != '' && File::isFile($tmp_vue_file)) {
+                        $vue_file = $tmp_vue_file;
+                        $vue_file_status = true;
+                        break;
                     }
                 }
+
+                // check if vue_file exists
+                if (!$vue_file_status && $vue_file != '' && File::isFile($vue_file)) {
+                    $vue_file_status = true;
+                }
+
             } else {
+
                 $module = $current_uri[1];
                 unset($current_uri[1]);
-                
+
                 $vue_file = base_path() . $DS . 'Modules' . $DS . ucfirst($module) . $DS . 'Resources' . $DS . 'vue' . $DS . implode($DS, $current_uri);
 
                 if ($vue_file != '' && File::isFile($vue_file)) {
