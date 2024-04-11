@@ -37,6 +37,8 @@ class Positions
         foreach ($groups as $key => $group) {
             $this->paths = array_merge($this->paths, glob(base_path($group)));
         }
+
+       
     }
 
     /**
@@ -58,6 +60,8 @@ class Positions
                 }
             }
         }
+
+        //print_r($this->positions);exit();
 
         // Sort the positions
         $column = 'ordering';
