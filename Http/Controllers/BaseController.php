@@ -35,6 +35,9 @@ class BaseController extends Controller
         $modularize = new Modularize($module, $model);
 
         $args = $request->query();
+        $args['mybizna_uniqid'] = $request->header('mybizna_uniqid');
+
+        //print_r($mybizna_uniqid); exit;
 
         $result = $modularize->getAllRecords($args);
 
@@ -46,6 +49,7 @@ class BaseController extends Controller
         $modularize = new Modularize($module, $model);
 
         $args = $request->query();
+        $args['mybizna_uniqid'] = $request->header('mybizna_uniqid');
 
         $result = $modularize->getRecord($id, $args);
 
@@ -59,6 +63,7 @@ class BaseController extends Controller
         // logic to get all records goes here
 
         $args = $request->query();
+        $args['mybizna_uniqid'] = $request->header('mybizna_uniqid');
 
         $result = $modularize->getRecordSelect($args);
 
@@ -70,6 +75,7 @@ class BaseController extends Controller
         $modularize = new Modularize($module, $model);
 
         $args = $request->all();
+        $args['mybizna_uniqid'] = $request->header('mybizna_uniqid');
 
         $result = $modularize->createRecord($args);
 
@@ -82,6 +88,7 @@ class BaseController extends Controller
         $modularize = new Modularize($module, $model);
 
         $args = $request->all();
+        $args['mybizna_uniqid'] = $request->header('mybizna_uniqid');
 
         $result = $modularize->updateRecord($id, $args);
 

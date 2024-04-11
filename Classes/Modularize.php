@@ -68,6 +68,8 @@ class Modularize
     {
         $user = Auth::user();
 
+        //print_r($user); die;
+
         if (!$user) {
             return false;
         }
@@ -91,6 +93,9 @@ class Modularize
     public function getAllRecords($args)
     {
         $can = $this->checkUserCan($this->module . "_" . $this->model . "_view");
+
+        //print_r($this->module . "_" . $this->model . "_view");
+        //print_r($can); die;
 
         if (!$can) {
             return $this->prepareResult('User does not have right to view ' . $this->module . '-' . $this->model, true);
