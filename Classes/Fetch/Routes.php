@@ -167,6 +167,8 @@ class Routes
             }
         }
 
+        
+
         // Loop through the folders
         foreach (['manage', 'user', 'guest'] as $folder) {
             $vue_folders = $path . $DS . 'Resources' . $DS . 'vue' . $DS . $folder;
