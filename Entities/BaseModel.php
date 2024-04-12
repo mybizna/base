@@ -17,21 +17,52 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
 
 {
 
+    /**
+     * Adding Userstamps trait for tracking user actions
+     *
+     */
     use Userstamps;
+
+    /**
+     * Adding Notifiable trait for sending notifications
+     *
+     */
     use Notifiable;
+
+    /**
+     * The fields that can be filled
+     *
+     * @var array<string>
+     */
 
     public $alias = [];
 
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+
     public $listtable;
+
+    /**
+     * The fields that can be filled
+     * 
+     * @var array<string>
+     */
     public $formbuilder;
 
     /**
      * Intialize fields for display and migration purpose.
+     * 
+     * @param array $fields
      */
     public $fields = [];
 
     /**
      * Set structure for displays ie table, form, filter, etc.
+     * 
+     * @param array $structure
      */
     public $structure = [];
 
@@ -41,6 +72,7 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
      * @var bool
      */
     public bool $show_frontend = false;
+
 
     /**
      * Set views is visible from frontend.
@@ -65,6 +97,23 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
     {
         //Your actions here
         return $structure;
+    }
+
+        /**
+     * Define rights for this model.
+     *
+     * @return array
+     */
+    public function rights(): array
+    {
+        return [
+            ['administrator' => ['view' => true, 'add' => true, 'edit' => true, 'delete' => true]],
+            ['manager' => ['view' => true, 'add' => true, 'edit' => true, 'delete' => true]],
+            ['supervisor' => ['view' => true, 'add' => true, 'edit' => true, 'delete' => true]],
+            ['staff' => ['view' => true, 'add' => true, 'edit' => true]],
+            ['registered' => ['view' => true, 'add' => true]],
+            ['guest' => ['view' => true]],
+        ];
     }
 
     /**
