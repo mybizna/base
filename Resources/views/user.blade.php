@@ -23,6 +23,7 @@
         var responsive_point = {!! $responsive_point !!};
         var floating_top = {{ $floating_top ? 'true' : 'false' }};
         var margin_top = {{ $margin_top ? 'true' : 'false' }};
+        var is_wordpress = {{ $is_wordpress ? 'true' : 'false' }};
         var viewside = 'frontend';
         var template = '{{ $template ?? 'user' }}';
         var mybizna_uniqid = '{!! $mybizna_uniqid !!}';
