@@ -119,7 +119,7 @@ class Vue
             } else {
 
                 $module = $current_uri[1];
-                unset($current_uri[1]);
+                unset($current_uri[1]); // remove module from current_uri
 
                 $vue_file = base_path() . $DS . 'Modules' . $DS . ucfirst($module) . $DS . 'Resources' . $DS . 'vue' . $DS . implode($DS, $current_uri);
 
