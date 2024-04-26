@@ -107,13 +107,15 @@ class Layout
                         $layout[$key]['fields'] = [];
 
                         // Get the fields to be displayed in the form
-                        foreach ($row['fields'] as $tmpkey => $field) {
-                            if (isset($schema['fields'][$field])) {
-                                $fields[] = $field;
+                        if (isset($row['fields']) && is_array($row['fields'])) {
+                            foreach ($row['fields'] as $tmpkey => $field) {
+                                if (isset($schema['fields'][$field])) {
+                                    $fields[] = $field;
 
-                                $field_arr = $this->prepareFormField($schema, $field, $action);
+                                    $field_arr = $this->prepareFormField($schema, $field, $action);
 
-                                $layout[$key]['fields'][] = $field_arr;
+                                    $layout[$key]['fields'][] = $field_arr;
+                                }
                             }
                         }
 
