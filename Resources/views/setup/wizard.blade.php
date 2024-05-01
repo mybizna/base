@@ -156,42 +156,6 @@
 
         })(db_list);
 
-
-
-        //Migration to create user
-        log_type = "create_user";
-        await (async () => {
-
-            loggingOutput('', log_type);
-            loggingOutput('', log_type);
-            loggingOutput('CREATING USERS FROM WORDPRESS LIST  ...', log_type);
-            loggingOutput('', log_type);
-
-
-            await fetch('{!! $mybizna_base_url !!}/base/create-user', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': form.elements['_token'].value
-                    },
-                })
-                .then(function(response) {
-                    if (!response.ok) {
-                        loggingOutput('Creating Users failed.', log_type);
-                    }
-
-                    return response.json();
-
-                }).then(data => {
-                    loggingOutput(data.message, log_type);
-                    loggingOutput('', log_type);
-                });
-
-            loggingOutput('', log_type);
-            loggingOutput('', log_type);
-        })();
-
-
         // Run the data processor
         log_type = 'dataprocessor';
         await (async (data_list) => {
@@ -229,8 +193,7 @@
             location.reload();
 
         })(data_list);
-
-    } 
+    }
 
     @if (!$has_setting || $has_uptodate)
         processList();
