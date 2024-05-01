@@ -433,7 +433,6 @@ class BaseServiceProvider extends ServiceProvider
                     ];
 
                     $partner->createPartner($data);
-
                 }
 
             } else {
