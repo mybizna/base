@@ -167,7 +167,6 @@ class BaseServiceProvider extends ServiceProvider
 
         view()->share($context);
 
-
     }
 
     /**
@@ -360,7 +359,7 @@ class BaseServiceProvider extends ServiceProvider
         if (!Schema::hasTable('cache') || !Schema::hasTable('sessions')) {
             Artisan::call('migrate');
         }
-        
+
         $this->initiateUser();
 
     }
@@ -386,18 +385,44 @@ class BaseServiceProvider extends ServiceProvider
 
         if (!$userCount) {
 
-            $user_cls = new User();
-
             if (defined('MYBIZNA_USER_LIST')) {
                 $wp_user_list = MYBIZNA_USER_LIST;
+
                 foreach ($wp_user_list as $key => $wp_user) {
+
+                    $user_cls = new User();
                     $user_cls->password = Hash::make(uniqid());
                     $user_cls->email = $wp_user->user_email;
                     $user_cls->name = $wp_user->user_nicename;
                     $user_cls->save();
+
+                    // administrator,editor,author,contributor,subscriber
+                    foreach ($wp_user->roles as $key => $role) {
+
+                        switch ($role) {
+                            case 'administrator':
+                                $user_cls->assignRole('administrator');
+                                break;
+                            case 'editor':
+                                $user_cls->assignRole('manager');
+                                break;
+                            case 'author':
+                                $user_cls->assignRole('supervisor');
+                                break;
+                            case 'contributor':
+                                $user_cls->assignRole('staff');
+                                break;
+                            case 'subscriber':
+                            default:
+                                $user_cls->assignRole('registered');
+                                break;
+                        }
+                    }
+
                 }
 
             } else {
+                $user_cls = new User();
 
                 $user_cls->password = Hash::make('admin');
                 $user_cls->email = 'admin@admin.com';
