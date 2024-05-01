@@ -14,6 +14,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Modules\Base\Classes\Datasetter;
 use Modules\Core\Entities\Setting;
+use Modules\Partner\Entities\Partner;
 use Mybizna\Automigrator\Commands\MigrateCommand;
 
 class BaseServiceProvider extends ServiceProvider
@@ -381,6 +382,8 @@ class BaseServiceProvider extends ServiceProvider
 
     private function initiateUser()
     {
+        $partner = new Partner();
+
         $userCount = User::count();
 
         if (!$userCount) {
@@ -419,6 +422,18 @@ class BaseServiceProvider extends ServiceProvider
                         }
                     }
 
+                    $name_arr = explode(' ', $wp_user->display_name);
+
+                    $data = [
+                        'user_id' => $user_cls->id,
+                        'first_name' => $name_arr[0],
+                        'last_name' => $name_arr[1] ?? '',
+                        'type_str' => 'customer',
+                        'email' => $wp_user->user_email,
+                    ];
+
+                    $partner->createPartner($data);
+
                 }
 
             } else {
@@ -428,6 +443,16 @@ class BaseServiceProvider extends ServiceProvider
                 $user_cls->email = 'admin@admin.com';
                 $user_cls->name = 'Admin User';
                 $user_cls->save();
+
+                $data = [
+                    'user_id' => $user_cls->id,
+                    'first_name' => 'Admin',
+                    'last_name' => 'User',
+                    'type_str' => 'customer',
+                    'email' => $wp_user->user_email,
+                ];
+
+                $partner->createPartner($data);
             }
         }
 
