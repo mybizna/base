@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
+use Modules\Base\Classes\Fetch\Rights;
 
 /**
  * Class Migration
@@ -223,7 +225,11 @@ class Migration
      */
     public function migrateModel(Model $model)
     {
-        $this->logOutput(get_class($model));
+        $rights = new Rights();
+
+        $class_name = get_class($model);
+
+        $this->logOutput($class_name);
 
         $modelTable = $model->getTable();
         $tempTable = 'table_' . $modelTable;
@@ -280,6 +286,24 @@ class Migration
                 throw $th;
             }
         }
+
+        // Remove Modules/ and /Entities from the class name
+        $class_name = str_replace(['Modules\\', 'Entities\\'], '', $class_name);
+        $class_name_arr = explode('\\', $class_name);
+
+        // Get the module name and change camel case to snake case using Str
+        $module_name = Str::snake($class_name_arr[0]);
+
+        // Get the model name and change camel case to snake case using Str
+        $model_name = Str::snake($class_name_arr[1]);
+
+        $right_arr = $model->rights() ?? [];
+
+        // loop through the array and add the rights
+        foreach ($right_arr as $role => $right) {
+            $rights->add_right($module_name, $model_name, $role, $right['view'] ?? false, $right['add'] ?? false, $right['edit'] ?? false, $right['delete'] ?? false);
+        }
+
     }
 
     /**

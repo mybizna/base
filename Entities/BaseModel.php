@@ -107,12 +107,12 @@ class BaseModel extends \Illuminate\Database\Eloquent\Model
     public function rights(): array
     {
         return [
-            ['administrator' => ['view' => true, 'add' => true, 'edit' => true, 'delete' => true]],
-            ['manager' => ['view' => true, 'add' => true, 'edit' => true, 'delete' => true]],
-            ['supervisor' => ['view' => true, 'add' => true, 'edit' => true, 'delete' => true]],
-            ['staff' => ['view' => true, 'add' => true, 'edit' => true]],
-            ['registered' => ['view' => true, 'add' => true]],
-            ['guest' => ['view' => true]],
+            'administrator' => ['view' => true, 'add' => true, 'edit' => true, 'delete' => true],
+            'manager' => ['view' => true, 'add' => true, 'edit' => true, 'delete' => true],
+            'supervisor' => ['view' => true, 'add' => true, 'edit' => true, 'delete' => true],
+            'staff' => ['view' => true, 'add' => true, 'edit' => true],
+            'registered' => ['view' => true, 'add' => true],
+            'guest' => ['view' => true],
         ];
     }
 
