@@ -16,16 +16,9 @@
     }
   ],
   "require": {
+    "coolsam/modules": "^4",
     "composer/installers": "~2.0",
-    "mybizna/automigrator": "^24.2",
-    "mybizna/assets": "^24.5",
-    "nwidart/laravel-modules": "^10.0",
-    "wildside/userstamps": "^2.4",
-    "laravel/sanctum": "^3.3",
-    "spatie/laravel-permission": "^6.0",
-    "parsecsv/php-parsecsv": "^1.3",
-    "livewire/livewire": "^3.5"
-
+    "wildside/userstamps": "^2.4.0"
   },
   "extra": {
     "laravel": {
