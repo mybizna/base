@@ -392,7 +392,7 @@ class Modularize
      */
     private function getClassName()
     {
-        $classname = 'Modules\\' . ucfirst($this->module) . '\Entities\\' . ucfirst(Str::camel($this->model));
+        $classname = 'Modules\\' . ucfirst($this->module) . '\Models\\' . ucfirst(Str::camel($this->model));
 
         return (class_exists($classname)) ? new $classname() : false;
     }

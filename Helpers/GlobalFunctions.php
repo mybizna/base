@@ -2,7 +2,7 @@
 
 use Modules\Base\Jobs\AppMailerJob;
 use Modules\Core\Classes\Language;
-use Modules\Core\Entities\LanguageTranslation;
+use Modules\Core\Models\LanguageTranslation;
 
 if (!function_exists('___')) {
 

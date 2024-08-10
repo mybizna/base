@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use Modules\Core\Entities\DataMigrated;
+use Modules\Core\Models\DataMigrated;
 
 /**
  * Class Datasetter
@@ -56,7 +56,7 @@ class Datasetter
      * Data Process
      *
      * The function is used to process the data
-     * 
+     *
      * @return void
      */
     public function dataProcess()
@@ -72,7 +72,7 @@ class Datasetter
      * Migrate Models
      *
      * The function is used to migrate the models
-     * 
+     *
      * @return Collection
      */
     public function migrateModels()
@@ -84,8 +84,8 @@ class Datasetter
             $path_arr = array_reverse(explode('/', $path));
             $module_name = $path_arr[0];
 
-            $namespace = 'Modules\\' . $module_name . '\\Entities\\Data';
-            $data_folder = $path . DIRECTORY_SEPARATOR . 'Entities' . DIRECTORY_SEPARATOR . 'Data';
+            $namespace = 'Modules\\' . $module_name . '\\Models\\Data';
+            $data_folder = $path . DIRECTORY_SEPARATOR . 'Models' . DIRECTORY_SEPARATOR . 'Data';
 
             if (is_dir($data_folder)) {
                 $data_dir = new \DirectoryIterator($data_folder);
@@ -121,9 +121,9 @@ class Datasetter
      * Migrate Model
      *
      * The function is used to migrate the model
-     * 
+     *
      * @param $model
-     * 
+     *
      * @return void
      */
     public function migrateModel($model)
@@ -139,12 +139,12 @@ class Datasetter
      * Add Data
      *
      * The function is used to add the data
-     * 
+     *
      * @param $module
      * @param $model
      * @param $main_field
      * @param $data
-     * 
+     *
      * @return void
      */
     public function add_data($module, $model, $main_field, $data)
@@ -200,12 +200,12 @@ class Datasetter
      * Add Data
      *
      * The function is used to add the data
-     * 
+     *
      * @param $module
      * @param $model
      * @param $main_field
      * @param $data
-     * 
+     *
      * @return void
      */
     public function initiateUser($user = [])
@@ -249,10 +249,10 @@ class Datasetter
      * Log Output
      *
      * The function is used to log the output
-     * 
+     *
      * @param $message
      * @param $type
-     * 
+     *
      * @return void
      */
     private function logOutput($message, $type = 'info')
@@ -287,15 +287,15 @@ class Datasetter
      * Get Class Name
      *
      * The function is used to get the class name
-     * 
+     *
      * @param $module
      * @param $model
-     * 
+     *
      * @return void
      */
     private function getClassName($module, $model)
     {
-        $classname = 'Modules\\' . ucfirst($module) . '\Entities\\' . ucfirst(Str::camel($model));
+        $classname = 'Modules\\' . ucfirst($module) . '\Models\\' . ucfirst(Str::camel($model));
 
         $this->logOutput($classname);
 

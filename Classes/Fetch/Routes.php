@@ -114,10 +114,10 @@ class Routes
 
         $tmproutes = [];
 
-        // Loop through the entities
-        if (is_dir($path . '/Entities')) {
+        // Loop through the Models
+        if (is_dir($path . '/Models')) {
 
-            $model_dir = new \DirectoryIterator($path . '/Entities');
+            $model_dir = new \DirectoryIterator($path . '/Models');
             foreach ($model_dir as $fileinfo) {
 
                 if (!$fileinfo->isDot() && $fileinfo->isFile() && $fileinfo->getExtension() == 'php') {
@@ -137,7 +137,7 @@ class Routes
                     $this->routes[$vue_name . '.create'] = $this->addRouteToList($vue_name_path . '/create', $vue_name . '.create', 'router_create', meta_path: $meta_path);
                     $this->routes[$vue_name . '.edit'] = $this->addRouteToList($vue_name_path . '/edit/:id', $vue_name . '.edit', 'router_edit', meta_path: $meta_path);
 
-                    $class_name = basename(dirname($path)) . '/' . basename($path) . '/Entities/' . Str::ucfirst(Str::camel($model_name));
+                    $class_name = basename(dirname($path)) . '/' . basename($path) . '/Models/' . Str::ucfirst(Str::camel($model_name));
                     $class_name = str_replace('/', '\\', $class_name);
 
                     if (is_subclass_of($class_name, Model::class)) {
@@ -166,8 +166,6 @@ class Routes
                 }
             }
         }
-
-        
 
         // Loop through the folders
         foreach (['manage', 'user', 'guest'] as $folder) {

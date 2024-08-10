@@ -3,7 +3,7 @@
 namespace Modules\Base\Classes\Fetch;
 
 use Illuminate\Support\Str;
-use Modules\Core\Entities\Setting as DBSetting;
+use Modules\Core\Models\Setting as DBSetting;
 
 /**
  * Class Settings
@@ -72,7 +72,7 @@ class Settings
                     //TODO: Change this to be logging errors silently.
                     try {
                         $settings = require $setting_file;
-                    } catch (\Throwable$th) {
+                    } catch (\Throwable $th) {
                         //throw $th;
                     }
 
@@ -105,7 +105,7 @@ class Settings
      *
      * @param $module
      * @param $data
-     * 
+     *
      * @return void
      */
     public function add_module_info($module, $data)
@@ -127,7 +127,7 @@ class Settings
      * @param $title
      * @param $position
      * @param array $params
-     * 
+     *
      * @return void
      */
     public function add_setting_category($module, $key, $title, $position, $params = [])
@@ -152,7 +152,7 @@ class Settings
      * @param $name
      * @param $position
      * @param $params
-     * 
+     *
      * @return void
      */
     public function add_setting($module, $key, $name, $position, $params)

@@ -163,8 +163,8 @@ class Migration
                         continue;
                     }
 
-                    $namespace = 'Modules\\' . $module_name . '\\Entities';
-                    $db_folder = $path . DIRECTORY_SEPARATOR . 'Entities';
+                    $namespace = 'Modules\\' . $module_name . '\\Models';
+                    $db_folder = $path . DIRECTORY_SEPARATOR . 'Models';
 
                     if (is_dir($db_folder)) {
                         $db_dir = new \DirectoryIterator($db_folder);
@@ -287,8 +287,8 @@ class Migration
             }
         }
 
-        // Remove Modules/ and /Entities from the class name
-        $class_name = str_replace(['Modules\\', 'Entities\\'], '', $class_name);
+        // Remove Modules/ and /Models from the class name
+        $class_name = str_replace(['Modules\\', 'Models\\'], '', $class_name);
         $class_name_arr = explode('\\', $class_name);
 
         // Get the module name and change camel case to snake case using Str

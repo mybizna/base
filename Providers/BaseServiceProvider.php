@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Modules\Base\Classes\Datasetter;
-use Modules\Core\Entities\Setting;
-use Modules\Partner\Entities\Partner;
+use Modules\Core\Models\Setting;
+use Modules\Partner\Models\Partner;
 use Mybizna\Automigrator\Commands\MigrateCommand;
 
 class BaseServiceProvider extends ServiceProvider

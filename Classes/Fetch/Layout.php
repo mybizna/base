@@ -284,7 +284,7 @@ class Layout
             return false;
         }
 
-        $classname = 'Modules\\' . $module . '\Entities\\' . $model;
+        $classname = 'Modules\\' . $module . '\Models\\' . $model;
 
         if (class_exists($classname)) {
             return new $classname();
