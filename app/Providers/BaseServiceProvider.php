@@ -62,9 +62,7 @@ class BaseServiceProvider extends ServiceProvider
 
         $this->setGlobalVariables();
 
-        require_once base_path() . '/Modules/Base/Helpers/GlobalFunctions.php';
-
-        $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
+        require_once base_path() . '/Modules/Base/app/Helpers/GlobalFunctions.php';
 
         $this->registerTranslations();
         $this->registerViews();

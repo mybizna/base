@@ -60,10 +60,10 @@ class RouteServiceProvider extends ServiceProvider
             $path_arr = array_reverse(explode('/', $path));
             $module_name = $path_arr[0];
 
-            if (file_exists($path . $DS . 'Routes/web.php')) {
+            if (file_exists($path . $DS . 'routes/web.php')) {
                 Route::middleware('web')
                     ->namespace('Modules\\' . $module_name . '\Http\Controllers')
-                    ->group(module_path($module_name, '/Routes/web.php'));
+                    ->group(module_path($module_name, '/routes/web.php'));
             }
         }
 
@@ -90,18 +90,18 @@ class RouteServiceProvider extends ServiceProvider
             $path_arr = array_reverse(explode('/', $path));
             $module_name = $path_arr[0];
 
-            if ($module_name != 'Base' && file_exists($path . $DS . 'Routes/api.php')) {
+            if ($module_name != 'Base' && file_exists($path . $DS . 'routes/api.php')) {
                 Route::prefix('api')
                     ->middleware('api')
                     ->namespace('Modules\\' . $module_name . '\Http\Controllers')
-                    ->group(module_path($module_name, '/Routes/api.php'));
+                    ->group(module_path($module_name, '/routes/api.php'));
             }
 
         }
 
         Route::prefix('api')
             ->middleware('api')
-            ->group(module_path('Base', '/Routes/api.php'));
+            ->group(module_path('Base', '/routes/api.php'));
 
     }
 }
