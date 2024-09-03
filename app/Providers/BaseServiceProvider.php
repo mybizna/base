@@ -3,39 +3,28 @@
 namespace Modules\Base\Providers;
 
 use App\Models\User;
-use Artisan;
-use Config;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Str;
-use Modules\Base\Classes\Datasetter;
-use Modules\Core\Models\Setting;
-use Modules\Partner\Models\Partner;
-use Mybizna\Automigrator\Commands\MigrateCommand;
+use Modules\Partner\Classes\Partner;
 
 class BaseServiceProvider extends ServiceProvider
 {
-    /**
-     * @var string $moduleName
-     */
-    protected $moduleName = 'Base';
+    protected string $moduleName = 'Base';
 
-    /**
-     * @var string $moduleNameLower
-     */
-    protected $moduleNameLower = 'base';
+    protected string $moduleNameLower = 'Base';
 
     /**
      * Boot the application events.
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
+        $this->registerCommands();
+        $this->registerCommandSchedules();
+        $this->registerTranslations();
+        $this->registerConfig();
+        $this->registerViews();
+        $this->loadMigrationsFrom(module_path($this->moduleName, 'database/migrations'));
 
         if (defined('DB_NAME')) {
             Config::set('app.url', MYBIZNA_URL);
@@ -51,14 +40,11 @@ class BaseServiceProvider extends ServiceProvider
             //Config::set('santum.stateful', MYBIZNA_URL);
         }
 
+        $this->initiateUser();
+
         $this->commands([
             \Modules\Base\Console\Commands\DataProcessor::class,
         ]);
-
-        if (!App::runningInConsole()) {
-            // app is running in console
-            $this->runMigration();
-        }
 
         $this->setGlobalVariables();
 
@@ -79,12 +65,96 @@ class BaseServiceProvider extends ServiceProvider
 
     /**
      * Register the service provider.
-     *
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
+        $this->app->register(EventServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
+    }
+
+    /**
+     * Register commands in the format of Command::class
+     */
+    protected function registerCommands(): void
+    {
+        // $this->commands([]);
+    }
+
+    /**
+     * Register command Schedules.
+     */
+    protected function registerCommandSchedules(): void
+    {
+        // $this->app->booted(function () {
+        //     $schedule = $this->app->make(Schedule::class);
+        //     $schedule->command('inspire')->hourly();
+        // });
+    }
+
+    /**
+     * Register translations.
+     */
+    public function registerTranslations(): void
+    {
+        $langPath = resource_path('lang/modules/' . $this->moduleNameLower);
+
+        if (is_dir($langPath)) {
+            $this->loadTranslationsFrom($langPath, $this->moduleNameLower);
+            $this->loadJsonTranslationsFrom($langPath);
+        } else {
+            $this->loadTranslationsFrom(module_path($this->moduleName, 'lang'), $this->moduleNameLower);
+            $this->loadJsonTranslationsFrom(module_path($this->moduleName, 'lang'));
+        }
+    }
+
+    /**
+     * Register config.
+     */
+    protected function registerConfig(): void
+    {
+        $this->publishes([module_path($this->moduleName, 'config/config.php') => config_path($this->moduleNameLower . '.php')], 'config');
+        $this->mergeConfigFrom(module_path($this->moduleName, 'config/config.php'), $this->moduleNameLower);
+    }
+
+    /**
+     * Register views.
+     */
+    public function registerViews(): void
+    {
+        $viewPath = resource_path('views/modules/' . $this->moduleNameLower);
+        $sourcePath = module_path($this->moduleName, 'resources/views');
+
+        $this->publishes([$sourcePath => $viewPath], ['views', $this->moduleNameLower . '-module-views']);
+
+        $this->loadViewsFrom(array_merge($this->getPublishableViewPaths(), [$sourcePath]), $this->moduleNameLower);
+
+        $componentNamespace = str_replace('/', '\\', config('modules.namespace') . '\\' . $this->moduleName . '\\' . ltrim(config('modules.paths.generator.component-class.path'), config('modules.paths.app_folder', '')));
+        Blade::componentNamespace($componentNamespace, $this->moduleNameLower);
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array<string>
+     */
+    public function provides(): array
+    {
+        return [];
+    }
+
+    /**
+     * @return array<string>
+     */
+    private function getPublishableViewPaths(): array
+    {
+        $paths = [];
+        foreach (config('view.paths') as $path) {
+            if (is_dir($path . '/modules/' . $this->moduleNameLower)) {
+                $paths[] = $path . '/modules/' . $this->moduleNameLower;
+            }
+        }
+
+        return $paths;
     }
 
     public function setGlobalVariables()
@@ -168,216 +238,6 @@ class BaseServiceProvider extends ServiceProvider
 
     }
 
-    /**
-     * Register translations.
-     *
-     * @return void
-     */
-    public function registerTranslations()
-    {
-        $paths = [];
-
-        $groups = (is_file(base_path('../readme.txt'))) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
-
-        foreach ($groups as $key => $group) {
-            $paths = array_merge($paths, glob(base_path($group)));
-        }
-
-        foreach ($paths as $key => $path) {
-            $path_arr = array_reverse(explode('/', $path));
-            $module_name = $path_arr[0];
-
-            if (is_dir($path . DIRECTORY_SEPARATOR . 'Resources/lang')) {
-                $this->loadTranslationsFrom(module_path($module_name, 'Resources/lang'), Str::lower($module_name));
-            }
-
-        }
-
-    }
-
-    /**
-     * Register config.
-     *
-     * @return void
-     */
-    protected function registerConfig()
-    {
-        if (!Schema::hasTable('core_setting')) {
-            return;
-        }
-
-        $paths = [];
-        $merged_settings = [];
-
-        $groups = (is_file(base_path('../readme.txt'))) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
-        foreach ($groups as $key => $group) {
-            $paths = array_merge($paths, glob(base_path($group)));
-        }
-
-        foreach ($paths as $key => $path) {
-            $path_arr = array_reverse(explode('/', $path));
-            $module_name = $path_arr[0];
-
-            $module_name_l = Str::lower($module_name);
-            $config_path = $path . DIRECTORY_SEPARATOR . 'settings.php';
-
-            if (file_exists($config_path)) {
-
-                $settings = require $config_path;
-
-                foreach ($settings as $key => $setting) {
-
-                    $value = $setting['value'];
-                    try {
-                        $db_setting = Setting::where(['module' => $module_name_l, 'name' => $key])->first();
-
-                        if ($db_setting) {
-                            $value = $db_setting->value;
-                        }
-                    } catch (\Throwable $th) {
-                        //throw $th;
-                    }
-
-                    $merged_settings[$key] = $value;
-
-                }
-
-                $config = $this->app['config']->get($module_name_l, []);
-                $this->app['config']->set($module_name_l, array_merge($merged_settings, $config));
-
-            }
-        }
-
-    }
-
-    /**
-     * Register views.
-     *
-     * @return void
-     */
-    public function registerViews()
-    {
-
-        $paths = [];
-
-        $groups = (is_file(base_path('../readme.txt'))) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
-        foreach ($groups as $key => $group) {
-            $paths = array_merge($paths, glob(base_path($group)));
-        }
-
-        foreach ($paths as $key => $path) {
-            $path_arr = array_reverse(explode('/', $path));
-            $module_name = $path_arr[0];
-
-            $viewPath = resource_path('views/modules/' . Str::lower($module_name));
-
-            $sourcePath = $path . DIRECTORY_SEPARATOR . 'Resources' . DIRECTORY_SEPARATOR . 'views';
-
-            if (is_dir($sourcePath)) {
-                $this->publishes([
-                    $sourcePath => $viewPath,
-                ], 'views');
-
-                $this->loadViewsFrom(array_merge(array_map(function ($path) use ($module_name) {
-                    return $path . '/modules/' . Str::lower($module_name);
-                }, \Config::get('view.paths')), [$sourcePath]), Str::lower($module_name));
-            }
-
-        }
-
-    }
-
-    /**
-     * xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-     * Run Migration
-     * xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-     * */
-    public function runMigrationOld()
-    {
-        $migrate_command = new MigrateCommand();
-        $datasetter = new Datasetter();
-
-        $paths = [];
-
-        $this->initializeConfig();
-        // $this->runSessionNCacheMigration();
-
-        $groups = (is_file(base_path('../readme.txt'))) ? ['Modules/*', '../../*/Modules/*'] : ['Modules/*'];
-
-        foreach ($groups as $key => $group) {
-            $paths = array_merge($paths, glob(base_path($group)));
-        }
-
-        $modules = [];
-        $new_versions = [];
-        $need_migration = false;
-        $versions = $this->getVersions();
-
-        foreach ($paths as $key => $path) {
-            $path_arr = array_reverse(explode('/', $path));
-            $module_name = $path_arr[0];
-
-            $composer = $this->getComposer($path);
-
-            if (!isset($versions[$module_name]) || $versions[$module_name] != $composer['version']) {
-                $need_migration = true;
-            }
-
-            $modules[$module_name] = true;
-            $new_versions[$module_name] = $composer['version'];
-        }
-
-        ksort($modules);
-        ksort($new_versions);
-
-        Cache::forget('mybizna_base_modules');
-        Cache::forget('mybizna_base_versions');
-
-        Cache::forever('mybizna_base_modules', $modules);
-        Cache::forever('mybizna_base_versions', $new_versions);
-
-        if ($need_migration) {
-            Artisan::call('migrate');
-            $migrate_command->migrateModels(true);
-            $this->initiateUser();
-            $datasetter->dataProcess();
-        }
-    }
-
-    protected function runMigration()
-    {
-
-        if (!Schema::hasTable('cache') && !$this->migrationFileExists('create_cache_table')) {
-            Artisan::call('cache:table');
-        }
-
-        if (!Schema::hasTable('sessions') && !$this->migrationFileExists('create_sessions_table')) {
-            Artisan::call('session:table');
-        }
-
-        if (!Schema::hasTable('cache') || !Schema::hasTable('sessions')) {
-            Artisan::call('migrate');
-        }
-
-        $this->initiateUser();
-
-    }
-
-    protected function migrationFileExists($mgr)
-    {
-        $path = database_path('migrations/');
-        $files = scandir($path);
-        $pos = false;
-        foreach ($files as &$value) {
-            $pos = strpos($value, $mgr);
-            if ($pos !== false) {
-                return true;
-            }
-
-        }
-        return false;
-    }
-
     private function initiateUser()
     {
         $partner = new Partner();
@@ -455,42 +315,4 @@ class BaseServiceProvider extends ServiceProvider
 
     }
 
-    private function getVersions()
-    {
-        if (Cache::has('mybizna_base_versions')) {
-            return Cache::get('mybizna_base_versions');
-        }
-
-        return [];
-    }
-
-    private function getComposer($path)
-    {
-        $path = $path . DIRECTORY_SEPARATOR . 'composer.json';
-
-        $json = file_get_contents($path);
-
-        return json_decode($json, true);
-    }
-
-    private function initializeConfig()
-    {
-        $logging_config = $this->app['config']->get('logging', []);
-        $logging_config['channels']['datasetter'] = [
-            'driver' => 'single',
-            'path' => storage_path('logs/datasetter.log'),
-        ];
-        $this->app['config']->set('logging', $logging_config);
-
-    }
-
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
-    public function provides()
-    {
-        return [];
-    }
 }
