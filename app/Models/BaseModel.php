@@ -2,6 +2,7 @@
 
 namespace Modules\Base\Models;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -13,7 +14,7 @@ use Wildside\Userstamps\Userstamps;
 class BaseModel extends \Illuminate\Database\Eloquent\Model
 
 {
-
+    use SoftDeletes;
     /**
      * Adding Userstamps trait for tracking user actions
      *
