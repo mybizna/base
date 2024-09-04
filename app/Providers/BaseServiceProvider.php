@@ -12,7 +12,7 @@ class BaseServiceProvider extends ServiceProvider
 {
     protected string $moduleName = 'Base';
 
-    protected string $moduleNameLower = 'Base';
+    protected string $moduleNameLower = 'base';
 
     /**
      * Boot the application events.
