@@ -5,6 +5,8 @@ namespace Modules\Base\Providers;
 use App\Models\User;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Modules\Partner\Classes\Partner;
 
@@ -242,6 +244,11 @@ class BaseServiceProvider extends ServiceProvider
     {
         $partner = new Partner();
 
+        // Check if user table is exist
+        if (!Schema::hasTable('users')) {
+            return;
+        }
+
         $userCount = User::count();
 
         if (!$userCount) {
@@ -306,7 +313,7 @@ class BaseServiceProvider extends ServiceProvider
                     'first_name' => 'Admin',
                     'last_name' => 'User',
                     'type_str' => 'customer',
-                    'email' => $wp_user->user_email,
+                    'email' => $user_cls->email,
                 ];
 
                 $partner->createPartner($data);

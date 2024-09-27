@@ -85,7 +85,7 @@ class Datasetter
             $module_name = $path_arr[0];
 
             $namespace = 'Modules\\' . $module_name . '\\Models\\Data';
-            $data_folder = $path . DIRECTORY_SEPARATOR . 'Models' . DIRECTORY_SEPARATOR . 'Data';
+            $data_folder = $path . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'Models' . DIRECTORY_SEPARATOR . 'Data';
 
             if (is_dir($data_folder)) {
                 $data_dir = new \DirectoryIterator($data_folder);

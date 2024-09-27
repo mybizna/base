@@ -53,7 +53,7 @@ class DataProcessor extends Command
         $data_setter->show_logs = true;
 
         $data_setter->dataProcess();
-        $fetch_rights->fetchRights(100);
+        // $fetch_rights->fetchRights(100);
 
         return 0;
     }
