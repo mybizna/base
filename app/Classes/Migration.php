@@ -87,7 +87,7 @@ class Migration
      *
      * @return void
      */
-    public function hasUpToDate()
+    public function hasUpToDate(): bool
     {
         $versions = $this->getVersions();
 
