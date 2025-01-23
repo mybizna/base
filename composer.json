@@ -1,40 +1,48 @@
 {
-  "name": "mybizna/base",
-  "description": "",
-  "type": "asgard-module",
-  "version": "2025.1",
-  "license": "GPL-3.0-or-later",
-  "authors": [
-    {
-      "name": "Mybizna",
-      "homepage": "https://mybizna.com",
-      "email": "info@mybizna.com"
+    "name": "mybizna/base",
+    "description": "",
+    "type": "asgard-module",
+    "version": "2025.1",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Mybizna",
+            "homepage": "https://mybizna.com",
+            "email": "info@mybizna.com"
+        },
+        {
+            "name": "Dedan Irungu",
+            "email": "dedanirungu@gmail.com"
+        }
+    ],
+    "require": {
+        "awcodes/filament-table-repeater": "^3.0",
+        "codedor/filament-resource-picker": "^1.0",
+        "coolsam/modules": "^4",
+        "filament/filament": "^3.2",
+        "doctrine/dbal": "^4.0",
+        "guava/calendar": "^1.2",
+        "miguilim/filament-auto-panel": "^2.0",
+        "mybizna/automigrator": "^2025.4",
+        "unexpectedjourney/filament-modal-resource-picker": "^1.0",
+        "wildside/userstamps": "^2.4.0"
     },
-    {
-      "name": "Dedan Irungu",
-      "email": "dedanirungu@gmail.com"
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {}
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Base\\": "app/",
+            "Modules\\Base\\Database\\Factories\\": "database/factories/",
+            "Modules\\Base\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Base\\Tests\\": "tests/"
+        }
     }
-  ],
-  "require": {
-    "coolsam/modules": "^4",
-    "wildside/userstamps": "^2.4.0"
-  },
-  "extra": {
-    "laravel": {
-      "providers": [],
-      "aliases": {}
-    }
-  },
-  "autoload": {
-    "psr-4": {
-      "Modules\\Base\\": "app/",
-      "Modules\\Base\\Database\\Factories\\": "database/factories/",
-      "Modules\\Base\\Database\\Seeders\\": "database/seeders/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Modules\\Base\\Tests\\": "tests/"
-    }
-  }
 }
