@@ -10,43 +10,51 @@
 | contains the "web" middleware group. Now create something great!
 |
  */
+use Illuminate\Support\Facades\Route;
+
+use Modules\Base\Http\Controllers\Auth\LoginController;
+use Modules\Base\Http\Controllers\Auth\ForgotPasswordController;
+use Modules\Base\Http\Controllers\Auth\RegisterController;
+use Modules\Base\Http\Controllers\Auth\ResetPasswordController;
+use Modules\Base\Http\Controllers\Auth\VerificationController;
+use Modules\Base\Http\Controllers\Auth\ConfirmPasswordController;
 
 //manage new user
 $options = [];
-$namespace = 'Modules\Base\Http\Controllers\\';
+$namespace = "Modules\Base\Http\Controllers";
 
 // Login Routes...
 if ($options['login'] ?? true) {
- 
-    Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
-    Route::post('login', 'Auth\LoginController@login');
+
+    Route::get('login', [LoginController::class,'showLoginForm'])->name('login');
+    Route::post('login', [LoginController::class,'login']);
 }
 
 // Logout Routes...
 if ($options['logout'] ?? true) {
-    Route::post('logout', 'Auth\LoginController@logout')->name('logout');
+    Route::post('logout', [LoginController::class,'logout'])->name('logout');
 }
 
 // Registration Routes...
 if ($options['register'] ?? true) {
-    Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
-    Route::post('register', 'Auth\RegisterController@register');
+    Route::get('register', [RegisterController::class,'showRegistrationForm'])->name('register');
+    Route::post('register', [RegisterController::class,'register']);
 }
 
 // Password Reset Routes...
 if ($options['reset'] ?? true) {
-    resetPassword($namespace);
+    resetPassword();
 }
 
 // Password Confirmation Routes...
 if ($options['confirm'] ??
     class_exists('Auth\ConfirmPasswordController')) {
-    confirmPassword($namespace);
+    confirmPassword();
 }
 
 // Email Verification Routes...
 if ($options['verify'] ?? false) {
-    emailVerification($namespace);
+    emailVerification();
 }
 
 /**
@@ -54,12 +62,12 @@ if ($options['verify'] ?? false) {
  *
  * @return callable
  */
-function resetPassword($namespace)
+function resetPassword()
 {
-    Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
-    Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
-    Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
-    Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.update');
+    Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+    Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+    Route::get('password/reset/{token}', [ForgotPasswordController::class,'showResetForm'])->name('password.reset');
+    Route::post('password/reset', [ForgotPasswordController::class,'reset'])->name('password.update');
 }
 
 /**
@@ -67,10 +75,10 @@ function resetPassword($namespace)
  *
  * @return callable
  */
-function confirmPassword($namespace)
+function confirmPassword()
 {
-    Route::get('password/confirm', 'Auth\ConfirmPasswordController@showConfirmForm')->name('password.confirm');
-    Route::post('password/confirm', 'Auth\ConfirmPasswordController@confirm');
+    Route::get('password/confirm', [ConfirmPasswordController::class,'showConfirmForm'])->name('password.confirm');
+    Route::post('password/confirm', [ConfirmPasswordController::class,'confirm']);
 }
 
 /**
@@ -78,9 +86,9 @@ function confirmPassword($namespace)
  *
  * @return callable
  */
-function emailVerification($namespace)
+function emailVerification()
 {
-    Route::get('email/verify', 'Auth\VerificationController@show')->name('verification.notice');
-    Route::get('email/verify/{id}/{hash}', 'Auth\VerificationController@verify')->name('verification.verify');
-    Route::post('email/resend', 'Auth\VerificationController@resend')->name('verification.resend');
+    Route::get('email/verify', [VerificationController::class,'show'])->name('verification.notice');
+    Route::get('email/verify/{id}/{hash}', [VerificationController::class,'verify'])->name('verification.verify');
+    Route::post('email/resend', [VerificationController::class,'resend'])->name('verification.resend');
 }
